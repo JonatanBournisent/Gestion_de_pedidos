@@ -1,0 +1,71 @@
+object fPausa: TfPausa
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'Esperando para continuar...'
+  ClientHeight = 169
+  ClientWidth = 455
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poOwnerFormCenter
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label21: TLabel
+    Left = 18
+    Top = 9
+    Width = 418
+    Height = 19
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Impresi'#243'n en pausa...'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label20: TLabel
+    Left = 18
+    Top = 40
+    Width = 418
+    Height = 36
+    AutoSize = False
+    Caption = 
+      'Se realiz'#243' una pausa de acuerdo a lo previsto. Indique cuantas l' +
+      #237'neas se deben volver a imprimir antes de la siguiente pausa'
+    WordWrap = True
+  end
+  object Label22: TLabel
+    Left = 133
+    Top = 99
+    Width = 121
+    Height = 13
+    Caption = 'L'#237'neas a imprimir ahora...'
+  end
+  object Edit3: TEdit
+    Left = 260
+    Top = 96
+    Width = 64
+    Height = 21
+    Alignment = taCenter
+    TabOrder = 0
+    Text = '10000'
+  end
+  object Button28: TButton
+    Left = 165
+    Top = 134
+    Width = 135
+    Height = 25
+    Caption = 'Continuar...'
+    TabOrder = 1
+    OnClick = Button28Click
+  end
+end

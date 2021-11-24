@@ -1,0 +1,139 @@
+object Frame4: TFrame4
+  Left = 0
+  Top = 0
+  Width = 576
+  Height = 169
+  Color = 11581943
+  ParentBackground = False
+  ParentColor = False
+  TabOrder = 0
+  object Label1: TLabel
+    Left = 3
+    Top = 6
+    Width = 36
+    Height = 13
+    Caption = 'Buscar:'
+  end
+  object Label2: TLabel
+    Left = 219
+    Top = 6
+    Width = 137
+    Height = 13
+    Caption = '(doble click para seleccionar)'
+  end
+  object DBGrid1: TDBGrid
+    Left = 3
+    Top = 27
+    Width = 570
+    Height = 139
+    DataSource = DataSource1
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    ReadOnly = True
+    TabOrder = 0
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnDrawColumnCell = DBGrid1DrawColumnCell
+    OnDblClick = DBGrid1DblClick
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'nombre'
+        Title.Alignment = taCenter
+        Title.Caption = 'Nombre'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 357
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'codigo'
+        Title.Alignment = taCenter
+        Title.Caption = 'C'#243'digo'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 81
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'categoria'
+        Title.Alignment = taCenter
+        Title.Caption = 'Categor'#237'a'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 96
+        Visible = True
+      end>
+  end
+  object Edit1: TEdit
+    Left = 45
+    Top = 3
+    Width = 166
+    Height = 21
+    TabOrder = 1
+    Text = 'Edit1'
+    OnChange = Edit1Change
+    OnKeyDown = Edit1KeyDown
+  end
+  object SQLConnection1: TSQLConnection
+    ConnectionName = 'MySQLConnection'
+    DriverName = 'MySQL'
+    KeepConnection = False
+    LoginPrompt = False
+    Params.Strings = (
+      'DriverName=MySQL'
+      'HostName=localhost'
+      'Database=dbes'
+      'User_Name=root'
+      'Password=CBR900rr'
+      'ServerCharSet=utf8'
+      'BlobSize=-1'
+      'ErrorResourceFile='
+      'LocaleCode=0000'
+      'Compressed=False'
+      'Encrypted=False'
+      'ConnectTimeout=60')
+    Left = 640
+    Top = 131
+  end
+  object Query1: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 528
+    Top = 175
+  end
+  object DataSetProvider1: TDataSetProvider
+    DataSet = Query1
+    Left = 600
+    Top = 175
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet1
+    Left = 688
+    Top = 175
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProvider1'
+    ReadOnly = True
+    Left = 768
+    Top = 175
+  end
+end

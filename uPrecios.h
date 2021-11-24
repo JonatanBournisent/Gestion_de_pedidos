@@ -1,0 +1,60 @@
+//---------------------------------------------------------------------------
+
+#ifndef uPreciosH
+#define uPreciosH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+#include <Datasnap.DBClient.hpp>
+#include <Datasnap.Provider.hpp>
+#include <Vcl.DBGrids.hpp>
+#include <Vcl.Grids.hpp>
+#include <Vcl.ExtCtrls.hpp>
+//---------------------------------------------------------------------------
+class TfPrecios : public TForm
+{
+__published:	// IDE-managed Components
+	TSQLConnection *SQLConnection1;
+	TSQLQuery *Query1;
+	TButton *Button1;
+	TEdit *Edit1;
+	TEdit *Edit2;
+	TEdit *Edit3;
+	TEdit *Edit4;
+	TLabel *Label1;
+	TLabel *Label2;
+	TLabel *Label3;
+	TLabel *Label4;
+	TShape *Shape1;
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall Edit1Enter(TObject *Sender);
+	void __fastcall Edit2Enter(TObject *Sender);
+	void __fastcall Edit3Enter(TObject *Sender);
+	void __fastcall Edit4Enter(TObject *Sender);
+	void __fastcall Edit1Exit(TObject *Sender);
+	void __fastcall Edit2Exit(TObject *Sender);
+	void __fastcall Edit3Exit(TObject *Sender);
+	void __fastcall Edit4Exit(TObject *Sender);
+	void __fastcall Edit1KeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall Edit2KeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall Edit3KeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall Edit4KeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfPrecios(TComponent* Owner);
+
+   float getValor(String txt);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfPrecios *fPrecios;
+//---------------------------------------------------------------------------
+#endif

@@ -1,0 +1,69 @@
+//---------------------------------------------------------------------------
+
+#ifndef uFrecuenciaComidasH
+#define uFrecuenciaComidasH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+#include <Datasnap.DBClient.hpp>
+#include <Datasnap.Provider.hpp>
+#include <Vcl.ComCtrls.hpp>
+#include <Vcl.DBGrids.hpp>
+#include <Vcl.Grids.hpp>
+#include <Vcl.ExtCtrls.hpp>
+#include <Vcl.Menus.hpp>
+//---------------------------------------------------------------------------
+class TfFrecuenciaComidas : public TForm
+{
+__published:	// IDE-managed Components
+	TLabel *Label1;
+	TButton *Button1;
+	TSQLConnection *SQLConnection1;
+	TSQLQuery *Query1;
+	TDataSetProvider *DataSetProvider1;
+	TClientDataSet *CDS1;
+	TMonthCalendar *MC;
+	TIntegerField *CDS1idComida;
+	TWideStringField *CDS1nombre;
+	TDBGrid *DBGrid1;
+	TDataSource *DataSource1;
+	TButton *Button2;
+	TLargeintField *CDS1frec;
+	TRadioGroup *RG1;
+	TCheckBox *CheckBox1;
+	TPanel *Panel1;
+	TListBox *ListBox1;
+	TPopupMenu *PopupMenu1;
+	TSQLQuery *QueryAux;
+	TMenuItem *Verltimasfechasdeenvo1;
+	TButton *Button3;
+	TButton *Button4;
+	TShape *Shape1;
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall RG1Click(TObject *Sender);
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall Verltimasfechasdeenvo1Click(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall Button4Click(TObject *Sender);
+	void __fastcall CDS1frecGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
+	void __fastcall CheckBox1Click(TObject *Sender);
+
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfFrecuenciaComidas(TComponent* Owner);
+
+	bool mostrarFrec;
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfFrecuenciaComidas *fFrecuenciaComidas;
+//---------------------------------------------------------------------------
+#endif

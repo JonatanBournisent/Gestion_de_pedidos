@@ -1,0 +1,48 @@
+//---------------------------------------------------------------------------
+
+#ifndef uFrame2H
+#define uFrame2H
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+#include <Datasnap.DBClient.hpp>
+#include <Datasnap.Provider.hpp>
+#include <Vcl.DBGrids.hpp>
+#include <Vcl.Grids.hpp>
+#include <Data.DBXMySQL.hpp>
+//---------------------------------------------------------------------------
+class TFrame2 : public TFrame
+{
+__published:	// IDE-managed Components
+	TLabel *Label1;
+	TEdit *Edit1;
+	TDBGrid *DBGrid1;
+	TSQLQuery *Query1;
+	TDataSetProvider *DataSetProvider1;
+	TClientDataSet *ClientDataSet1;
+	TDataSource *DataSource1;
+	TSQLConnection *SQLConnection1;
+	TLabel *Label2;
+	void __fastcall Edit1Change(TObject *Sender);
+	void __fastcall DBGrid1DblClick(TObject *Sender);
+	void __fastcall Edit1KeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
+          TColumn *Column, TGridDrawState State);
+	void __fastcall Edit1KeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TFrame2(TComponent* Owner);
+	int idSeleccionado;
+	void restablecerFrame(void);
+	void cerrarFrame(void);
+	int llamador;
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TFrame2 *Frame2;
+//---------------------------------------------------------------------------
+#endif

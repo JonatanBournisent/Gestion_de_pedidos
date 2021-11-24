@@ -1,0 +1,33 @@
+//---------------------------------------------------------------------------
+
+#ifndef uAgregarComidaH
+#define uAgregarComidaH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include "uFrame3.h"
+#include <Vcl.ExtCtrls.hpp>
+//---------------------------------------------------------------------------
+class TfAgregarComida : public TForm
+{
+__published:	// IDE-managed Components
+	TFrame3 *Frame31;
+	TButton *Button1;
+	TButton *Button2;
+	TButton *Button3;
+	TShape *Shape1;
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfAgregarComida(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfAgregarComida *fAgregarComida;
+//---------------------------------------------------------------------------
+#endif

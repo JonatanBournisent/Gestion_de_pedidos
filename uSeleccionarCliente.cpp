@@ -1,0 +1,97 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uSeleccionarCliente.h"
+#include "uAgregarCliente.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma link "uFrame2"
+#pragma resource "*.dfm"
+TfSeleccionarCliente *fSeleccionarCliente;
+//---------------------------------------------------------------------------
+__fastcall TfSeleccionarCliente::TfSeleccionarCliente(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TfSeleccionarCliente::Frame21DBGrid1DblClick(TObject *Sender)
+{
+  Frame21->DBGrid1DblClick(fSeleccionarCliente);
+  idSeleccionado = Frame21->idSeleccionado;
+  Close();
+}
+//---------------------------------------------------------------------------
+void __fastcall TfSeleccionarCliente::FormShow(TObject *Sender)
+{
+   idSeleccionado = 0;
+   Frame21->restablecerFrame();
+   if(llamador == 2)
+   {
+	  Frame21->llamador = 2;
+	  Frame21->Edit1Change(fSeleccionarCliente); //disparo este evento para que se actualice la lista de clientes.
+   }
+
+   Frame21->Edit1->SetFocus();
+   if(precargar)
+   {
+	   Frame21->Edit1->Text = filtro;
+	   Frame21->Edit1->SelectAll();
+	   precargar = false;
+   }
+}
+//---------------------------------------------------------------------------
+void __fastcall TfSeleccionarCliente::FormClose(TObject *Sender, TCloseAction &Action)
+{
+   Frame21->cerrarFrame();
+}
+//---------------------------------------------------------------------------
+void __fastcall TfSeleccionarCliente::Button1Click(TObject *Sender)
+{
+   fAgregarCliente->ShowModal();
+   if(Frame21->ClientDataSet1->Active)
+      Frame21->ClientDataSet1->Refresh();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfSeleccionarCliente::Frame21Edit1KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == VK_RETURN && Frame21->ClientDataSet1->Active && Frame21->ClientDataSet1->RecordCount == 1)
+   {
+	  Frame21->DBGrid1DblClick(fSeleccionarCliente);
+	  idSeleccionado = Frame21->idSeleccionado;
+	  Close();
+   }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfSeleccionarCliente::Frame21DBGrid1KeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift)
+{
+   if(Key == VK_RETURN)
+   {
+        Frame21->DBGrid1DblClick(fSeleccionarCliente);
+		idSeleccionado = Frame21->idSeleccionado;
+  		Close();
+   }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfSeleccionarCliente::FormCreate(TObject *Sender)
+{
+   precargar = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfSeleccionarCliente::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+
+{
+   if(Key == VK_ESCAPE)
+   {
+      Close();
+   }
+}
+//---------------------------------------------------------------------------
+

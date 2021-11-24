@@ -1,0 +1,176 @@
+object fProductos: TfProductos
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = ' Productos'
+  ClientHeight = 258
+  ClientWidth = 563
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object DBGrid1: TDBGrid
+    Left = 9
+    Top = 8
+    Width = 545
+    Height = 201
+    DataSource = DataSource1
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    TabOrder = 0
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnKeyDown = DBGrid1KeyDown
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'descripcion'
+        Title.Alignment = taCenter
+        Title.Caption = 'Producto'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 148
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'precio1'
+        Title.Alignment = taCenter
+        Title.Caption = 'Precio lista 1'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 94
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'precio2'
+        Title.Alignment = taCenter
+        Title.Caption = 'Precio lista 2'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 93
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'precio3'
+        Title.Alignment = taCenter
+        Title.Caption = 'Precio lista 3'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 82
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'precio4'
+        Title.Alignment = taCenter
+        Title.Caption = 'Precio lista 4'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 87
+        Visible = True
+      end>
+  end
+  object DBNavigator1: TDBNavigator
+    Left = 8
+    Top = 216
+    Width = 546
+    Height = 33
+    DataSource = DataSource1
+    VisibleButtons = [nbPrior, nbNext, nbInsert, nbEdit, nbPost, nbCancel]
+    Hints.Strings = (
+      'First record'
+      'Desplazarse hacia arriba'
+      'Desplazarse hacia abajo'
+      'Last record'
+      'Agregar un nuevo producto'
+      'Delete record'
+      'Modificar datos del producto seleccionado'
+      'Guardar cambios realizados'
+      'Cancelar cambios realizados'
+      'Refresh data'
+      'Apply updates'
+      'Cancel updates')
+    TabOrder = 1
+    OnClick = DBNavigator1Click
+  end
+  object DataSetProvider1: TDataSetProvider
+    DataSet = Table1
+    Left = 92
+    Top = 82
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProvider1'
+    Left = 156
+    Top = 114
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet1
+    Left = 228
+    Top = 122
+  end
+  object SQLConnection1: TSQLConnection
+    ConnectionName = 'MySQLConnection'
+    DriverName = 'MySQL'
+    KeepConnection = False
+    LoginPrompt = False
+    Params.Strings = (
+      'DriverName=MySQL'
+      'HostName=localhost'
+      'Database=dbes'
+      'User_Name=root'
+      'Password=CBR900rr'
+      'ServerCharSet=utf8'
+      'BlobSize=-1'
+      'ErrorResourceFile='
+      'LocaleCode=0000'
+      'Compressed=False'
+      'Encrypted=False'
+      'ConnectTimeout=60')
+    Left = 36
+    Top = 130
+  end
+  object Table1: TSQLTable
+    SchemaName = 'dbes'
+    MaxBlobSize = -1
+    SQLConnection = SQLConnection1
+    TableName = 'productos'
+    Left = 47
+    Top = 82
+  end
+end

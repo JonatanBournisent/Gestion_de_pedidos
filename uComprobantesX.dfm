@@ -1,0 +1,288 @@
+object fComprobantesX: TfComprobantesX
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = ' Registro de comprobantes X'
+  ClientHeight = 689
+  ClientWidth = 762
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Shape1: TShape
+    Left = 8
+    Top = 8
+    Width = 745
+    Height = 202
+    Brush.Style = bsClear
+  end
+  object Label1: TLabel
+    Left = 40
+    Top = 14
+    Width = 146
+    Height = 14
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Filtrar por N'#176' de Comp.'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 206
+    Top = 14
+    Width = 251
+    Height = 14
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Filtrar por fecha de emisi'#243'n'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 463
+    Top = 14
+    Width = 250
+    Height = 14
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Filtrar por fecha informada'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object DBGrid1: TDBGrid
+    Left = 9
+    Top = 217
+    Width = 745
+    Height = 435
+    DataSource = DataSource1
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    TabOrder = 0
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnDrawColumnCell = DBGrid1DrawColumnCell
+    OnDblClick = DBGrid1DblClick
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'idComprobanteX'
+        Title.Alignment = taCenter
+        Title.Caption = 'Recibo N'#176
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 134
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'cliente'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cliente'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 244
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'fechaEmision'
+        Title.Alignment = taCenter
+        Title.Caption = 'Fecha de emisi'#243'n'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 117
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'fechaComprobante'
+        Title.Alignment = taCenter
+        Title.Caption = 'Fecha informada'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 116
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'total'
+        Title.Alignment = taCenter
+        Title.Caption = 'Monto total'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 95
+        Visible = True
+      end>
+  end
+  object Edit1: TEdit
+    Left = 40
+    Top = 33
+    Width = 146
+    Height = 27
+    Alignment = taCenter
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    Text = 'Edit1'
+    OnChange = Edit1Change
+    OnKeyPress = Edit1KeyPress
+  end
+  object MC1: TMonthCalendar
+    Left = 206
+    Top = 33
+    Width = 251
+    Height = 160
+    Date = 44056.896879525460000000
+    TabOrder = 2
+    OnClick = MC1Click
+  end
+  object MC2: TMonthCalendar
+    Left = 463
+    Top = 33
+    Width = 250
+    Height = 160
+    Date = 44056.896879525460000000
+    TabOrder = 3
+    OnClick = MC2Click
+  end
+  object Button1: TButton
+    Left = 40
+    Top = 92
+    Width = 146
+    Height = 25
+    Caption = 'Filtrar por cliente'
+    TabOrder = 4
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 40
+    Top = 152
+    Width = 146
+    Height = 25
+    Caption = 'Restablecer'
+    TabOrder = 5
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 280
+    Top = 658
+    Width = 201
+    Height = 25
+    Caption = 'Salir'
+    TabOrder = 6
+    OnClick = Button3Click
+  end
+  object SQLConnection1: TSQLConnection
+    ConnectionName = 'MySQLConnection'
+    DriverName = 'MySQL'
+    KeepConnection = False
+    LoginPrompt = False
+    Params.Strings = (
+      'DriverName=MySQL'
+      'HostName=localhost'
+      'Database=dbes'
+      'User_Name=root'
+      'Password=CBR900rr'
+      'ServerCharSet=utf8'
+      'BlobSize=-1'
+      'ErrorResourceFile='
+      'LocaleCode=0000'
+      'Compressed=False'
+      'Encrypted=False'
+      'ConnectTimeout=60')
+    Left = 312
+    Top = 386
+  end
+  object Query1: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 376
+    Top = 384
+  end
+  object DataSetProvider1: TDataSetProvider
+    DataSet = Query1
+    Left = 440
+    Top = 384
+  end
+  object CDS1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProvider1'
+    ReadOnly = True
+    Left = 488
+    Top = 384
+    object CDS1idComprobanteX: TIntegerField
+      FieldName = 'idComprobanteX'
+      DisplayFormat = '0010 - 0000000'
+    end
+    object CDS1cliente: TWideStringField
+      FieldName = 'cliente'
+      Size = 45
+    end
+    object CDS1total: TFMTBCDField
+      FieldName = 'total'
+      DisplayFormat = '$ 0.00'
+      Size = 15
+    end
+    object CDS1refCliente: TIntegerField
+      FieldName = 'refCliente'
+    end
+    object CDS1fechaComprobante: TDateField
+      FieldName = 'fechaComprobante'
+    end
+    object CDS1fechaEmision: TSQLTimeStampField
+      FieldName = 'fechaEmision'
+      DisplayFormat = 'dd/mm/yyy hh:mm'
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = CDS1
+    Left = 528
+    Top = 384
+  end
+end
