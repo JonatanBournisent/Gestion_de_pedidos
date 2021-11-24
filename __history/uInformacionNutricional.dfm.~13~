@@ -1,0 +1,444 @@
+object fInformacionNutricional: TfInformacionNutricional
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = ' Informaci'#243'n Nutricional'
+  ClientHeight = 453
+  ClientWidth = 340
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Shape1: TShape
+    Left = 8
+    Top = 84
+    Width = 324
+    Height = 325
+    Brush.Style = bsClear
+  end
+  object Shape2: TShape
+    Left = 8
+    Top = 46
+    Width = 324
+    Height = 39
+    Brush.Style = bsClear
+  end
+  object Label1: TLabel
+    Left = 32
+    Top = 97
+    Width = 108
+    Height = 16
+    Caption = 'Valor energetico'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 269
+    Top = 97
+    Width = 37
+    Height = 16
+    Caption = '[kcal]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 33
+    Top = 137
+    Width = 92
+    Height = 16
+    Caption = 'Carbohidratos'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 269
+    Top = 137
+    Width = 20
+    Height = 16
+    Caption = '[g]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label5: TLabel
+    Left = 33
+    Top = 177
+    Width = 62
+    Height = 16
+    Caption = 'Proteinas'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label6: TLabel
+    Left = 269
+    Top = 177
+    Width = 20
+    Height = 16
+    Caption = '[g]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label7: TLabel
+    Left = 33
+    Top = 217
+    Width = 95
+    Height = 16
+    Caption = 'Grasas Totales'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label8: TLabel
+    Left = 269
+    Top = 217
+    Width = 20
+    Height = 16
+    Caption = '[g]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label9: TLabel
+    Left = 33
+    Top = 257
+    Width = 115
+    Height = 16
+    Caption = 'Grasas Saturadas'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label10: TLabel
+    Left = 269
+    Top = 257
+    Width = 20
+    Height = 16
+    Caption = '[g]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label11: TLabel
+    Left = 33
+    Top = 297
+    Width = 84
+    Height = 16
+    Caption = 'Grasas Trans'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label12: TLabel
+    Left = 269
+    Top = 297
+    Width = 20
+    Height = 16
+    Caption = '[g]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label13: TLabel
+    Left = 33
+    Top = 337
+    Width = 109
+    Height = 16
+    Caption = 'Fibra Alimentaria'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label14: TLabel
+    Left = 269
+    Top = 337
+    Width = 20
+    Height = 16
+    Caption = '[g]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label15: TLabel
+    Left = 33
+    Top = 377
+    Width = 35
+    Height = 16
+    Caption = 'Sodio'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label16: TLabel
+    Left = 269
+    Top = 377
+    Width = 31
+    Height = 16
+    Caption = '[mg]'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label17: TLabel
+    Left = 22
+    Top = 58
+    Width = 294
+    Height = 16
+    Caption = 'Valor nutricional cada 100 [g] del ingrediente'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label18: TLabel
+    Left = 8
+    Top = 8
+    Width = 93
+    Height = 16
+    Caption = 'Seleccionado: '
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label19: TLabel
+    Left = 102
+    Top = 8
+    Width = 50
+    Height = 16
+    Caption = 'Label19'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label20: TLabel
+    Left = 182
+    Top = 97
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label20'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label21: TLabel
+    Left = 182
+    Top = 137
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label21'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label22: TLabel
+    Left = 182
+    Top = 177
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label22'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label23: TLabel
+    Left = 182
+    Top = 217
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label23'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label24: TLabel
+    Left = 182
+    Top = 257
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label24'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label25: TLabel
+    Left = 182
+    Top = 297
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label25'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label26: TLabel
+    Left = 182
+    Top = 337
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label26'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label27: TLabel
+    Left = 182
+    Top = 377
+    Width = 81
+    Height = 16
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Label27'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Button1: TButton
+    Left = 24
+    Top = 421
+    Width = 128
+    Height = 25
+    Caption = 'Guardar datos'
+    TabOrder = 0
+  end
+  object Button2: TButton
+    Left = 187
+    Top = 421
+    Width = 128
+    Height = 25
+    Caption = 'Cancelar'
+    TabOrder = 1
+  end
+  object SQLConnection1: TSQLConnection
+    ConnectionName = 'MySQLConnection'
+    DriverName = 'MySQL'
+    KeepConnection = False
+    LoginPrompt = False
+    Params.Strings = (
+      'DriverName=MySQL'
+      'HostName=localhost'
+      'Database=dbes'
+      'User_Name=root'
+      'Password=CBR900rr'
+      'ServerCharSet=utf8'
+      'BlobSize=-1'
+      'ErrorResourceFile='
+      'LocaleCode=0000'
+      'Compressed=False'
+      'Encrypted=False'
+      'ConnectTimeout=60')
+    Left = 400
+    Top = 10
+  end
+  object Query1: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 464
+    Top = 18
+  end
+end

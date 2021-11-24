@@ -1,0 +1,57 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uVerCargaManual.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TfVerCargaManual *fVerCargaManual;
+//---------------------------------------------------------------------------
+__fastcall TfVerCargaManual::TfVerCargaManual(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TfVerCargaManual::FormShow(TObject *Sender)
+{
+   TIniFile *Configuraciones;
+   String Dir = GetCurrentDir()+"//Config.ini";
+   Configuraciones = new TIniFile(Dir);
+
+   SQLConnection1->Params->Values["HostName"] = Configuraciones->ReadString("MySQLServer","Servidor", "127.0.0.1");
+
+   delete Configuraciones;
+
+   ClientDataSet3->Active = false;
+   QueryCantidad->Close();
+   QueryCantidad->SQL->Clear();
+   String q;
+
+   q = "SELECT idCantidad, nroBandejas AS bandGrand, nroUnidades AS cantViandas, txtComplemento AS complemento, (sectorReparto + 1) AS reparto, "
+	   "(SELECT descripcion FROM repartidores WHERE repartidores.idRepartidor = cantidades.refRepartidor LIMIT 1) AS repartidor, "
+	   "(SELECT CONCAT(calle, ' ' ,numero) FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) AS cliente "
+	   "FROM cantidades WHERE cargaManual = 1 AND fecha = :fecha "
+	   "ORDER BY repartidor, reparto";
+
+
+   QueryCantidad->SQL->Add(q);
+   QueryCantidad->ParamByName("fecha")->AsDate = MC->Date;
+   QueryCantidad->Open();
+   ClientDataSet3->Active = true;
+}
+//---------------------------------------------------------------------------
+void __fastcall TfVerCargaManual::FormClose(TObject *Sender, TCloseAction &Action)
+
+{
+   ClientDataSet3->Active = false;
+   QueryCantidad->Close();
+   SQLConnection1->Close();
+}
+//---------------------------------------------------------------------------
+void __fastcall TfVerCargaManual::Button1Click(TObject *Sender)
+{
+   Close();
+}
+//---------------------------------------------------------------------------

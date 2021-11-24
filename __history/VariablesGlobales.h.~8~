@@ -1,0 +1,4 @@
+extern String servidor;
+extern String dbName;
+extern String UserName;
+extern String pass;

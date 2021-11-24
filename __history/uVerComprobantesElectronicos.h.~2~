@@ -1,0 +1,21 @@
+//---------------------------------------------------------------------------
+
+#ifndef uVerComprobantesElectronicosH
+#define uVerComprobantesElectronicosH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+//---------------------------------------------------------------------------
+class TfVerComprobantesElectronicos : public TForm
+{
+__published:	// IDE-managed Components
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfVerComprobantesElectronicos(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfVerComprobantesElectronicos *fVerComprobantesElectronicos;
+//---------------------------------------------------------------------------
+#endif

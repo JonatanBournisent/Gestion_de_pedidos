@@ -1,0 +1,93 @@
+object fAgregarPago: TfAgregarPago
+  Left = 0
+  Top = 0
+  Caption = 'fAgregarPago'
+  ClientHeight = 492
+  ClientWidth = 751
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object MC: TMonthCalendar
+    Left = 104
+    Top = 8
+    Width = 191
+    Height = 160
+    Date = 43962.548139050920000000
+    TabOrder = 0
+  end
+  inline Frame21: TFrame2
+    Left = 8
+    Top = 184
+    Width = 556
+    Height = 166
+    TabOrder = 1
+    ExplicitLeft = 8
+    ExplicitTop = 184
+    inherited DBGrid1: TDBGrid
+      Left = 2
+      Top = 27
+      OnDblClick = Frame21DBGrid1DblClick
+    end
+  end
+  object Edit1: TEdit
+    Left = 32
+    Top = 400
+    Width = 121
+    Height = 21
+    TabOrder = 2
+    Text = 'Edit1'
+    OnKeyPress = Edit1KeyPress
+  end
+  object Edit2: TEdit
+    Left = 174
+    Top = 400
+    Width = 121
+    Height = 21
+    TabOrder = 3
+    Text = 'Edit2'
+  end
+  object Edit3: TEdit
+    Left = 320
+    Top = 400
+    Width = 121
+    Height = 21
+    TabOrder = 4
+    Text = 'Edit3'
+  end
+  object Query1: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 491
+    Top = 32
+  end
+  object SQLConnection1: TSQLConnection
+    ConnectionName = 'MySQLConnection'
+    DriverName = 'MySQL'
+    KeepConnection = False
+    LoginPrompt = False
+    Params.Strings = (
+      'DriverName=MySQL'
+      'HostName=localhost'
+      'Database=dbes'
+      'User_Name=root'
+      'Password=CBR900rr'
+      'ServerCharSet=utf8'
+      'BlobSize=-1'
+      'ErrorResourceFile='
+      'LocaleCode=0000'
+      'Compressed=False'
+      'Encrypted=False'
+      'ConnectTimeout=60')
+    Left = 379
+    Top = 32
+  end
+end

@@ -1,0 +1,27 @@
+//---------------------------------------------------------------------------
+
+#ifndef uInfoVentasH
+#define uInfoVentasH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Vcl.ExtCtrls.hpp>
+//---------------------------------------------------------------------------
+class TfInfoVentas : public TForm
+{
+__published:	// IDE-managed Components
+	TPanel *Panel1;
+	TListBox *ListBox1;
+	TListBox *ListBox2;
+	TListBox *ListBox3;
+	TListBox *ListBox4;
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfInfoVentas(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfInfoVentas *fInfoVentas;
+//---------------------------------------------------------------------------
+#endif

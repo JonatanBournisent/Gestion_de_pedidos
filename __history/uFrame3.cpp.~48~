@@ -1,0 +1,155 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uFrame3.h"
+#include "VariablesGlobales.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TFrame3 *Frame3;
+
+extern String servidor;
+//---------------------------------------------------------------------------
+__fastcall TFrame3::TFrame3(TComponent* Owner)
+	: TFrame(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+void TFrame3::cancelar(void)
+{
+}
+//---------------------------------------------------------------------------
+
+void TFrame3::cancelar(void)
+{
+}
+//---------------------------------------------------------------------------
+
+void TFrame3::restablecerFrame(void)
+{
+   SQLConnection1->Params->Values["HostName"] = servidor;
+   SQLConnection1->Params->Values["User_Name"] = "elsembrador";
+   SQLConnection1->Params->Values["Password"] = "*-elsembrador63/*";
+
+   Query1->Close();
+   Query1->SQL->Clear();
+   Query1->SQL->Add("SELECT * FROM categoriacomidas ORDER BY idCategoriaComida");
+   Query1->Open();
+
+   Query3->Close();
+
+   ClientDataSet2->Active = true;
+   ClientDataSet4->Active = false;
+
+   if(llamador == 1)
+	  ClientDataSet1->Filtered = false;
+   else if(llamador == 2)
+   {
+	  ClientDataSet1->Filter = "idComida = " + IntToStr(id);
+	  ClientDataSet1->Filtered = true;
+   }
+   SQLTable1->Active = true;
+   ClientDataSet1->Active = true;
+
+   if(llamador == 1)
+	  ClientDataSet1->Insert();
+   else if(llamador == 2)
+	  ClientDataSet1->Edit();
+
+   ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+}
+//---------------------------------------------------------------------------
+
+void TFrame3::cerrarFrame(void)
+{
+   llamador = 0;
+   ClientDataSet1->Cancel();
+   ClientDataSet1->Active = false;
+   ClientDataSet2->Active = false;
+   ClientDataSet4->Active = false;
+   SQLTable1->Active = false;
+   Query1->Close();
+   Query3->Close();
+
+   SQLConnection1->Close();
+}
+//---------------------------------------------------------------------------
+void __fastcall TFrame3::DBEdNombreChange(TObject *Sender)
+{
+   if(DBEdNombre->Text != "")
+   {
+	  ClientDataSet4->Active = false;
+	  Query3->Close();
+	  Query3->SQL->Clear();
+	  Query3->SQL->Add("SELECT nombre, codigo FROM comidas WHERE UPPER(nombre) LIKE :n  AND idComida > 1 ORDER BY nombre LIMIT 10");
+	  Query3->ParamByName("n")->AsString = "%" + DBEdNombre->Text.UpperCase() + "%";
+	  Query3->Open();
+	  if(!Query3->IsEmpty())
+		 ClientDataSet4->Active = true;
+   }
+   else
+   {
+	  ClientDataSet4->Close();
+	  Query3->Close();
+   }
+
+   ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TFrame3::Button1Click(TObject *Sender)
+{
+   guardoOK = true;
+   if(llamador == 1)
+   {
+	  QueryAux->Close();
+	  QueryAux->SQL->Clear();
+	  QueryAux->SQL->Add("SELECT * FROM comidas WHERE codigo = :codigo LIMIT 1");
+	  QueryAux->ParamByName("codigo")->AsString = DBEdCodigo->Text;
+	  QueryAux->Open();
+	  if(!QueryAux->IsEmpty())
+	  {
+		 QueryAux->Close();
+		 Application->MessageBox(L"El código asignado ya existe para otra comida. Ingrese uno diferente." ,L"No se realizaron cambios",MB_OK | MB_ICONERROR| MB_DEFBUTTON1);
+		 guardoOK = false;
+         return;
+	  }
+      QueryAux->Close();
+
+	  ClientDataSet1->FieldByName("idComida")->AsInteger = 0;
+	  ClientDataSet1->FieldByName("dirImagen")->AsString = NULL;
+   }
+   ClientDataSet1->ApplyUpdates(0);
+}
+//---------------------------------------------------------------------------
+void __fastcall TFrame3::DBEdCodigoChange(TObject *Sender)
+{
+   if(DBEdCodigo->Text != "")
+   {
+	  ClientDataSet4->Active = false;
+	  Query3->Close();
+	  Query3->SQL->Clear();
+	  Query3->SQL->Add("SELECT nombre, codigo FROM comidas WHERE UPPER(codigo) LIKE :n AND idComida > 1 ORDER BY nombre LIMIT 10");
+	  Query3->ParamByName("n")->AsString = "%" + DBEdCodigo->Text.UpperCase() + "%";
+	  Query3->Open();
+	  if(!Query3->IsEmpty())
+		 ClientDataSet4->Active = true;
+   }
+   else
+   {
+	  ClientDataSet4->Close();
+	  Query3->Close();
+   }
+
+   ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TFrame3::Button2Click(TObject *Sender)
+{
+   ClientDataSet1->Cancel();
+}
+//---------------------------------------------------------------------------
+
+

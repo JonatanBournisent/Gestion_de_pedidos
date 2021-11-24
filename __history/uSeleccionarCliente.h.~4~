@@ -1,0 +1,23 @@
+//---------------------------------------------------------------------------
+
+#ifndef uSeleccionarClienteH
+#define uSeleccionarClienteH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include "uFrame2.h"
+//---------------------------------------------------------------------------
+class TfSeleccionarCliente : public TForm
+{
+__published:	// IDE-managed Components
+	TFrame2 *Frame21;
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfSeleccionarCliente(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfSeleccionarCliente *fSeleccionarCliente;
+//---------------------------------------------------------------------------
+#endif

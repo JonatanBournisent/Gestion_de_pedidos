@@ -1,0 +1,76 @@
+object fModificarCliente: TfModificarCliente
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = ' Modificar datos de un cliente'
+  ClientHeight = 663
+  ClientWidth = 712
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  inline Frame11: TFrame1
+    Left = 8
+    Top = 178
+    Width = 702
+    Height = 439
+    TabOrder = 0
+    ExplicitLeft = 8
+    ExplicitTop = 178
+    ExplicitWidth = 702
+    ExplicitHeight = 439
+  end
+  inline Frame21: TFrame2
+    Left = 5
+    Top = 6
+    Width = 556
+    Height = 166
+    Color = clBtnFace
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 1
+    ExplicitLeft = 5
+    ExplicitTop = 6
+    inherited Edit1: TEdit
+      OnKeyDown = Frame21Edit1KeyDown
+    end
+    inherited DBGrid1: TDBGrid
+      OnDblClick = Frame21DBGrid1DblClick
+    end
+  end
+  object Button1: TButton
+    Left = 62
+    Top = 630
+    Width = 145
+    Height = 25
+    Caption = 'Guardar cambios'
+    TabOrder = 2
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 282
+    Top = 630
+    Width = 145
+    Height = 25
+    Caption = 'Cancelar cambios'
+    TabOrder = 3
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 502
+    Top = 630
+    Width = 145
+    Height = 25
+    Caption = 'Salir'
+    TabOrder = 4
+    OnClick = Button3Click
+  end
+end

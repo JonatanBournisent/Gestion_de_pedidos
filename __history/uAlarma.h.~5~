@@ -1,0 +1,31 @@
+//---------------------------------------------------------------------------
+
+#ifndef uAlarmaH
+#define uAlarmaH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+//---------------------------------------------------------------------------
+class TfAlarma : public TForm
+{
+__published:	// IDE-managed Components
+	TMemo *Memo1;
+	TButton *Button1;
+	TButton *Button2;
+	TSQLConnection *SQLConnection1;
+	TSQLQuery *Query1;
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfAlarma(TComponent* Owner);
+	int idAlarma;
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfAlarma *fAlarma;
+//---------------------------------------------------------------------------
+#endif

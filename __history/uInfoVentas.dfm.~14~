@@ -1,0 +1,155 @@
+object fInfoVentas: TfInfoVentas
+  Left = 0
+  Top = 0
+  Caption = 'fInfoVentas'
+  ClientHeight = 697
+  ClientWidth = 1284
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 8
+    Top = 192
+    Width = 482
+    Height = 450
+    Caption = 'Panel1'
+    Color = clWindow
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 0
+    object lbCodigo: TListBox
+      Left = 8
+      Top = 6
+      Width = 185
+      Height = 441
+      BorderStyle = bsNone
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -40
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ItemHeight = 48
+      Items.Strings = (
+        'M CAR'
+        'M POLL'
+        'ENTRE'
+        'CALA GR'
+        'TORRE'
+        'REVZAP'
+        ''
+        'PIZZA'
+        'RZTHAQ')
+      ParentFont = False
+      TabOrder = 0
+    end
+    object lbPorcPrim: TListBox
+      Left = 199
+      Top = 6
+      Width = 89
+      Height = 441
+      BorderStyle = bsNone
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -40
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ItemHeight = 48
+      Items.Strings = (
+        '222'
+        '222'
+        '222'
+        '222'
+        '222'
+        '222'
+        ''
+        '222'
+        '222')
+      ParentFont = False
+      TabOrder = 1
+    end
+    object lbPorcSeg: TListBox
+      Left = 291
+      Top = 6
+      Width = 89
+      Height = 441
+      BorderStyle = bsNone
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -40
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ItemHeight = 48
+      Items.Strings = (
+        '222'
+        '222'
+        '222'
+        '222'
+        '222'
+        '222'
+        ''
+        '222'
+        '222')
+      ParentFont = False
+      TabOrder = 2
+    end
+    object lbPorcTotal: TListBox
+      Left = 386
+      Top = 6
+      Width = 89
+      Height = 441
+      BorderStyle = bsNone
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -40
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ItemHeight = 48
+      Items.Strings = (
+        '222'
+        '222'
+        '222'
+        '222'
+        '222'
+        '222'
+        ''
+        '222'
+        '222')
+      ParentFont = False
+      TabOrder = 3
+    end
+  end
+  object lbComEsp: TListBox
+    Left = 504
+    Top = 8
+    Width = 497
+    Height = 297
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ItemHeight = 29
+    ParentFont = False
+    TabOrder = 1
+  end
+  object lbCombCom: TListBox
+    Left = 504
+    Top = 360
+    Width = 497
+    Height = 282
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ItemHeight = 29
+    ParentFont = False
+    TabOrder = 2
+  end
+end

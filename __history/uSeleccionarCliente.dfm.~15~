@@ -1,0 +1,47 @@
+object fSeleccionarCliente: TfSeleccionarCliente
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = ' Seleccionar un cliente...'
+  ClientHeight = 165
+  ClientWidth = 558
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poOwnerFormCenter
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  inline Frame21: TFrame2
+    Left = 0
+    Top = 0
+    Width = 559
+    Height = 166
+    Color = 11581943
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 0
+    ExplicitWidth = 559
+    inherited Edit1: TEdit
+      OnKeyPress = Frame21Edit1KeyPress
+    end
+    inherited DBGrid1: TDBGrid
+      Top = 34
+      OnDblClick = Frame21DBGrid1DblClick
+    end
+  end
+  object Button1: TButton
+    Left = 464
+    Top = 3
+    Width = 75
+    Height = 26
+    Caption = 'Agregar'
+    TabOrder = 1
+    OnClick = Button1Click
+  end
+end

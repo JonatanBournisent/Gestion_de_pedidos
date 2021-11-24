@@ -1,0 +1,48 @@
+object fInfoVentas: TfInfoVentas
+  Left = 0
+  Top = 0
+  Caption = 'fInfoVentas'
+  ClientHeight = 697
+  ClientWidth = 1284
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object ListBox1: TListBox
+    Left = 8
+    Top = 160
+    Width = 89
+    Height = 457
+    ItemHeight = 13
+    TabOrder = 0
+  end
+  object ListBox2: TListBox
+    Left = 199
+    Top = 160
+    Width = 89
+    Height = 457
+    ItemHeight = 13
+    TabOrder = 1
+  end
+  object ListBox3: TListBox
+    Left = 294
+    Top = 160
+    Width = 89
+    Height = 457
+    ItemHeight = 13
+    TabOrder = 2
+  end
+  object ListBox4: TListBox
+    Left = 389
+    Top = 160
+    Width = 89
+    Height = 457
+    ItemHeight = 13
+    TabOrder = 3
+  end
+end

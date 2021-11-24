@@ -1,0 +1,30 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include <DateUtils.hpp>
+#pragma hdrstop
+
+#include "uEmitirFactura.h"
+#include "uSeleccionarCliente.h"
+#include "FEAFIPLib_TLB.hpp"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma link "frxClass"
+#pragma link "frxDBSet"
+#pragma link "frxBarcode"
+#pragma resource "*.dfm"
+TfEmitirFactura *fEmitirFactura;
+//---------------------------------------------------------------------------
+__fastcall TfEmitirFactura::TfEmitirFactura(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
+
+
+

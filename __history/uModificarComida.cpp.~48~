@@ -1,0 +1,92 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uModificarComida.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma link "uFrame4"
+#pragma link "uFrame3"
+#pragma resource "*.dfm"
+TfModificarComida *fModificarComida;
+//---------------------------------------------------------------------------
+__fastcall TfModificarComida::TfModificarComida(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TfModificarComida::FormShow(TObject *Sender)
+{
+   Frame31->Enabled = false;
+   Frame41->Enabled = true;
+   Frame41->restablecerFrame();
+}
+//---------------------------------------------------------------------------
+void __fastcall TfModificarComida::Frame41DBGrid1DblClick(TObject *Sender)
+{
+  Frame41->DBGrid1DblClick(fModificarComida);
+  if(Frame41->idSeleccionado > 0)
+  {
+	 Frame31->id = Frame41->idSeleccionado;
+	 Frame31->llamador = 2;
+	 Frame31->Enabled = true;
+	 Frame31->restablecerFrame();
+	 Frame41->Enabled = false;
+  }
+}
+//---------------------------------------------------------------------------
+void __fastcall TfModificarComida::FormClose(TObject *Sender, TCloseAction &Action)
+{
+   if(!Frame31->Enabled || Frame31->DBEdNombre->Text == "" || (Application->MessageBox(L"Desea descartar los cambios realizados y salir?",L"Descartar cambios y salir?",MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) == IDYES))
+   {
+	  Frame31->cerrarFrame();
+	  Frame41->cerrarFrame();
+   }
+}
+//---------------------------------------------------------------------------
+void __fastcall TfModificarComida::Frame41Edit1KeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift)
+{
+  if(Key == VK_RETURN)
+  {
+	 if(Frame41->ClientDataSet1->RecordCount != 1)
+	    return;
+
+	 Frame41DBGrid1DblClick(fModificarComida);
+  }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfModificarComida::Button2Click(TObject *Sender)
+{
+  if(Application->MessageBox(L"Se van a descartar los cambios realizados. Desea continuar?",L"Cancelar cambios?",MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) != IDYES)
+     return;
+
+  Frame31->cancelar();
+  Frame31->cerrarFrame();
+  Frame31->Enabled = false;
+  Frame41->Enabled = true;
+  Frame41->restablecerFrame();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfModificarComida::Button1Click(TObject *Sender)
+{
+  Frame31->guardar();
+  if(Frame31->guardoOK)
+  {
+	 Frame31->cerrarFrame();
+	 Frame31->Enabled = false;
+	 Frame41->Enabled = true;
+	 Frame41->restablecerFrame();
+  }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfModificarComida::Button3Click(TObject *Sender)
+{
+   Close();
+}
+//---------------------------------------------------------------------------
+

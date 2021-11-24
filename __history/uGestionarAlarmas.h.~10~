@@ -1,0 +1,42 @@
+//---------------------------------------------------------------------------
+
+#ifndef uGestionarAlarmasH
+#define uGestionarAlarmasH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+#include <Datasnap.DBClient.hpp>
+#include <Datasnap.Provider.hpp>
+#include <Vcl.DBGrids.hpp>
+#include <Vcl.Grids.hpp>
+//---------------------------------------------------------------------------
+class TfGestionarAlarmas : public TForm
+{
+__published:	// IDE-managed Components
+	TSQLConnection *SQLConnection1;
+	TSQLQuery *Query1;
+	TDataSetProvider *DataSetProvider1;
+	TClientDataSet *CDS1;
+	TDataSource *DataSource1;
+	TDBGrid *DBGrid1;
+	TSQLQuery *QueryAux;
+	TIntegerField *CDS1idAlarma;
+	TWideStringField *CDS1mensaje;
+	TSQLTimeStampField *CDS1marcaTiempo;
+	TWideStringField *CDS1frec;
+	void __fastcall FormShow(TObject *Sender);
+
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfGestionarAlarmas(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfGestionarAlarmas *fGestionarAlarmas;
+//---------------------------------------------------------------------------
+#endif

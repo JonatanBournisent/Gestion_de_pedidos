@@ -1,0 +1,48 @@
+//---------------------------------------------------------------------------
+
+#ifndef uHistorialPedidosH
+#define uHistorialPedidosH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+#include <Datasnap.DBClient.hpp>
+#include <Datasnap.Provider.hpp>
+#include <Vcl.DBGrids.hpp>
+#include <Vcl.Grids.hpp>
+#include <Vcl.ComCtrls.hpp>
+//---------------------------------------------------------------------------
+class TfHistorialPedidos : public TForm
+{
+__published:	// IDE-managed Components
+	TSQLConnection *SQLConnection1;
+	TSQLQuery *Query1;
+	TDataSetProvider *DataSetProvider1;
+	TClientDataSet *CDS1;
+	TDataSource *DataSource1;
+	TDBGrid *DBGrid1;
+	TButton *Button1;
+	TButton *Button2;
+	TWideStringField *CDS1opcion1;
+	TWideStringField *CDS1opcion2;
+	TWideStringField *CDS1opcion3;
+	TWideStringField *CDS1complemento;
+	TIntegerField *CDS1idPedido;
+	TSQLTimeStampField *CDS1fecha;
+	void __fastcall FormShow(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfHistorialPedidos(TComponent* Owner);
+
+	int idCliente;
+	int periodo;
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfHistorialPedidos *fHistorialPedidos;
+//---------------------------------------------------------------------------
+#endif

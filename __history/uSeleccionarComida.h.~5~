@@ -1,0 +1,26 @@
+//---------------------------------------------------------------------------
+
+#ifndef uSeleccionarComidaH
+#define uSeleccionarComidaH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include "uFrame4.h"
+//---------------------------------------------------------------------------
+class TfSeleccionarComida : public TForm
+{
+__published:	// IDE-managed Components
+	TFrame4 *Frame41;
+	void __fastcall FormShow(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfSeleccionarComida(TComponent* Owner);
+
+	int idSeleccionado;
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfSeleccionarComida *fSeleccionarComida;
+//---------------------------------------------------------------------------
+#endif

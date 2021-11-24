@@ -1,0 +1,70 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uAgregarPago.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma link "uFrame2"
+#pragma resource "*.dfm"
+TfAgregarPago *fAgregarPago;
+//---------------------------------------------------------------------------
+__fastcall TfAgregarPago::TfAgregarPago(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TfAgregarPago::Frame21DBGrid1DblClick(TObject *Sender)
+{
+   Frame21->DBGrid1DblClick(fAgregarPago);
+   int id = Frame21->idSeleccionado;
+   Frame21->Enabled = false;
+
+   Query1->Close();
+   Query1->SQL->Clear();
+   Query1->SQL->Add("SELECT COUNT(*) AS existe FROM cuentas WHERE fecha = :f AND refCliente = :rc LIMIT 1");
+   Query1->ParamByName("f")->AsDate = MC->Date;
+   Query1->ParamByName("rc")->AsInteger = id;
+   Query1->Open();
+   bool existe = Query1->FieldByName("existe")->AsInteger;
+   Query1->Close();
+
+   String q;
+
+   if(!existe)
+   {
+	  q = "INSERT INTO cuentas (refCliente, fecha, refRepartidor, valorUnidad) VALUES(:rc, :f, :rep, "
+		  "(SELECT valor FROM listasPrecio WHERE (SELECT refListaPrecio FROM clientes WHERE idCliente = refCliente LIMIT 1) = idListaPrecio LIMIT 1))";
+
+	  Query1->SQL->Clear();
+	  Query1->SQL->Add(q);
+	  Query1->ParamByName("rep")->AsInteger = idRepartidor;
+	  Query1->ParamByName("f")->AsDate = MC->Date;
+	  Query1->ExecSQL();
+   }
+
+
+   Query1->SQL->Clear();
+   Query1->SQL->Add("SELECT unidades, valorUnidad, pagoRealizado FROM cuentas WHERE fecha = :f AND refCliente = :rc LIMIT 1");
+   Query1->ParamByName("f")->AsDate = MC->Date;
+   Query1->ParamByName("rc")->AsInteger = id;
+   Query1->Open();
+   Edit1->Text = Query1->FieldByName("unidades")->AsString;
+   Edit2->Text = Query1->FieldByName("pagoRealizado")->AsString;
+   Edit3->Text = Query1->FieldByName("valorUnidad")->AsString;
+   Query1->Close();
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TfAgregarPago::FormShow(TObject *Sender)
+{
+   Frame21->restablecerFrame();
+}
+//---------------------------------------------------------------------------
+void __fastcall TfAgregarPago::FormClose(TObject *Sender, TCloseAction &Action)
+{
+   Frame21->cerrarFrame();
+}
+//---------------------------------------------------------------------------

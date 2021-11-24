@@ -1,0 +1,33 @@
+object fAgregarPago: TfAgregarPago
+  Left = 0
+  Top = 0
+  Caption = 'fAgregarPago'
+  ClientHeight = 492
+  ClientWidth = 751
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object MonthCalendar1: TMonthCalendar
+    Left = 104
+    Top = 8
+    Width = 191
+    Height = 160
+    Date = 43962.388480625000000000
+    TabOrder = 0
+  end
+  inline Frame21: TFrame2
+    Left = 8
+    Top = 184
+    Width = 556
+    Height = 166
+    TabOrder = 1
+    ExplicitLeft = 8
+    ExplicitTop = 184
+  end
+end

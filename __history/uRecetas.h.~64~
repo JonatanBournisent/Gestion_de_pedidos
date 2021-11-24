@@ -1,0 +1,90 @@
+//---------------------------------------------------------------------------
+
+#ifndef uRecetasH
+#define uRecetasH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+#include <Datasnap.DBClient.hpp>
+#include <Datasnap.Provider.hpp>
+#include <Vcl.DBCtrls.hpp>
+#include <Vcl.ComCtrls.hpp>
+#include <Vcl.ExtCtrls.hpp>
+#include <Vcl.Dialogs.hpp>
+//---------------------------------------------------------------------------
+class TfRecetas : public TForm
+{
+__published:	// IDE-managed Components
+	TButton *Button1;
+	TSQLConnection *SQLConnection1;
+	TSQLQuery *QueryReceta;
+	TSQLQuery *QueryAux;
+	TLabel *Label1;
+	TButton *Button2;
+	TButton *Button3;
+	TRichEdit *REMemo;
+	TButton *Button4;
+	TPanel *Panel1;
+	TColorDialog *ColorDialog1;
+	TButton *Button8;
+	TPanel *Panel2;
+	TPanel *Panel3;
+	TPanel *Panel4;
+	TPanel *Panel5;
+	TPanel *Panel6;
+	TShape *Shape1;
+	TFontDialog *FontDialog1;
+	TButton *Button5;
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall Button4Click(TObject *Sender);
+	void __fastcall Panel1Click(TObject *Sender);
+	void __fastcall Button8Click(TObject *Sender);
+	void __fastcall Panel2Click(TObject *Sender);
+	void __fastcall Panel3Click(TObject *Sender);
+	void __fastcall REMemoSelectionChange(TObject *Sender);
+	void __fastcall Panel3MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel3MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel2MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel2MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel1MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel4Click(TObject *Sender);
+	void __fastcall Panel5Click(TObject *Sender);
+	void __fastcall Panel6Click(TObject *Sender);
+	void __fastcall Panel4MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel5MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Panel6MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall Button8MouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall REMemoChange(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfRecetas(TComponent* Owner);
+	int idComida;
+	int idReceta;
+	bool guardado;
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfRecetas *fRecetas;
+//---------------------------------------------------------------------------
+#endif

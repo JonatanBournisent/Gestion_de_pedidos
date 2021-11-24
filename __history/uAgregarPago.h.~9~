@@ -1,0 +1,39 @@
+//---------------------------------------------------------------------------
+
+#ifndef uAgregarPagoH
+#define uAgregarPagoH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include "uFrame2.h"
+#include <Vcl.ComCtrls.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+//---------------------------------------------------------------------------
+class TfAgregarPago : public TForm
+{
+__published:	// IDE-managed Components
+	TMonthCalendar *MC;
+	TFrame2 *Frame21;
+	TEdit *Edit1;
+	TEdit *Edit2;
+	TEdit *Edit3;
+	TSQLQuery *Query1;
+	TSQLConnection *SQLConnection1;
+	void __fastcall Frame21DBGrid1DblClick(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfAgregarPago(TComponent* Owner);
+
+	int idRepartidor;
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfAgregarPago *fAgregarPago;
+//---------------------------------------------------------------------------
+#endif

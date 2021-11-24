@@ -1,0 +1,34 @@
+//---------------------------------------------------------------------------
+
+#ifndef uChartCobrosPorDiaH
+#define uChartCobrosPorDiaH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+#include <Data.DB.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
+#include <Datasnap.DBClient.hpp>
+#include <Datasnap.Provider.hpp>
+#include <Vcl.ExtCtrls.hpp>
+#include <VCLTee.Chart.hpp>
+#include <VCLTee.DBChart.hpp>
+#include <VCLTee.Series.hpp>
+#include <VclTee.TeeGDIPlus.hpp>
+#include <VCLTee.TeEngine.hpp>
+#include <VCLTee.TeeProcs.hpp>
+//---------------------------------------------------------------------------
+class TfChartCobrosPorDia : public TForm
+{
+__published:	// IDE-managed Components
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfChartCobrosPorDia(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfChartCobrosPorDia *fChartCobrosPorDia;
+//---------------------------------------------------------------------------
+#endif

@@ -1,0 +1,23 @@
+//---------------------------------------------------------------------------
+
+#ifndef uChartPedidosPorDiaH
+#define uChartPedidosPorDiaH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+//---------------------------------------------------------------------------
+class TfChartPedidosPorDia : public TForm
+{
+__published:	// IDE-managed Components
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormResize(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TfChartPedidosPorDia(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TfChartPedidosPorDia *fChartPedidosPorDia;
+//---------------------------------------------------------------------------
+#endif

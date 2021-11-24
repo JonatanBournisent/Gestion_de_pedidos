@@ -1,0 +1,5 @@
+﻿program pasall;
+uses
+  FEAFIPLib_TLB in 'Win32\Release\FEAFIPLib_TLB.pas';
+begin
+end.

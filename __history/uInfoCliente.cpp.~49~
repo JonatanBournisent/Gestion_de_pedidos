@@ -1,0 +1,105 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uInfoCliente.h"
+#include "VariablesGlobales.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TfInfoCliente *fInfoCliente;
+
+extern String servidor;
+//---------------------------------------------------------------------------
+__fastcall TfInfoCliente::TfInfoCliente(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TfInfoCliente::FormCreate(TObject *Sender)
+{
+   SQLConnection1->Params->Values["HostName"] = servidor;
+   SQLConnection1->Params->Values["User_Name"] = "elsembrador";
+   SQLConnection1->Params->Values["Password"] = "*-elsembrador63/*";
+}
+//---------------------------------------------------------------------------
+void __fastcall TfInfoCliente::FormShow(TObject *Sender)
+{
+   Query1->Close();
+   Query1->SQL->Clear();
+   String q;
+   q = "SELECT nombre, apellido, calle, numero, bonificacion, razonSocial, domicilioFiscal, "
+	   "esVisible, imprimirDetalle, CUIT, generarFactura, refFrecuenciaPago, refDiaPago, refListaPrecio,"
+	   "refCondicionFrenteIVA, "
+	   "(SELECT descripcion FROM diapago WHERE idDiaPago = clientes.refDiaPago LIMIT 1) AS diaPago, "
+	   "(SELECT descripcion FROM frecuenciaPagos WHERE idFrecuenciaPago = clientes.refFrecuenciaPago LIMIT 1) AS frecuenciaPago, "
+	   "(SELECT descripcion FROM listasprecio WHERE idListaPrecio = clientes.refListaPrecio LIMIT 1) AS listaPrecio, "
+	   "(SELECT descripcion FROM condicionesfrenteiva WHERE idCondicionFrenteIVA = clientes.refCondicionFrenteIVA LIMIT 1) AS condicionFrenteIVA "
+	   "FROM clientes WHERE idCliente = :idCliente LIMIT 1";
+
+   Query1->SQL->Add(q);
+   Query1->ParamByName("idCliente")->AsInteger = idCliente;
+   Query1->Open();
+
+   Label1->Caption = Query1->FieldByName("nombre")->AsString;
+   Label2->Caption = Query1->FieldByName("apellido")->AsString;
+   Label3->Caption = Query1->FieldByName("calle")->AsString;
+   Label4->Caption = Query1->FieldByName("numero")->AsString;
+
+   if(!Query1->FieldByName("razonSocial")->AsString.IsEmpty())
+	  Label5->Caption = Query1->FieldByName("razonSocial")->AsString;
+   else
+	  Label5->Caption = "NO ESPECIFICADA";
+
+   if(!Query1->FieldByName("domicilioFiscal")->AsString.IsEmpty())
+	  Label6->Caption = Query1->FieldByName("domicilioFiscal")->AsString;
+   else
+	  Label6->Caption = "NO ESPECIFICADO";
+
+   if(Query1->FieldByName("CUIT")->AsInteger == 0)
+	  Label7->Caption = "NO ESPECIFICADO";
+   else if(Query1->FieldByName("CUIT")->AsString.Length() <= 8)
+   {
+	  Label23->Caption = "DNI:";
+	  Label7->Caption = Query1->FieldByName("CUIT")->AsString;
+   }
+   else
+   {
+	  Label23->Caption = "CUIT:";
+	  Label7->Caption = Query1->FieldByName("CUIT")->AsString;
+   }
+
+   if(Query1->FieldByName("bonificacion")->AsString == "0")
+	  Label8->Caption = "NO POSEE";
+   else
+	  Label8->Caption = Query1->FieldByName("bonificacion")->AsString + "%";
+
+   Label9->Caption = Query1->FieldByName("listaPrecio")->AsString;
+
+   if(Query1->FieldByName("esVisible")->AsInteger != 0)
+	  Label10->Caption = "SI";
+   else
+	  Label10->Caption = "NO";
+
+   if(Query1->FieldByName("generarFactura")->AsInteger != 0)
+	  Label11->Caption = "SI";
+   else
+	  Label11->Caption = "NO";
+
+   if(Query1->FieldByName("imprimirDetalle")->AsInteger != 0)
+	  Label12->Caption = "SI";
+   else
+	  Label12->Caption = "NO";
+
+   Label13->Caption = Query1->FieldByName("diaPago")->AsString;
+
+   if(Query1->FieldByName("frecuenciaPago")->AsString == "Semanal")
+   Label14->Caption = Query1->FieldByName("frecuenciaPago")->AsString;
+   Label15->Caption = Query1->FieldByName("diaPago")->AsString;
+   Label16->Caption = Query1->FieldByName("condicionFrenteIVA")->AsString;
+
+
+   Query1->Close();
+}
+//---------------------------------------------------------------------------

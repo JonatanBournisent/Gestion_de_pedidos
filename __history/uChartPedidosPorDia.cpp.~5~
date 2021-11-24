@@ -1,0 +1,32 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uChartPedidosPorDia.h"
+#include "VariablesGlobales.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TfChartPedidosPorDia *fChartPedidosPorDia;
+
+extern String servidor;
+//---------------------------------------------------------------------------
+__fastcall TfChartPedidosPorDia::TfChartPedidosPorDia(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TfChartPedidosPorDia::FormCreate(TObject *Sender)
+{
+   SQLConnection1->Params->Values["HostName"] = servidor;
+   SQLConnection1->Params->Values["User_Name"] = "elsembrador";
+   SQLConnection1->Params->Values["Password"] = "*-elsembrador63/*";
+}
+//---------------------------------------------------------------------------
+void __fastcall TfChartPedidosPorDia::FormResize(TObject *Sender)
+{
+   DBChart1->Width = fChartPedidosPorHora->Width;
+   DBChart1->Height = fChartPedidosPorHora->Height - 35;
+}
+//---------------------------------------------------------------------------

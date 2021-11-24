@@ -1,0 +1,354 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "uValorNutricional.h"
+#include "VariablesGlobales.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TfValorNutricional *fValorNutricional;
+
+extern String servidor;
+//---------------------------------------------------------------------------
+__fastcall TfValorNutricional::TfValorNutricional(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+void __fastcall TfValorNutricional::Edit1KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit1Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,00";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.00", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit2KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit3KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit4KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit5KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit6KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit7KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit8KeyPress(TObject *Sender, System::WideChar &Key)
+
+{
+   if(Key == '.')
+	  Key = ',';
+
+   if((Key < '0' || Key > '9') && Key != '\b' && Key != ',')
+	  Key = NULL;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit2Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,0000";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.0000", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit3Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,0000";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.0000", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit4Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,0000";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.0000", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit5Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,0000";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.0000", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit6Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,0000";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.0000", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit7Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,0000";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.0000", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Edit8Exit(TObject *Sender)
+{
+   String s = dynamic_cast<TEdit *>(Sender)->Text;
+
+   try
+   {
+	  StrToFloat(s);
+   }
+   catch(...)
+   {
+	  s = "0,00";
+   }
+
+   dynamic_cast<TEdit *>(Sender)->Text = FormatFloat("0.00", StrToFloat(s));
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::FormCreate(TObject *Sender)
+{
+   SQLConnection1->Params->Values["HostName"] = servidor;
+   SQLConnection1->Params->Values["User_Name"] = "elsembrador";
+   SQLConnection1->Params->Values["Password"] = "*-elsembrador63/*";
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Button1Click(TObject *Sender)
+{
+   Query1->Close();
+   Query1->SQL->Clear();
+   String q;
+
+   q = "UPDATE ingredientes SET ";
+	   "valorEnergetico = :valorEnergetico, "
+	   "carbohidratos = :carbohidratos, "
+	   "proteinas = :proteinas, "
+	   "grasasTotales = :grasasTotales, "
+	   "grasasSaturadas = :grasasSaturadas, "
+	   "grasasTrans = :grasasTrans, "
+	   "fibraAlimentaria = :fibraAlimentaria, "
+	   "sodio = :sodio "
+	   "WHERE idIngrediente = :idIngrediente";
+
+   Query1->SQL->Add(q);
+   Query1->ParamByName("idIngrediente")->AsInteger = idIngrediente;
+
+   Query1->ParamByName("idIngrediente")->AsFloat = StrToFloat(Edit1->Text);
+   Query1->ParamByName("carbohidratos")->AsFloat = StrToFloat(Edit2->Text);
+   Query1->ParamByName("proteinas")->AsFloat = StrToFloat(Edit3->Text);
+   Query1->ParamByName("grasasTotales")->AsFloat = StrToFloat(Edit4->Text);
+   Query1->ParamByName("grasasSaturadas")->AsFloat = StrToFloat(Edit5->Text);
+   Query1->ParamByName("grasasTrans")->AsFloat = StrToFloat(Edit6->Text);
+   Query1->ParamByName("fibraAlimentaria")->AsFloat = StrToFloat(Edit7->Text);
+   Query1->ParamByName("sodio")->AsFloat = StrToFloat(Edit8->Text);
+   Query1->ExecSQL();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Button2Click(TObject *Sender)
+{
+   Close();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::FormClose(TObject *Sender, TCloseAction &Action)
+
+{
+   Query1->Close();
+   SQLConnection1->Close();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::FormShow(TObject *Sender)
+{
+   Panel1->Visible = false;
+
+   Query1->Close();
+   Query1->SQL->Clear();
+   String q;
+   q = "SELECT * FROM ingredientes WHERE idIgrediente = :idIngrediente LIMIT 1";
+   Query1->SQL->Add(q);
+   Query1->ParamByName("idIngrediente")->AsInteger = idIngrediente;
+   Query1->Open();
+
+   Label19->Caption = Query1->FieldByName("nombre")->AsString;
+   Edit1->Text = FormatFloat("0.00", Query1->FieldByName("valorEnergetico")->AsFloat);
+   Edit2->Text = FormatFloat("0.0000", Query1->FieldByName("carbohidratos")->AsFloat);
+   Edit3->Text = FormatFloat("0.0000", Query1->FieldByName("proteinas")->AsFloat);
+   Edit4->Text = FormatFloat("0.0000", Query1->FieldByName("grasasTotales")->AsFloat);
+   Edit5->Text = FormatFloat("0.0000", Query1->FieldByName("grasasSaturadas")->AsFloat);
+   Edit6->Text = FormatFloat("0.0000", Query1->FieldByName("grasasTrans")->AsFloat);
+   Edit7->Text = FormatFloat("0.0000", Query1->FieldByName("fibraAlimentaria")->AsFloat);
+   Edit8->Text = FormatFloat("0.00", Query1->FieldByName("sodio")->AsFloat);
+   Query1->Close();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Button5Click(TObject *Sender)
+{
+   Edit9->Text = Label19->Caption;
+   Panel1->Visible = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Button3Click(TObject *Sender)
+{
+   Query1->Close();
+   Query1->SQL->Clear();
+   String q;
+
+   q = "UPDATE ingredientes SET ";
+	   "nombre = :nombre "
+	   "WHERE idIngrediente = :idIngrediente";
+
+   Query1->SQL->Add(q);
+   Query1->ParamByName("idIngrediente")->AsInteger = idIngrediente;
+   Query1->ParamByName("nombre")->AsString = Edit9->Text;
+   Query1->ExecSQL();
+   Label19->Caption = Edit9->Text;
+   Panel1->Visible = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfValorNutricional::Button4Click(TObject *Sender)
+{
+   Panel1->Visible = false;
+}
+//---------------------------------------------------------------------------
+

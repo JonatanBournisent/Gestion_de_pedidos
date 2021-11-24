@@ -1,0 +1,162 @@
+object fComidasExcluidas: TfComidasExcluidas
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'Lista de comidas excluidas de comprobaci'#243'n'
+  ClientHeight = 521
+  ClientWidth = 484
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object DBGrid1: TDBGrid
+    Left = 8
+    Top = 8
+    Width = 468
+    Height = 465
+    DataSource = DataSource1
+    PopupMenu = PopupMenu1
+    TabOrder = 0
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'nombre'
+        Title.Alignment = taCenter
+        Title.Caption = 'Nombre'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 236
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'codigo'
+        Title.Alignment = taCenter
+        Title.Caption = 'C'#243'digo'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 96
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'categoria'
+        Title.Alignment = taCenter
+        Title.Caption = 'Categor'#237'a'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 98
+        Visible = True
+      end>
+  end
+  object Button1: TButton
+    Left = 40
+    Top = 488
+    Width = 177
+    Height = 25
+    Caption = 'Agregar comida'
+    TabOrder = 1
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 264
+    Top = 488
+    Width = 177
+    Height = 25
+    Caption = 'Salir'
+    TabOrder = 2
+    OnClick = Button2Click
+  end
+  object DataSource1: TDataSource
+    DataSet = CDS1
+    Left = 312
+    Top = 72
+  end
+  object Query1: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 176
+    Top = 72
+  end
+  object DataSetProvider1: TDataSetProvider
+    DataSet = Query1
+    Left = 224
+    Top = 72
+  end
+  object CDS1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProvider1'
+    ReadOnly = True
+    Left = 272
+    Top = 72
+    object CDS1refComida: TIntegerField
+      FieldName = 'refComida'
+    end
+    object CDS1nombre: TWideStringField
+      FieldName = 'nombre'
+    end
+    object CDS1codigo: TWideStringField
+      FieldName = 'codigo'
+    end
+    object CDS1categoria: TWideStringField
+      FieldName = 'categoria'
+    end
+  end
+  object SQLConnection1: TSQLConnection
+    ConnectionName = 'MySQLConnection'
+    DriverName = 'MySQL'
+    KeepConnection = False
+    LoginPrompt = False
+    Params.Strings = (
+      'DriverName=MySQL'
+      'HostName=localhost'
+      'Database=dbes'
+      'User_Name=root'
+      'Password=CBR900rr'
+      'ServerCharSet=utf8'
+      'BlobSize=-1'
+      'ErrorResourceFile='
+      'LocaleCode=0000'
+      'Compressed=False'
+      'Encrypted=False'
+      'ConnectTimeout=60')
+    Left = 96
+    Top = 74
+  end
+  object QueryAux: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 152
+    Top = 168
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 224
+    Top = 208
+  end
+end
