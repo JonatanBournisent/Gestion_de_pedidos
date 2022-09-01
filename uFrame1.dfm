@@ -2,7 +2,7 @@ object Frame1: TFrame1
   Left = 0
   Top = 0
   Width = 700
-  Height = 440
+  Height = 444
   TabOrder = 0
   object Label1: TLabel
     Left = 0
@@ -47,7 +47,7 @@ object Frame1: TFrame1
     Caption = 'Lista de precio asociada'
   end
   object Label7: TLabel
-    Left = 1
+    Left = 322
     Top = 366
     Width = 78
     Height = 13
@@ -94,6 +94,41 @@ object Frame1: TFrame1
     Width = 110
     Height = 13
     Caption = 'Condicion frente al IVA'
+  end
+  object Label14: TLabel
+    Left = 1
+    Top = 366
+    Width = 69
+    Height = 13
+    Caption = 'Nombre Banco'
+  end
+  object Label15: TLabel
+    Left = 1
+    Top = 393
+    Width = 69
+    Height = 13
+    Caption = 'Nombre Banco'
+  end
+  object Label16: TLabel
+    Left = 1
+    Top = 421
+    Width = 69
+    Height = 13
+    Caption = 'Nombre Banco'
+  end
+  object Label17: TLabel
+    Left = 544
+    Top = 368
+    Width = 60
+    Height = 13
+    Caption = 'Facturaci'#243'n:'
+  end
+  object Label18: TLabel
+    Left = 512
+    Top = 396
+    Width = 121
+    Height = 13
+    Caption = 'Medio de pago preferido:'
   end
   object DBEdNombre: TDBEdit
     Left = 128
@@ -160,8 +195,8 @@ object Frame1: TFrame1
     TabOrder = 10
   end
   object DBEdBonificacion: TDBEdit
-    Left = 129
-    Top = 362
+    Left = 409
+    Top = 363
     Width = 57
     Height = 21
     DataField = 'bonificacion'
@@ -253,7 +288,7 @@ object Frame1: TFrame1
     TabOrder = 9
   end
   object DBCheckBox1: TDBCheckBox
-    Left = 12
+    Left = 322
     Top = 392
     Width = 161
     Height = 17
@@ -305,8 +340,8 @@ object Frame1: TFrame1
     OnChange = CBCondicionFrenteIVAChange
   end
   object DBCheckBox2: TDBCheckBox
-    Left = 12
-    Top = 415
+    Left = 322
+    Top = 420
     Width = 161
     Height = 17
     Caption = 'Generar factura electr'#243'nica'
@@ -315,6 +350,65 @@ object Frame1: TFrame1
     TabOrder = 14
     ValueChecked = '1'
     ValueUnchecked = '0'
+  end
+  object DBEdBanco1: TDBEdit
+    Left = 129
+    Top = 363
+    Width = 121
+    Height = 21
+    DataField = 'nombreBanco1'
+    DataSource = DataSource1
+    TabOrder = 15
+  end
+  object DBEdBanco2: TDBEdit
+    Left = 129
+    Top = 390
+    Width = 121
+    Height = 21
+    DataField = 'nombreBanco2'
+    DataSource = DataSource1
+    TabOrder = 16
+  end
+  object DBEdBanco3: TDBEdit
+    Left = 129
+    Top = 418
+    Width = 121
+    Height = 21
+    DataField = 'nombreBanco3'
+    DataSource = DataSource1
+    TabOrder = 17
+  end
+  object CBFacturar: TComboBox
+    Left = 624
+    Top = 365
+    Width = 33
+    Height = 22
+    Style = csOwnerDrawFixed
+    ItemIndex = 0
+    TabOrder = 18
+    Text = 'O'
+    OnChange = CBFacturarChange
+    Items.Strings = (
+      'O'
+      'M'
+      'W')
+  end
+  object CBmp: TComboBox
+    Left = 512
+    Top = 413
+    Width = 145
+    Height = 21
+    ItemIndex = 0
+    TabOrder = 19
+    Text = 'A- Efectivo'
+    OnChange = CBmpChange
+    Items.Strings = (
+      'A- Efectivo'
+      'B - Banco Oscar'
+      'C - Banco Monica'
+      'D - Banco Williams'
+      'M - MercadoPago Oscar'
+      'N - MercadoPago Monica')
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -425,6 +519,19 @@ object Frame1: TFrame1
     end
     object ClientDataSet1tipo: TWideStringField
       FieldName = 'tipo'
+      Size = 1
+    end
+    object ClientDataSet1nombreBanco1: TWideStringField
+      FieldName = 'nombreBanco1'
+    end
+    object ClientDataSet1nombreBanco2: TWideStringField
+      FieldName = 'nombreBanco2'
+    end
+    object ClientDataSet1nombreBanco3: TWideStringField
+      FieldName = 'nombreBanco3'
+    end
+    object ClientDataSet1medioPagoDefecto: TWideStringField
+      FieldName = 'medioPagoDefecto'
       Size = 1
     end
   end
@@ -544,7 +651,7 @@ object Frame1: TFrame1
     MaxBlobSize = -1
     Params = <>
     SQLConnection = SQLConnection1
-    Left = 592
-    Top = 368
+    Left = 640
+    Top = 392
   end
 end

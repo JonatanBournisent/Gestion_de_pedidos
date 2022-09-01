@@ -40,6 +40,16 @@ __published:	// IDE-managed Components
 	TBevel *Bevel1;
 	TButton *Button2;
 	TButton *Button3;
+	TFMTBCDField *CDSdeuda;
+	TFMTBCDField *CDSvalorPedido;
+	TFMTBCDField *CDSsaldoTotal;
+	TWideStringField *CDSmedioPago;
+	TIntegerField *CDSdiaPago;
+	TIntegerField *CDSfrecuenciaPago;
+	TFMTBCDField *CDSvar_dummy;
+	TCheckBox *CBxViernes;
+	TCheckBox *CBxSabado;
+	TCheckBox *CBxDeshabilitar;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall ComboBox1Change(TObject *Sender);
@@ -48,6 +58,23 @@ __published:	// IDE-managed Components
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall Button3Click(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall CDSsaldoTotalValidate(TField *Sender);
+	void __fastcall CDSdeudaGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
+	void __fastcall CDSvalorPedidoGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
+	void __fastcall CDSsaldoTotalGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
+	void __fastcall CDSvar_dummyGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 private:	// User declarations
@@ -56,6 +83,7 @@ public:		// User declarations
 
 	int idRepartidor;
 	bool CanPrint;
+	String consulta;
 
 	int esSabado;
 

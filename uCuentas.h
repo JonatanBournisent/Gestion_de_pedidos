@@ -18,6 +18,7 @@
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.Menus.hpp>
+#include <Vcl.Dialogs.hpp>
 //---------------------------------------------------------------------------
 class TfCuentas : public TForm
 {
@@ -70,6 +71,10 @@ __published:	// IDE-managed Components
 	TIntegerField *CDS2refCliente;
 	TWideStringField *CDS2cliente;
 	TLabel *Label6;
+	TButton *Button11;
+	TOpenDialog *OD1;
+	TDateField *CDSfechaIngresoPago;
+	TWideStringField *CDSmedioDePago;
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall Button3Click(TObject *Sender);
 	void __fastcall MCClick(TObject *Sender);
@@ -99,6 +104,13 @@ __published:	// IDE-managed Components
 	void __fastcall DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
           TColumn *Column, TGridDrawState State);
 	void __fastcall DBGrid2DblClick(TObject *Sender);
+	void __fastcall Button11Click(TObject *Sender);
+	void __fastcall CDSfechaIngresoPagoGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText);
+	void __fastcall CDSmedioDePagoGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
+	void __fastcall CDSmedioDePagoChange(TField *Sender);
+	void __fastcall CDSfechaIngresoPagoChange(TField *Sender);
+
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfCuentas(TComponent* Owner);

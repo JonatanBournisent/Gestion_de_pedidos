@@ -32,12 +32,14 @@ void TfVerHistorialPedidos::mostrar(int refCliente, TDate fini, TDate ffin)
 	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS opcion2, "
 	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS opcion3, "
 	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS complemento "
-	   "FROM pedidos WHERE refCliente = :refCliente AND DATE(momento) >= :fi AND DATE(momento) <= :ff";
+	   "FROM pedidos WHERE refCliente = :refCliente AND momento >= :mi AND momento <= :mf";
 
    Query1->SQL->Add(q);
    Query1->ParamByName("refCliente")->AsInteger = refCliente;
-   Query1->ParamByName("fi")->AsDate = fini;
-   Query1->ParamByName("ff")->AsDate = ffin;
+//   Query1->ParamByName("fi")->AsDate = fini;
+//   Query1->ParamByName("ff")->AsDate = ffin;
+   Query1->ParamByName("mi")->AsDateTime = StartOfTheDay(fini);
+   Query1->ParamByName("mf")->AsDateTime = EndOfTheDay(ffin);
    Query1->Open();
 
    if(Query1->IsEmpty())

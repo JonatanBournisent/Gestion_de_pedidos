@@ -2,7 +2,7 @@ object Frame3: TFrame3
   Left = 0
   Top = 0
   Width = 579
-  Height = 239
+  Height = 275
   TabOrder = 0
   object Label3: TLabel
     Left = 3
@@ -27,7 +27,7 @@ object Frame3: TFrame3
   end
   object Label7: TLabel
     Left = 3
-    Top = 128
+    Top = 160
     Width = 58
     Height = 13
     Caption = 'Descripci'#243'n:'
@@ -73,10 +73,10 @@ object Frame3: TFrame3
     TabOrder = 2
   end
   object DBGrid1: TDBGrid
-    Left = 273
+    Left = 272
     Top = 24
     Width = 304
-    Height = 209
+    Height = 241
     DataSource = DataSource4
     Enabled = False
     ReadOnly = True
@@ -117,12 +117,24 @@ object Frame3: TFrame3
   end
   object DBMemo1: TDBMemo
     Left = 3
-    Top = 144
+    Top = 176
     Width = 246
     Height = 89
     DataField = 'descripcion'
     DataSource = DataSource1
     TabOrder = 3
+  end
+  object DBCheckBox1: TDBCheckBox
+    Left = 14
+    Top = 129
+    Width = 131
+    Height = 17
+    Caption = 'Permite doble porci'#243'n'
+    DataField = 'admiteDoble'
+    DataSource = DataSource1
+    TabOrder = 5
+    ValueChecked = '1'
+    ValueUnchecked = '0'
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'

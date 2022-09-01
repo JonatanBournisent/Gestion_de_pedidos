@@ -48,8 +48,8 @@ void __fastcall TfDatos::Button1Click(TObject *Sender)
    QueryAux->SQL->Clear();
    q = "SELECT SUM(unidades) AS totalViandas, SUM(pagoRealizado) AS totalCobros, "
 	   "SUM(unidades * valorUnidad) AS totalVentas, "
-	   "(SELECT COUNT(*) AS totalPedidos FROM pedidos WHERE DATE(momento) >= :fi AND DATE(momento) <= :ff) AS totalPedidos, "
-	   "(SELECT COUNT(*) AS oficina FROM pedidos WHERE refComida4 = 1 AND DATE(momento) >= :fi AND DATE(momento) <= :ff) AS oficina, "
+	   "(SELECT COUNT(*) AS totalPedidos FROM pedidos WHERE momento >= :mi AND momento <= :mf) AS totalPedidos, "
+	   "(SELECT COUNT(*) AS oficina FROM pedidos WHERE refComida4 = 1 AND momento >= :mi AND momento <= :mf) AS oficina, "
 	   "(SELECT SUM(acumuladoGlobal) as deudaClientes FROM clientes WHERE clientes.acumuladoGlobal > 0.0) AS deudaClientes, "
 	   "(SELECT (-1 * SUM(acumuladoGlobal)) as deudaNuestra FROM clientes WHERE clientes.acumuladoGlobal < 0.0) AS deudaNuestra "
 	   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff";
@@ -57,9 +57,12 @@ void __fastcall TfDatos::Button1Click(TObject *Sender)
    QueryAux->SQL->Add(q);
    QueryAux->ParamByName("fi")->AsDate = MC->Date;
    QueryAux->ParamByName("ff")->AsDate = MC->EndDate;
+   QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(MC->Date);
+   QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(MC->EndDate);
    QueryAux->Open();
 
    Label1->Caption = "Equivalencia en viandas totales entregadas en el período: " + FormatFloat("0.00",QueryAux->FieldByName("totalViandas")->AsFloat);
+   Label9->Caption = "Valor equivalente por vianda: $ " + FormatFloat("0.00",QueryAux->FieldByName("totalVentas")->AsFloat / QueryAux->FieldByName("totalViandas")->AsFloat);
    Label3->Caption = "Cobro total en el período: $ " + FormatFloat("#,##0.00",QueryAux->FieldByName("totalCobros")->AsFloat);
    Label2->Caption = "Monto total de ventas en el período: $ " + FormatFloat("#,##0.00",QueryAux->FieldByName("totalVentas")->AsFloat);
    Label4->Caption = "Total de pedidos entregados en el período: " + QueryAux->FieldByName("totalPedidos")->AsString;
@@ -93,6 +96,7 @@ void __fastcall TfDatos::FormShow(TObject *Sender)
    Label5->Caption = "";
    Label6->Caption = "";
    Label7->Caption = "";
+   Label9->Caption = "";
 
    Panel1->Visible = false;
 }
@@ -140,11 +144,11 @@ void __fastcall TfDatos::Button3Click(TObject *Sender)
    fChartPedidosPorHora->Query2->SQL->Clear();
    String q;
    q = "SELECT COUNT(*) AS cantPedidos, HOUR(momento) AS horaDelDia "
-	   "FROM pedidos WHERE DATE(momento) >= :fi AND DATE(momento) <= :ff GROUP BY HOUR(momento)";
+	   "FROM pedidos WHERE momento >= :mi AND momento <= :mf GROUP BY HOUR(momento)";
 
    fChartPedidosPorHora->Query2->SQL->Add(q);
-   fChartPedidosPorHora->Query2->ParamByName("fi")->AsDate = MC->Date;
-   fChartPedidosPorHora->Query2->ParamByName("ff")->AsDate = MC->EndDate;
+   fChartPedidosPorHora->Query2->ParamByName("mi")->AsDateTime = StartOfTheDay(MC->Date);
+   fChartPedidosPorHora->Query2->ParamByName("mf")->AsDateTime = EndOfTheDay(MC->EndDate);
    fChartPedidosPorHora->Query2->Open();
    fChartPedidosPorHora->CDS2->Active = true;
 
@@ -186,21 +190,23 @@ void __fastcall TfDatos::Button5Click(TObject *Sender)
 	   "(SELECT codigo FROM comidas WHERE comidas.idComida = refComida) AS nombre "
 	   "FROM "
 	   "("
-		   "SELECT refComida1 AS refComida FROM pedidos WHERE refComida1 > 1 AND DATE(momento) >= :fi AND DATE(momento) <= :ff "
+		   "SELECT refComida1 AS refComida FROM pedidos WHERE refComida1 > 1 AND momento >= :mi AND momento <= :mf "
 		   "UNION ALL "
-		   "(SELECT refComida2 AS refComida FROM pedidos WHERE refComida2 > 1 AND DATE(momento) >= :fi AND DATE(momento) <= :ff) "
+		   "(SELECT refComida2 AS refComida FROM pedidos WHERE refComida2 > 1 AND momento >= :mi AND momento <= :mf) "
 		   "UNION ALL "
-		   "(SELECT refComida3 AS refComida FROM pedidos WHERE refComida3 > 1 AND DATE(momento) >= :fi AND DATE(momento) <= :ff) "
+		   "(SELECT refComida3 AS refComida FROM pedidos WHERE refComida3 > 1 AND momento >= :mi AND momento <= :mf) "
 		   "UNION ALL "
-		   "(SELECT refComida4 AS refComida FROM pedidos WHERE refComida4 > 1 AND DATE(momento) >= :fi AND DATE(momento) <= :ff) "
+		   "(SELECT refComida4 AS refComida FROM pedidos WHERE refComida4 > 1 AND momento >= :mi AND momento <= :mf) "
 	   ") aux "
 	   "GROUP BY refComida) aux2 WHERE nroRepe > 10 ORDER BY nroRepe DESC LIMIT ";
 
    q = q + IntToStr(SpinEdit1->Value);
 
    fChartComidasMasVendidas->Query2->SQL->Add(q);
-   fChartComidasMasVendidas->Query2->ParamByName("fi")->AsDate = MC->Date;
-   fChartComidasMasVendidas->Query2->ParamByName("ff")->AsDate = MC->EndDate;
+//   fChartComidasMasVendidas->Query2->ParamByName("fi")->AsDate = MC->Date;
+//   fChartComidasMasVendidas->Query2->ParamByName("ff")->AsDate = MC->EndDate;
+   fChartComidasMasVendidas->Query2->ParamByName("mi")->AsDateTime = StartOfTheDay(MC->Date);
+   fChartComidasMasVendidas->Query2->ParamByName("mf")->AsDateTime = EndOfTheDay(MC->EndDate);
    fChartComidasMasVendidas->Query2->Open();
    fChartComidasMasVendidas->CDS2->Active = true;
 
@@ -236,6 +242,27 @@ void __fastcall TfDatos::Button6Click(TObject *Sender)
    CDS2->Active = false;
    Query2->Close();
    Panel1->Visible = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfDatos::Button8Click(TObject *Sender)
+{
+   fChartPedidosPorDia->CDS2->Active = false;
+
+   fChartPedidosPorDia->Query2->Close();
+   fChartPedidosPorDia->Query2->SQL->Clear();
+   String q;
+   q = "SELECT SUM(unidades) AS cantViandas, MONTH(fecha)*100000000 AS diaDelMes "
+	   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff GROUP BY MONTH(fecha)";
+
+   fChartPedidosPorDia->Query2->SQL->Add(q);
+   fChartPedidosPorDia->Query2->ParamByName("fi")->AsDate = MC->Date;
+   fChartPedidosPorDia->Query2->ParamByName("ff")->AsDate = MC->EndDate;
+   fChartPedidosPorDia->Query2->Open();
+   fChartPedidosPorDia->CDS2->Active = true;
+
+   fChartPedidosPorDia->DBChart1->UndoZoom();
+   fChartPedidosPorDia->ShowModal();
 }
 //---------------------------------------------------------------------------
 

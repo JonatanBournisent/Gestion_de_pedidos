@@ -15,6 +15,10 @@
 #include "VariablesGlobales.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
+#pragma link "frxClass"
+#pragma link "frxExportBaseDialog"
+#pragma link "frxExportImage"
+#pragma link "frxRich"
 #pragma resource "*.dfm"
 TfMenuSemanal *fMenuSemanal;
 
@@ -1890,7 +1894,13 @@ void __fastcall TfMenuSemanal::Button18Click(TObject *Sender)
 					   Lista->Add("*Guarnición:*");
 					   catV = catN;
 					}
-					linea = linea + QueryAux->FieldByName(c)->AsString;
+					if(linea != "")
+					{
+					   linea = linea + "\n" + QueryAux->FieldByName(c)->AsString;
+					}
+					else
+					   linea = QueryAux->FieldByName(c)->AsString;
+
 					p++;
 				 }
 				 else
@@ -1908,11 +1918,21 @@ void __fastcall TfMenuSemanal::Button18Click(TObject *Sender)
 
 			i = 7;
 			c = "c" + IntToStr(i);
-			linea = linea + QueryAux->FieldByName(c)->AsString;
+			if(linea != "")
+			{
+			   linea = linea + "\n" + QueryAux->FieldByName(c)->AsString;
+			}
+			else
+			   linea = QueryAux->FieldByName(c)->AsString;
 			p++;
 			i = 8;
 			c = "c" + IntToStr(i);
-			linea = linea + QueryAux->FieldByName(c)->AsString;
+			if(linea != "")
+			{
+			   linea = linea + "\n" + QueryAux->FieldByName(c)->AsString;
+			}
+			else
+			   linea = QueryAux->FieldByName(c)->AsString;
 
 			Lista->Add(linea);
 		}
@@ -1922,13 +1942,6 @@ void __fastcall TfMenuSemanal::Button18Click(TObject *Sender)
 		Lista->Add("");
    }
 
-//   TClipboard *cb;
-//   cb = new TClipboard();
-//   cb->AsText = Lista->Text;
-//   delete cb;
-//
-//   Application->MessageBox(L"El menú fue copiado correctamente al portapapeles. Puede pegarlo donde prefiera",L"Menú copiado",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
-//   delete Lista;
 
 	 Memo2->Clear();
 	 Memo2->Text = Lista->Text;
@@ -1936,127 +1949,6 @@ void __fastcall TfMenuSemanal::Button18Click(TObject *Sender)
 	 Timer1->Enabled = true;
 
 
-
-
-
-
-
-
-
-
-
-   /*
-      TStringList * Lista;
-   Lista = new TStringList();
-   Memo2->Clear();
-   Lista->Clear();
-   for(int w = 0; w < 6; w++)
-   {
-		QueryAux->Close();
-		QueryAux->SQL->Clear();
-		String q;
-		q = "SELECT *, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8 "
-		   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
-
-		QueryAux->SQL->Add(q);
-		QueryAux->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(MC1->Date), w);
-		QueryAux->Open();
-
-
-		if(QueryAux->IsEmpty() || QueryAux->FieldByName("refComida1")->AsInteger <= 1 || QueryAux->FieldByName("refComida7")->AsInteger <= 1)
-		{
-		  Lista->Add("*Menú del día " + FormatDateTime("dddd dd/mm/yyyy", QueryAux->FieldByName("fecha")->AsDateTime) + "*");
-		  Lista->Add("");
-		  Lista->Add("	CERRADO");
-		}
-		else
-		{
-			int catV, catN;
-			String rc, cc, c;
-			catV = 1;
-			catN = 1;
-
-			Lista->Add("*Menú del día " + FormatDateTime("dddd dd/mm/yyyy", QueryAux->FieldByName("fecha")->AsDateTime) + "*");
-			Lista->Add("");
-			Lista->Add("*Plato principal:*");
-			Lista->Add(QueryAux->FieldByName("c1")->AsString);
-			int i = 2;
-			int p = 2;
-			while(i < 7)
-			{
-			  rc = "refComida" + IntToStr(i);
-			  cc = "cat" + IntToStr(i);
-			  c = "c" + IntToStr(i);
-			  catN = QueryAux->FieldByName(cc)->AsInteger;
-
-			  if(QueryAux->FieldByName(rc)->AsInteger != 2431  && QueryAux->FieldByName(rc)->AsInteger != 2434  && QueryAux->FieldByName(rc)->AsInteger != 2664)   //bolognesa o estofado
-			  {
-				 if(QueryAux->FieldByName(rc)->AsInteger > 1)
-				 {
-					if(catN > catV)
-					{
-					   Memo2->Lines->Add("");
-					   Memo2->Lines->Add("*Guarnición:*");
-					   catV = catN;
-					}
-					Lista->Add(QueryAux->FieldByName(c)->AsString);
-					p++;
-				 }
-				 else
-				 {
-					i = 10;    //sale del while
-				 }
-			  }
-			  i++;
-			}
-
-			Lista->Add("");
-			Lista->Add("*Complemento:*");
-
-			i = 7;
-			c = "c" + IntToStr(i);
-			Lista->Add(QueryAux->FieldByName(c)->AsString);
-			p++;
-			i = 8;
-			c = "c" + IntToStr(i);
-			Lista->Add(QueryAux->FieldByName(c)->AsString);
-		}
-
-		Lista->Add("");
-		Lista->Add("");
-		Lista->Add("");
-   }
-
-   Lista->Add("_Si no desea recibir estos mensajes avísenos y será quitado inmediatamente de esta lista._");
-   Lista->Add("_El Sembrador - Viandas saludables_");
-
-//   Lista->SelectAll();
-//   Lista->CopyToClipboard();
-   TClipboard *cb;
-   cb = new TClipboard();
-   cb->AsText = Lista->Text;
-   delete cb;
-
-   Application->MessageBox(L"El menú fue copiado correctamente al portapapeles. Puede pegarlo donde prefiera",L"Menú copiado",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
-   delete Lista;
-
-   */
 }
 //---------------------------------------------------------------------------
 
@@ -2118,4 +2010,120 @@ void __fastcall TfMenuSemanal::Button19Click(TObject *Sender)
    }
 }
 //---------------------------------------------------------------------------
+
+
+void __fastcall TfMenuSemanal::Button20Click(TObject *Sender)
+{
+//
+//	  Lista = new TStringList();
+//   Memo2->Clear();
+//   Lista->Clear();
+//
+//   String linea;
+//
+//   for(int w = 0; w < 1; w++)
+//   {
+//		QueryAux->Close();
+//		QueryAux->SQL->Clear();
+//		String q;
+//		q = "SELECT *, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8 "
+//		   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+//
+//		QueryAux->SQL->Add(q);
+//		QueryAux->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(MC1->Date), w);
+//		QueryAux->Open();
+//
+//
+//
+//
+//
+//
+//
+//
+//	   RichEdit1->Lines->LoadFromFile("rf.rtf");
+
+//	   int n;
+//	   TSearchTypes mySearchTypes = TSearchTypes();
+//
+//	   String p, c;
+//	   for(int i = 1; i <= 3; i++)
+//	   {
+//		   p = "PP" + IntToStr(i);
+//		   n = RichEdit1->FindTextW(p, 0, RichEdit1->Text.Length(), mySearchTypes);
+//		   if(n > 0)
+//		   {
+//			   RichEdit1->SelStart = n;
+//			   RichEdit1->SelLength = 3;
+//			   c = "c" + IntToStr(i);
+//			   if(QueryAux->FieldByName(c)->AsString != "")
+//				  RichEdit1->SetSelTextBuf(QueryAux->FieldByName(c)->AsString.w_str());
+//			   else
+//				  RichEdit1->Lines->Delete(3);
+//		   }
+//	   }
+//	   for(int i = 1; i <= 3; i++)
+//	   {
+//		   p = "G" + IntToStr(i);
+//		   n = RichEdit1->FindTextW(p, 0, RichEdit1->Text.Length(), mySearchTypes);
+//		   if(n > 0)
+//		   {
+//			   RichEdit1->SelStart = n;
+//			   RichEdit1->SelLength = 3;
+//			   c = "c" + IntToStr(i+3);
+//			   if(QueryAux->FieldByName(c)->AsString != "")
+//				  RichEdit1->SetSelTextBuf(QueryAux->FieldByName(c)->AsString.w_str());
+//
+//		   }
+//	   }
+//	   for(int i = 1; i <= 2; i++)
+//	   {
+//		   p = "C" + IntToStr(i);
+//		   n = RichEdit1->FindTextW(p, 0, RichEdit1->Text.Length(), mySearchTypes);
+//		   if(n > 0)
+//		   {
+//			   RichEdit1->SelStart = n;
+//			   RichEdit1->SelLength = 3;
+//			   c = "c" + IntToStr(i+6);
+//			   if(QueryAux->FieldByName(c)->AsString != "")
+//				  RichEdit1->SetSelTextBuf(QueryAux->FieldByName(c)->AsString.w_str());
+//
+//		   }
+//	   }
+
+//	   TfrxRichView * menu;
+//	   menu = dynamic_cast <TfrxRichView *> (fMenuSemanal->frx_contenido_lunes->FindObject("Rich1"));
+//
+//	   TMemoryStream *stream = new TMemoryStream();
+//	   RichEdit1->Lines->SaveToStream(stream);
+//	   menu->LoadFromStream(stream);
+//	   delete stream;
+//
+//
+//   frx_contenido_lunes->PrepareReport(true);
+//   frx_contenido_lunes->Export(frxPNGExport1);
+//
+//   delete menu;
+//   QueryAux->Close();
+//
+//					  }
+}
+//---------------------------------------------------------------------------
+
+
 

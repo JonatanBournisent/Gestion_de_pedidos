@@ -1,6 +1,6 @@
 object fPedidos: TfPedidos
   Left = 0
-  Top = 123
+  Top = 90
   BorderIcons = [biSystemMenu]
   Caption = 'Gestion de pedidos y planillas  "El Sembrador"'
   ClientHeight = 678
@@ -23,8 +23,8 @@ object fPedidos: TfPedidos
   PixelsPerInch = 96
   TextHeight = 13
   object Label9: TLabel
-    Left = 720
-    Top = 325
+    Left = 719
+    Top = 326
     Width = 81
     Height = 13
     Caption = 'Medio de ingreso'
@@ -215,7 +215,7 @@ object fPedidos: TfPedidos
     OnClick = Image3Click
   end
   object Image4: TImage
-    Left = 310
+    Left = 308
     Top = 602
     Width = 36
     Height = 45
@@ -312,7 +312,7 @@ object fPedidos: TfPedidos
     ParentFont = False
   end
   object Label7: TLabel
-    Left = 280
+    Left = 282
     Top = 653
     Width = 90
     Height = 14
@@ -429,6 +429,27 @@ object fPedidos: TfPedidos
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Label20: TLabel
+    Left = 721
+    Top = 59
+    Width = 37
+    Height = 13
+    Caption = 'Label20'
+  end
+  object Label21: TLabel
+    Left = 721
+    Top = 77
+    Width = 37
+    Height = 13
+    Caption = 'Label21'
+  end
+  object Label24: TLabel
+    Left = 535
+    Top = 104
+    Width = 70
+    Height = 13
+    Caption = 'Medio de pago'
+  end
   object Button27: TButton
     Left = 718
     Top = 583
@@ -462,8 +483,8 @@ object fPedidos: TfPedidos
     OnClick = Mem
   end
   object Button20: TButton
-    Left = 873
-    Top = 312
+    Left = 878
+    Top = 357
     Width = 75
     Height = 25
     Caption = 'Button20'
@@ -502,7 +523,7 @@ object fPedidos: TfPedidos
     Top = 609
     Width = 230
     Height = 20
-    Caption = 'Cancelar este pedido'
+    Caption = 'Cancelar cambios'
     TabOrder = 46
     OnClick = Button15Click
   end
@@ -553,8 +574,8 @@ object fPedidos: TfPedidos
     OnClick = RGTextoClick
   end
   object Panel1: TPanel
-    Left = 348
-    Top = 353
+    Left = 347
+    Top = 354
     Width = 39
     Height = 242
     BevelOuter = bvNone
@@ -620,7 +641,7 @@ object fPedidos: TfPedidos
     OnClick = Button4Click
   end
   object DTP: TDateTimePicker
-    Left = 462
+    Left = 375
     Top = 603
     Width = 186
     Height = 33
@@ -634,7 +655,6 @@ object fPedidos: TfPedidos
     ParentFont = False
     TabOrder = 0
     OnChange = DTPChange
-    OnEnter = DTPEnter
     OnExit = DTPExit
   end
   object RG1: TRadioGroup
@@ -721,7 +741,7 @@ object fPedidos: TfPedidos
   object cbRefMedioContacto: TComboBox
     Left = 719
     Top = 343
-    Width = 230
+    Width = 229
     Height = 22
     Style = csOwnerDrawFixed
     TabOrder = 7
@@ -847,7 +867,7 @@ object fPedidos: TfPedidos
   end
   object edUnidades: TEdit
     Left = 757
-    Top = 23
+    Top = 21
     Width = 77
     Height = 33
     Alignment = taCenter
@@ -859,11 +879,13 @@ object fPedidos: TfPedidos
     ParentFont = False
     TabOrder = 11
     Text = '1,00'
+    OnChange = edUnidadesChange
+    OnExit = edUnidadesExit
     OnKeyPress = edUnidadesKeyPress
   end
   object edBandGrand: TEdit
     Left = 882
-    Top = 23
+    Top = 21
     Width = 68
     Height = 33
     Alignment = taCenter
@@ -879,24 +901,24 @@ object fPedidos: TfPedidos
   end
   object Button2: TButton
     Left = 720
-    Top = 65
+    Top = 96
     Width = 230
-    Height = 34
+    Height = 23
     Caption = 'Actualizar cantidades'
     TabOrder = 13
     OnClick = Button2Click
   end
   object Button7: TButton
     Left = 720
-    Top = 111
+    Top = 123
     Width = 230
-    Height = 34
+    Height = 23
     Caption = 'Eliminar todo el pedido'
     TabOrder = 14
     OnClick = Button7Click
   end
   object Button8: TButton
-    Left = 718
+    Left = 717
     Top = 539
     Width = 230
     Height = 25
@@ -906,7 +928,7 @@ object fPedidos: TfPedidos
   end
   object UpDown1: TUpDown
     Left = 720
-    Top = 23
+    Top = 20
     Width = 31
     Height = 33
     Min = -50000
@@ -916,7 +938,7 @@ object fPedidos: TfPedidos
   end
   object UpDown2: TUpDown
     Left = 848
-    Top = 23
+    Top = 21
     Width = 28
     Height = 33
     Min = -50000
@@ -1092,7 +1114,7 @@ object fPedidos: TfPedidos
     Left = 531
     Top = 46
     Width = 180
-    Height = 100
+    Height = 48
     Caption = 'Actualizar ubicaci'#243'n'
     TabOrder = 33
     WordWrap = True
@@ -1218,9 +1240,9 @@ object fPedidos: TfPedidos
   end
   object Panel18: TPanel
     Left = 721
-    Top = 66
+    Top = 96
     Width = 229
-    Height = 33
+    Height = 23
     Caption = 'Actualizar cantidades'
     Color = 14671839
     ParentBackground = False
@@ -1231,7 +1253,7 @@ object fPedidos: TfPedidos
     Left = 531
     Top = 47
     Width = 179
-    Height = 98
+    Height = 47
     Caption = 'Actualizar ubicaci'#243'n'
     Color = 14671839
     ParentBackground = False
@@ -1556,9 +1578,9 @@ object fPedidos: TfPedidos
     OnClick = Button24Click
   end
   object Button25: TButton
-    Left = 440
-    Top = 642
-    Width = 229
+    Left = 375
+    Top = 645
+    Width = 186
     Height = 25
     Caption = 'Control de pedidos habituales'
     TabOrder = 61
@@ -1627,12 +1649,278 @@ object fPedidos: TfPedidos
     end
   end
   object Button28: TButton
-    Left = 637
-    Top = 603
-    Width = 75
-    Height = 25
-    Caption = 'Button28'
+    Left = 571
+    Top = 602
+    Width = 30
+    Height = 32
+    Hint = 'Copiar saludo'
+    Caption = #55357#56395
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 65
+    OnClick = Button28Click
+  end
+  object Button29: TButton
+    Left = 605
+    Top = 602
+    Width = 30
+    Height = 32
+    Hint = 'Copiar men'#250
+    Caption = #55357#56523
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    PopupMenu = PopupMenu4
+    ShowHint = True
+    TabOrder = 66
+    OnClick = Button29Click
+  end
+  object Button30: TButton
+    Left = 639
+    Top = 602
+    Width = 30
+    Height = 32
+    Hint = 'Copiar Info Servicio'
+    Caption = #8505#65039
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 67
+    OnClick = Button30Click
+  end
+  object Button31: TButton
+    Left = 605
+    Top = 638
+    Width = 30
+    Height = 32
+    Hint = 'Copiar instrucciones para armar vianda'
+    Caption = #55358#56663
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 68
+    OnClick = Button31Click
+  end
+  object Button32: TButton
+    Left = 571
+    Top = 638
+    Width = 30
+    Height = 32
+    Hint = 'Copiar Info Precio'
+    Caption = #55357#56496
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 69
+    OnClick = Button32Click
+  end
+  object Button33: TButton
+    Left = 639
+    Top = 638
+    Width = 30
+    Height = 32
+    Hint = 'Copiar datos para transferencia'
+    Caption = #3647
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 70
+    OnClick = Button33Click
+  end
+  object Button34: TButton
+    Left = 673
+    Top = 602
+    Width = 30
+    Height = 32
+    Hint = 'Copiar "Llegamos con tu pedido"'
+    Caption = #55357#57077
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 71
+    OnClick = Button34Click
+  end
+  object Button35: TButton
+    Left = 673
+    Top = 638
+    Width = 30
+    Height = 32
+    Hint = 'Copiar instrucciones para listas WhastApp'
+    Caption = #55357#56541
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 72
+    OnClick = Button35Click
+  end
+  object Panel21: TPanel
+    Left = 555
+    Top = 676
+    Width = 321
+    Height = 385
+    Caption = 'Panel21'
+    Color = 16766421
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 73
+    object Label22: TLabel
+      Left = 114
+      Top = 10
+      Width = 102
+      Height = 13
+      Caption = 'Cantidad de viandas:'
+    end
+    object Label23: TLabel
+      Left = 66
+      Top = 72
+      Width = 92
+      Height = 13
+      Caption = 'Per'#237'odo de entrega'
+    end
+    object MC: TMonthCalendar
+      Left = 31
+      Top = 83
+      Width = 260
+      Height = 160
+      MultiSelect = True
+      Date = 43949.355480428240000000
+      EndDate = 43949.000000000000000000
+      MaxSelectRange = 500
+      PopupMenu = PopupMenu1
+      ShowToday = False
+      ShowTodayCircle = False
+      TabOrder = 0
+      OnClick = MCClick
+    end
+    object Edit3: TEdit
+      Left = 114
+      Top = 29
+      Width = 101
+      Height = 33
+      Alignment = taCenter
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 1
+      Text = '1,00'
+      OnChange = Edit3Change
+      OnExit = Edit3Exit
+      OnKeyPress = Edit3KeyPress
+    end
+    object Memo4: TMemo
+      Left = 29
+      Top = 249
+      Width = 263
+      Height = 89
+      Lines.Strings = (
+        'Memo4')
+      TabOrder = 2
+    end
+    object Button38: TButton
+      Left = 29
+      Top = 349
+      Width = 129
+      Height = 25
+      Caption = 'Copiar al portapapeles'
+      TabOrder = 3
+      OnClick = Button38Click
+    end
+    object Button39: TButton
+      Left = 164
+      Top = 349
+      Width = 129
+      Height = 25
+      Caption = 'Cerar'
+      TabOrder = 4
+      OnClick = Button39Click
+    end
+  end
+  object Button36: TButton
+    Left = 884
+    Top = 76
+    Width = 69
+    Height = 18
+    Caption = 'Presup.'
+    TabOrder = 74
+    OnClick = Button36Click
+  end
+  object Button37: TButton
+    Left = 884
+    Top = 56
+    Width = 69
+    Height = 19
+    Caption = 'Copiar valor'
+    PopupMenu = PopupMenu3
+    TabOrder = 75
+    OnClick = Button37Click
+  end
+  object CBmp: TComboBox
+    Left = 535
+    Top = 124
+    Width = 174
+    Height = 22
+    Style = csOwnerDrawFixed
+    TabOrder = 76
+    Items.Strings = (
+      'A- Efectivo'
+      'B - Banco Oscar'
+      'C - Banco Monica'
+      'D - Banco Williams'
+      'M - MercadoPago Oscar'
+      'N - MercadoPago Monica')
+  end
+  object Button40: TButton
+    Left = 611
+    Top = 102
+    Width = 75
+    Height = 19
+    Caption = 'Actualizar'
+    PopupMenu = PopupMenu5
+    TabOrder = 77
+    OnClick = Button40Click
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -1744,6 +2032,14 @@ object fPedidos: TfPedidos
         Caption = 'Este complemento'
         OnClick = Marcarcomplementocomoimpreso1Click
       end
+    end
+    object Imprimirtodosestospedidos1: TMenuItem
+      Caption = 'Imprimir todos estos pedidos'
+      OnClick = Imprimirtodosestospedidos1Click
+    end
+    object Imprimirtodosestoscomplementos1: TMenuItem
+      Caption = 'Imprimir todos estos complementos'
+      OnClick = Imprimirtodosestoscomplementos1Click
     end
     object N2: TMenuItem
       Caption = '-'
@@ -2740,14 +3036,14 @@ object fPedidos: TfPedidos
     Interval = 250
     OnTimer = Timer1Timer
     Left = 779
-    Top = 20
+    Top = 18
   end
   object Timer2: TTimer
     Enabled = False
     Interval = 250
     OnTimer = Timer2Timer
-    Left = 568
-    Top = 80
+    Left = 600
+    Top = 48
   end
   object DSch: TDataSetProvider
     DataSet = Querych
@@ -2781,8 +3077,8 @@ object fPedidos: TfPedidos
     Enabled = False
     Interval = 10000
     OnTimer = Timer3Timer
-    Left = 560
-    Top = 640
+    Left = 272
+    Top = 608
   end
   object QueryRep: TSQLQuery
     MaxBlobSize = -1
@@ -2790,5 +3086,29 @@ object fPedidos: TfPedidos
     SQLConnection = SQLConnection1
     Left = 616
     Top = 232
+  end
+  object PopupMenu3: TPopupMenu
+    Left = 936
+    Top = 32
+    object Copiarsaludoyvalor1: TMenuItem
+      Caption = 'Copiar saludo y valor'
+      OnClick = Copiarsaludoyvalor1Click
+    end
+  end
+  object PopupMenu4: TPopupMenu
+    Left = 608
+    Top = 568
+    object Copiarmensemanal1: TMenuItem
+      Caption = 'Copiar men'#250' semanal'
+      OnClick = Copiarmensemanal1Click
+    end
+  end
+  object PopupMenu5: TPopupMenu
+    Left = 648
+    Top = 88
+    object Establecercomopredeterminado1: TMenuItem
+      Caption = 'Cambiar y establecer como predeterminado'
+      OnClick = Establecercomopredeterminado1Click
+    end
   end
 end

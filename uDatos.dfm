@@ -4,7 +4,7 @@ object fDatos: TfDatos
   BorderStyle = bsDialog
   Caption = ' Consultar datos de ventas'
   ClientHeight = 639
-  ClientWidth = 579
+  ClientWidth = 576
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -34,7 +34,7 @@ object fDatos: TfDatos
   end
   object Label1: TLabel
     Left = 24
-    Top = 605
+    Top = 586
     Width = 31
     Height = 13
     Caption = 'Label1'
@@ -55,14 +55,14 @@ object fDatos: TfDatos
   end
   object Label4: TLabel
     Left = 24
-    Top = 542
+    Top = 539
     Width = 31
     Height = 13
     Caption = 'Label4'
   end
   object Label5: TLabel
     Left = 24
-    Top = 573
+    Top = 562
     Width = 31
     Height = 13
     Caption = 'Label5'
@@ -94,6 +94,13 @@ object fDatos: TfDatos
     Width = 175
     Height = 74
     Brush.Style = bsClear
+  end
+  object Label9: TLabel
+    Left = 24
+    Top = 610
+    Width = 31
+    Height = 13
+    Caption = 'Label9'
   end
   object Button1: TButton
     Left = 271
@@ -192,7 +199,7 @@ object fDatos: TfDatos
     Width = 257
     Height = 160
     MultiSelect = True
-    Date = 44044.334833333330000000
+    Date = 44044.262211944440000000
     EndDate = 44044.000000000000000000
     MaxSelectRange = 700
     ShowToday = False
@@ -202,25 +209,25 @@ object fDatos: TfDatos
     Left = 395
     Top = 8
     Width = 175
-    Height = 25
+    Height = 20
     Caption = 'Ventas por d'#237'a'
     TabOrder = 3
     OnClick = Button2Click
   end
   object Button3: TButton
     Left = 395
-    Top = 39
+    Top = 54
     Width = 175
-    Height = 25
+    Height = 20
     Caption = 'Ventas por horario'
     TabOrder = 4
     OnClick = Button3Click
   end
   object Button4: TButton
     Left = 395
-    Top = 71
+    Top = 77
     Width = 175
-    Height = 25
+    Height = 20
     Caption = 'Cobros por d'#237'a'
     TabOrder = 5
     OnClick = Button4Click
@@ -256,8 +263,8 @@ object fDatos: TfDatos
     OnClick = Button7Click
   end
   object Panel1: TPanel
-    Left = 141
-    Top = 355
+    Left = 560
+    Top = 21
     Width = 328
     Height = 449
     Caption = 'Panel1'
@@ -315,6 +322,15 @@ object fDatos: TfDatos
       TabOrder = 1
       OnClick = Button6Click
     end
+  end
+  object Button8: TButton
+    Left = 395
+    Top = 31
+    Width = 176
+    Height = 20
+    Caption = 'Ventas por mes (beta)'
+    TabOrder = 10
+    OnClick = Button8Click
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'

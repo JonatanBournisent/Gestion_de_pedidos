@@ -3,7 +3,7 @@ object fAgregarComida: TfAgregarComida
   Top = 0
   BorderStyle = bsDialog
   Caption = ' Agregar una nueva comida.'
-  ClientHeight = 304
+  ClientHeight = 346
   ClientWidth = 615
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,23 +21,23 @@ object fAgregarComida: TfAgregarComida
     Left = 9
     Top = 7
     Width = 597
-    Height = 255
+    Height = 290
     Brush.Style = bsClear
   end
   inline Frame31: TFrame3
     Left = 18
     Top = 19
     Width = 577
-    Height = 238
+    Height = 270
     TabOrder = 0
     ExplicitLeft = 18
     ExplicitTop = 19
     ExplicitWidth = 577
-    ExplicitHeight = 238
+    ExplicitHeight = 270
   end
   object Button1: TButton
     Left = 47
-    Top = 272
+    Top = 309
     Width = 130
     Height = 25
     Caption = 'Guardar'
@@ -46,7 +46,7 @@ object fAgregarComida: TfAgregarComida
   end
   object Button2: TButton
     Left = 240
-    Top = 272
+    Top = 309
     Width = 130
     Height = 25
     Caption = 'Cancelar'
@@ -55,7 +55,7 @@ object fAgregarComida: TfAgregarComida
   end
   object Button3: TButton
     Left = 434
-    Top = 272
+    Top = 309
     Width = 130
     Height = 25
     Caption = 'Salir'

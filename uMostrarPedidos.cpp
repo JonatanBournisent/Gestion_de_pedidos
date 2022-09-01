@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
+#include <DateUtils.hpp>
 #pragma hdrstop
 
 #include "uMostrarPedidos.h"
@@ -31,20 +32,22 @@ void __fastcall TfMostrarPedidos::DTPChange(TObject *Sender)
 			  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE refComida2 = idComida LIMIT 1) AS com2, "
 			  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE refComida3 = idComida LIMIT 1) AS com3, "
 			  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE refComida4 = idComida LIMIT 1) AS com4 "
-			  "FROM pedidos WHERE DATE(momento) = :d ORDER BY momento DESC";
+			  "FROM pedidos WHERE momento >= :mi AND momento <= :mf ORDER BY momento DESC";
 
 		 CDS2->Active = false;
 		 QueryPedidos->Close();
 		 QueryPedidos->SQL->Clear();
 		 QueryPedidos->SQL->Add(q1);
-		 QueryPedidos->ParamByName("d")->AsDate = DTP->Date;
+//		 QueryPedidos->ParamByName("d")->AsDate = DTP->Date;
+		 QueryPedidos->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->Date);
+		 QueryPedidos->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->Date);
 		 QueryPedidos->ParamByName("una")->AsString = una;
 		 QueryPedidos->ParamByName("ens")->AsString = ens;
 		 QueryPedidos->Open();
 
 		 if(QueryPedidos->IsEmpty())
 		 {
-            CDS2->Active = false;
+			CDS2->Active = false;
 			QueryPedidos->Close();
 			CBE->Visible = false;
 			CBC->Visible = false;
@@ -176,8 +179,10 @@ void __fastcall TfMostrarPedidos::Marcarcomoimpreso3Click(TObject *Sender)
 
    QueryUpdate->Close();
    QueryUpdate->SQL->Clear();
-   QueryUpdate->SQL->Add("UPDATE pedidos SET complementoImpreso = 1 WHERE DATE(momento) = DATE(:fecha)");
-   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+   QueryUpdate->SQL->Add("UPDATE pedidos SET complementoImpreso = 1 WHERE momento >= :mi AND momento <= :mf");
+//   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+   QueryUpdate->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->Date);
+   QueryUpdate->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->Date);
    QueryUpdate->ExecSQL();
 
    CDS2->Refresh();
@@ -191,8 +196,11 @@ void __fastcall TfMostrarPedidos::Marcarcomonoimpreso3Click(TObject *Sender)
 
    QueryUpdate->Close();
    QueryUpdate->SQL->Clear();
-   QueryUpdate->SQL->Add("UPDATE pedidos SET complementoImpreso = 0 WHERE DATE(momento) = DATE(:fecha)");
-   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 0 WHERE (momento >= :mi AND momento <= :mf "
+						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad AND fecha = :fecha) LIMIT 1) = 0)");
+   QueryUpdate->ParamByName("fecha")->AsDate = DTP->Date;
+   QueryUpdate->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->Date);
+   QueryUpdate->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->Date);
    QueryUpdate->ExecSQL();
 
    CDS2->Refresh();
@@ -206,9 +214,11 @@ void __fastcall TfMostrarPedidos::Marcarcomoimpreso1Click(TObject *Sender)
 
    QueryUpdate->Close();
    QueryUpdate->SQL->Clear();
-   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (DATE(momento) = DATE(:fecha) "
-						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = 0)");
-   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (momento >= :mi AND momento <= :mf "
+						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad AND fecha = :fecha) LIMIT 1) = 0)");
+   QueryUpdate->ParamByName("fecha")->AsDate = DTP->Date;
+   QueryUpdate->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->Date);
+   QueryUpdate->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->Date);
    QueryUpdate->ExecSQL();
 
    CDS2->Refresh();
@@ -222,9 +232,11 @@ void __fastcall TfMostrarPedidos::Marcarcomoimpreso2Click(TObject *Sender)
 
    QueryUpdate->Close();
    QueryUpdate->SQL->Clear();
-   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (DATE(momento) = DATE(:fecha) "
-						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = 1)");
-   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (momento >= :mi AND momento <= :mf "
+						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad AND fecha = :fecha) LIMIT 1) = 1)");
+   QueryUpdate->ParamByName("fecha")->AsDate = DTP->Date;
+   QueryUpdate->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->Date);
+   QueryUpdate->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->Date);
    QueryUpdate->ExecSQL();
 
    CDS2->Refresh();
@@ -238,9 +250,11 @@ void __fastcall TfMostrarPedidos::Marcarcomonoimpreso1Click(TObject *Sender)
 
    QueryUpdate->Close();
    QueryUpdate->SQL->Clear();
-   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 0 WHERE (DATE(momento) = DATE(:fecha) "
-						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = 0)");
-   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 0 WHERE (momento >= :mi AND momento <= :mf "
+						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad AND fecha = :fecha) LIMIT 1) = 0)");
+   QueryUpdate->ParamByName("fecha")->AsDate = DTP->Date;
+   QueryUpdate->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->Date);
+   QueryUpdate->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->Date);
    QueryUpdate->ExecSQL();
 
    CDS2->Refresh();
@@ -254,13 +268,16 @@ void __fastcall TfMostrarPedidos::Marcarcomonoimpreso2Click(TObject *Sender)
 
    QueryUpdate->Close();
    QueryUpdate->SQL->Clear();
-   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 0 WHERE (DATE(momento) = DATE(:fecha) "
+   QueryUpdate->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 0 WHERE momento >= :mi AND momento <= :mf "
 						 "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = 1)");
-   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+//   QueryUpdate->ParamByName("fecha")->AsDateTime = DTP->DateTime;
+   QueryUpdate->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->Date);
+   QueryUpdate->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->Date);
    QueryUpdate->ExecSQL();
 
    CDS2->Refresh();
 }
 //---------------------------------------------------------------------------
+
 
 

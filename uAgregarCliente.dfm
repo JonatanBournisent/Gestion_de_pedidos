@@ -3,8 +3,8 @@ object fAgregarCliente: TfAgregarCliente
   Top = 0
   BorderStyle = bsDialog
   Caption = ' Agregar un nuevo cliente'
-  ClientHeight = 493
-  ClientWidth = 713
+  ClientHeight = 520
+  ClientWidth = 729
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,16 +17,23 @@ object fAgregarCliente: TfAgregarCliente
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  inline Frame11: TFrame1
+  object Shape1: TShape
     Left = 8
     Top = 8
+    Width = 713
+    Height = 454
+    Brush.Style = bsClear
+  end
+  inline Frame11: TFrame1
+    Left = 14
+    Top = 14
     Width = 699
-    Height = 433
+    Height = 440
     TabOrder = 0
-    ExplicitLeft = 8
-    ExplicitTop = 8
+    ExplicitLeft = 14
+    ExplicitTop = 14
     ExplicitWidth = 699
-    ExplicitHeight = 433
+    ExplicitHeight = 440
     inherited SQLTable1: TSQLTable
       Left = 640
       Top = 104
@@ -37,8 +44,8 @@ object fAgregarCliente: TfAgregarCliente
     end
   end
   object Button1: TButton
-    Left = 71
-    Top = 460
+    Left = 78
+    Top = 479
     Width = 150
     Height = 25
     Caption = 'Guardar'
@@ -46,8 +53,8 @@ object fAgregarCliente: TfAgregarCliente
     OnClick = Button1Click
   end
   object Button2: TButton
-    Left = 279
-    Top = 460
+    Left = 286
+    Top = 479
     Width = 150
     Height = 25
     Caption = 'Cancelar'
@@ -55,8 +62,8 @@ object fAgregarCliente: TfAgregarCliente
     OnClick = Button2Click
   end
   object Button3: TButton
-    Left = 487
-    Top = 460
+    Left = 494
+    Top = 479
     Width = 150
     Height = 25
     Caption = 'Salir'

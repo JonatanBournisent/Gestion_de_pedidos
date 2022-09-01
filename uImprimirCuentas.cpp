@@ -87,7 +87,7 @@ void __fastcall TfImprimirCuentas::Button1Click(TObject *Sender)
 		 q = q + "FROM clientes WHERE(refFrecuenciaPago = 2 AND esVisible = 1 AND refDiaPago = 6 AND imprimirDetalle = 1) ORDER BY rep, pos";
    }
    else if(RG1->ItemIndex == 1)
-      q = q + "FROM clientes WHERE(refFrecuenciaPago = 3 AND esVisible = 1 AND imprimirDetalle = 1) ORDER BY rep, pos";
+	  q = q + "FROM clientes WHERE(refFrecuenciaPago = 3 AND esVisible = 1 AND imprimirDetalle = 1) ORDER BY rep, pos";
 
    CDS->Active = false;
    Query1->Close();
@@ -134,34 +134,34 @@ void __fastcall TfImprimirCuentas::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TfImprimirCuentas::DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect,
-          int DataCol, TColumn *Column, TGridDrawState State)
+		  int DataCol, TColumn *Column, TGridDrawState State)
 {
    int DrawState;
    if(State.Contains(gdFocused))
    {
-      if(Column->Field == CB->Field)
-      {
+	  if(Column->Field == CB->Field)
+	  {
 		 CB->Left = Rect.Left + DBGrid1->Left + 2;
 		 CB->Top = Rect.Top + DBGrid1->Top + 2;
 		 CB->Width = Rect.Right - Rect.Left;
-         CB->Height = Rect.Bottom - Rect.Top;
+		 CB->Height = Rect.Bottom - Rect.Top;
 
 		 CB->Visible = true;
-      }
+	  }
    }
    else if(Column->Index == 7)
    {
-      DrawRect = new TRect(Rect);
+	  DrawRect = new TRect(Rect);
 	  InflateRect(DrawRect,-1,-1);
 
-      if(Column->Field->AsInteger == 0)
-         DrawState = DFCS_BUTTONCHECK;
-      else
-         DrawState = DFCS_BUTTONCHECK | DFCS_CHECKED;
+	  if(Column->Field->AsInteger == 0)
+		 DrawState = DFCS_BUTTONCHECK;
+	  else
+		 DrawState = DFCS_BUTTONCHECK | DFCS_CHECKED;
 
-      DBGrid1->Canvas->FillRect(Rect);
-      DrawFrameControl(DBGrid1->Canvas->Handle , DrawRect, DFC_BUTTON, DrawState);
-      delete DrawRect;
+	  DBGrid1->Canvas->FillRect(Rect);
+	  DrawFrameControl(DBGrid1->Canvas->Handle , DrawRect, DFC_BUTTON, DrawState);
+	  delete DrawRect;
    }
 }
 //---------------------------------------------------------------------------
@@ -260,7 +260,7 @@ void __fastcall TfImprimirCuentas::Button4Click(TObject *Sender)
 			if(CDS->FieldByName("rep")->AsInteger != repartidorAnterior)
 			{
 			   Application->MessageBox(L"Se imprimieron todos los comprobantes asignados a un repartidor, presione OK para continuar con el siguiente" ,L"Presione OK para continuar.",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
-               repartidorAnterior = CDS->FieldByName("rep")->AsInteger;
+			   repartidorAnterior = CDS->FieldByName("rep")->AsInteger;
 			}
 
 			if(CDS->FieldByName("imprimir")->AsInteger == 1)

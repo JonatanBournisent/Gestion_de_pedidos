@@ -4,7 +4,7 @@ object fFacturacionMensual: TfFacturacionMensual
   BorderStyle = bsDialog
   Caption = ' Lista de clientes para facturaci'#243'n electr'#243'nica mensual'
   ClientHeight = 644
-  ClientWidth = 579
+  ClientWidth = 578
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -70,7 +70,8 @@ object fFacturacionMensual: TfFacturacionMensual
         FieldName = 'tipo'
         PickList.Strings = (
           'O'
-          'M')
+          'M'
+          'W')
         Title.Alignment = taCenter
         Title.Caption = 'Emisor'
         Width = 53
@@ -83,7 +84,7 @@ object fFacturacionMensual: TfFacturacionMensual
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.800950532410000000
+    Date = 43949.401495636570000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1

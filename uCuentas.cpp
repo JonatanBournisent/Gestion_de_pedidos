@@ -12,6 +12,7 @@
 #include "VariablesGlobales.h"
 #include "uEmitirComprobanteElectronico.h"
 #include "uVerHistorialPedidos.h"
+#include "uImportarPagosBancos.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -87,14 +88,14 @@ void TfCuentas::calcular(bool parcial)
 
    if(CheckBox1->Checked)
    {
-	  q = "SELECT idCuenta, fecha, unidades, pagoRealizado, valorUnidad, "
+	  q = "SELECT idCuenta, fecha, unidades, pagoRealizado, valorUnidad, fechaIngresoPago, medioDePago, "
 		  "(SELECT descripcion FROM obsCuentas WHERE cuentas.idCuenta = obscuentas.refCuenta LIMIT 1) AS obs, "
 		  "(SELECT nombreCorto FROM repartidores WHERE cuentas.refRepartidor = repartidores.idRepartidor LIMIT 1) AS rep "
 		  "FROM cuentas WHERE refCliente = :rc AND fecha >= :fi AND fecha <= :ff ORDER by fecha";
    }
    else
    {
-	  q = "SELECT idCuenta, fecha, unidades, pagoRealizado, valorUnidad, "
+	  q = "SELECT idCuenta, fecha, unidades, pagoRealizado, valorUnidad, fechaIngresoPago, medioDePago, "
 		  "(SELECT descripcion FROM obsCuentas WHERE cuentas.idCuenta = obscuentas.refCuenta LIMIT 1) AS obs, "
 		  "(SELECT nombreCorto FROM repartidores WHERE cuentas.refRepartidor = repartidores.idRepartidor LIMIT 1) AS rep "
 		  "FROM cuentas WHERE refCliente = :rc AND fecha >= :fi AND fecha <= :ff  AND (unidades <> 0.0 OR pagoRealizado <> 0.0) ORDER by fecha";
@@ -611,24 +612,68 @@ void __fastcall TfCuentas::Button10Click(TObject *Sender)
 	  Lista->Add("*DEUDA ANTERIOR:* " + FormatFloat("$0.00", deudaAnterior));
 	  Lista->Add("");
    }
-
-   CDS->First();
-   while(!CDS->Eof)
+   else if(deudaAnterior < 0.0)
    {
-	  Lista->Add("*" + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* - " + FormatFloat("0.00", CDS->FieldByName("unidades")->AsFloat) + "v = " + FormatFloat("$0.00", CDS->FieldByName("unidades")->AsFloat * CDS->FieldByName("valorUnidad")->AsFloat));
-	  if(CDS->FieldByName("pagoRealizado")->AsFloat > 0.0)
-	  {
-		 Lista->Add("   *Pago " + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* " + FormatFloat("$0.00", CDS->FieldByName("pagoRealizado")->AsFloat));
-         Lista->Add("");
-	  }
-	  CDS->Next();
+	  Lista->Add("*SALDO A FAVOR:* " + FormatFloat("$0.00", deudaAnterior * -1.0));
+	  Lista->Add("");
    }
+
+
+   if(CDS->Active)
+   {
+	   CDS->First();
+	   while(!CDS->Eof)
+	   {
+		  Lista->Add("*" + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* - " + FormatFloat("0.00", CDS->FieldByName("unidades")->AsFloat) + "v = " + FormatFloat("$0.00", CDS->FieldByName("unidades")->AsFloat * CDS->FieldByName("valorUnidad")->AsFloat));
+		  if(CDS->FieldByName("pagoRealizado")->AsFloat > 0.0)
+		  {
+			 Lista->Add("   *Pago " + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* " + FormatFloat("$0.00", CDS->FieldByName("pagoRealizado")->AsFloat));
+			 Lista->Add("");
+		  }
+		  CDS->Next();
+	   }
+   }
+
+   float unidades = 0.0;
+   float valorUnit = 0.0;
+   float bonificacion = 0.0;
+
+   if(CompareDate(MC->EndDate, DateOf(Now())) == EqualsValue || CompareDate(MC->EndDate, DateOf(Now())) == GreaterThanValue)
+   {
+	   q = "SELECT valor, "
+		   "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = :rc AND cantidades.fecha = :d) LIMIT 1) AS unidades, "
+		   "(SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = :rc LIMIT 1) AS bonificacion "
+		   "FROM listasPrecio WHERE (SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = :rc LIMIT 1) = idListaPrecio LIMIT 1";
+
+
+
+	   QueryAux->Close();
+	   QueryAux->SQL->Clear();
+	   QueryAux->SQL->Add(q);
+	   QueryAux->ParamByName("rc")->AsInteger = idCliente;
+	   QueryAux->ParamByName("d")->AsDate = DateOf(Now());
+
+	   QueryAux->Open();
+	   valorUnit = QueryAux->FieldByName("valor")->AsFloat;
+	   unidades = QueryAux->FieldByName("unidades")->AsFloat;
+	   bonificacion = QueryAux->FieldByName("bonificacion")->AsFloat;
+
+	   if(QueryAux->FieldByName("unidades")->AsFloat > 0.0)
+		  Lista->Add("*" + FormatDateTime("dd/mm", DateOf(Now())) + "* - " + FormatFloat("0.00", unidades) + "v = " + FormatFloat("$0.00", unidades * valorUnit * bonificacion));
+	   QueryAux->Close();
+   }
+
+
    Lista->Add("");
 
+
+
    if(CompareDateTime(MC->EndDate, Now()) == GreaterThanValue)
-	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", Now()) + ":* " + FormatFloat("$0.00", deudaParcial));
+	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", Now()) + ":* " + FormatFloat("$0.00", deudaParcial + (unidades * valorUnit * bonificacion)));
    else
-	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", MC->EndDate) + ":* " + FormatFloat("$0.00", deudaParcial));
+	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", MC->EndDate) + ":* " + FormatFloat("$0.00", deudaParcial + (unidades * valorUnit * bonificacion)));
+
+
 
    TClipboard *cb;
    cb = new TClipboard();
@@ -636,7 +681,7 @@ void __fastcall TfCuentas::Button10Click(TObject *Sender)
    delete cb;
    delete Lista;
 
-   Application->MessageBox(L"Resumen copiado al portapapeles.\nPuede pegarlo en WhatsApp",L"Resumen copiado",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
+   Beep();
 }
 //---------------------------------------------------------------------------
 
@@ -719,6 +764,204 @@ void __fastcall TfCuentas::DBGrid2DblClick(TObject *Sender)
 {
    idCliente = CDS2->FieldByName("refCliente")->AsInteger;
    FormShow(Label1);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfCuentas::Button11Click(TObject *Sender)
+{
+   TStringList *infoBanco = new TStringList();
+   TStringList *cliente = new TStringList();
+   TStringList *direccionCliente = new TStringList();
+   TStringList *pago = new TStringList();
+   TStringList *fecha = new TStringList();
+
+   if(OD1->Execute())
+	  infoBanco->LoadFromFile(OD1->FileName);
+   else
+   {
+	  delete infoBanco;
+	  ShowMessage("Error");
+	  return;
+   }
+
+   QueryAux->Close();
+   QueryAux->SQL->Clear();
+   QueryAux->SQL->Add("SELECT idCliente, RPAD(CONCAT(calle, ' ',numero), 30, ' ') AS nombre, nombreBanco1, nombreBanco2, nombreBanco3 FROM clientes");
+   QueryAux->Open();
+
+   TStringList *nombresBancos1 = new TStringList();
+   TStringList *nombresBancos2 = new TStringList();
+   TStringList *nombresBancos3 = new TStringList();
+   TStringList *idClientes = new TStringList();
+   TStringList *nombreCliente = new TStringList();
+
+   while(!QueryAux->Eof)
+   {
+	  idClientes->Add(QueryAux->FieldByName("idCliente")->AsString);
+	  nombreCliente->Add(QueryAux->FieldByName("nombre")->AsString);
+	  nombresBancos1->Add(QueryAux->FieldByName("nombreBanco1")->AsString);
+	  nombresBancos2->Add(QueryAux->FieldByName("nombreBanco2")->AsString);
+	  nombresBancos3->Add(QueryAux->FieldByName("nombreBanco3")->AsString);
+	  QueryAux->Next();
+   }
+   QueryAux->Close();
+
+   //fechaPago = TDate();
+   //int idCliente = 0;
+   //valorPago = 0.0
+
+   String strFecha, strPago, strCliente, strNombreCliente, s, infoCliente;
+
+   bool flag;
+   for (int i = 0; i < infoBanco->Count; i++)
+   {
+		flag = false;
+		s = infoBanco->Strings[i];
+		strFecha = s.SubString(1, s.Pos(";")-1);
+		s = s.Delete(1,s.Pos(";"));
+		s = s.Delete(1,s.Pos(";"));
+		infoCliente = s.SubString(1, s.Pos(";")-1);
+		s = s.Delete(1,s.Pos(";"));
+		strPago = s.SubString(1, s.Pos(";")-1);
+
+		while(strPago.Pos("$") > 0)
+		strPago = strPago.Delete(strPago.Pos("$"), 1);
+
+		while(strPago.Pos(" ") > 0)
+		strPago = strPago.Delete(strPago.Pos(" "), 1);
+
+		while(strPago.Pos(".") > 0)
+		strPago = strPago.Delete(strPago.Pos("."), 1);
+
+	  if((StrToFloat(strPago) < 0.1))
+		 continue;
+
+
+	  for (int j = 0; j < nombresBancos1->Count; j++)
+	  {
+		 bool isOK1 = nombresBancos1->Strings[j] != "";
+		 bool isOK2 = nombresBancos2->Strings[j] != "";
+		 bool isOK3 = nombresBancos3->Strings[j] != "";
+
+
+
+
+		 s = infoBanco->Strings[i];
+		 if ((infoCliente.Pos(nombresBancos1->Strings[j]) > 0 && isOK1) ||
+			 (infoCliente.Pos(nombresBancos2->Strings[j]) > 0 && isOK2) ||
+			 (infoCliente.Pos(nombresBancos3->Strings[j]) > 0 && isOK3))
+		 {
+			 strCliente = idClientes->Strings[j];
+			 strNombreCliente = nombreCliente->Strings[j];
+			 strFecha = s.SubString(1, s.Pos(";")-1);
+			 s = s.Delete(1,s.Pos(";"));
+			 s = s.Delete(1,s.Pos(";"));
+			 s = s.Delete(1,s.Pos(";"));
+			 strPago = s.SubString(1, s.Pos(";")-1);
+
+			 while(strPago.Pos("$") > 0)
+				strPago = strPago.Delete(strPago.Pos("$"), 1);
+
+			 while(strPago.Pos(" ") > 0)
+				strPago = strPago.Delete(strPago.Pos(" "), 1);
+
+			 while(strPago.Pos(".") > 0)
+				strPago = strPago.Delete(strPago.Pos("."), 1);
+
+			 cliente->Add(strCliente);
+			 direccionCliente->Add(strNombreCliente);
+			 pago->Add(strPago);
+			 fecha->Add(strFecha);
+
+			 flag = true;
+			 break;
+		 }
+	  }
+
+	  if (!flag && (StrToFloat(strPago) > 0.1))
+	  {
+		 cliente->Add("0");
+		 direccionCliente->Add(infoCliente);
+		 pago->Add(strPago);
+		 fecha->Add(strFecha);
+	  }
+   }
+
+   fImportarPagosBancos->ListBox1->Clear();
+   for (int i = 0; i < cliente->Count; i++)
+   {
+	  while(fecha->Strings[i].Length() < 12)
+		 fecha->Strings[i] = fecha->Strings[i] + " ";
+
+	  fImportarPagosBancos->ListBox1->Items->Add(fecha->Strings[i] + direccionCliente->Strings[i] + "-----> " + pago->Strings[i]);
+   }
+   fImportarPagosBancos->Show();
+
+   delete infoBanco;
+   delete nombresBancos1;
+   delete nombresBancos2;
+   delete nombresBancos3;
+   delete idClientes;
+   delete cliente;
+   delete direccionCliente;
+   delete nombreCliente;
+   delete pago;
+   delete fecha;
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfCuentas::CDSfechaIngresoPagoGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(Sender->AsDateTime == StrToDateTime("01/01/1990") )
+	  Text = "-";
+   else
+      Text = Sender->AsString;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfCuentas::CDSmedioDePagoGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(Sender->AsString == "A")
+	  Text = "Efectivo";
+   else if(Sender->AsString == "B")
+	  Text = "Banco Oscar";
+   else if(Sender->AsString == "C")
+	  Text = "Banco Monica";
+   else if(Sender->AsString == "D")
+	  Text = "Banco Williams";
+   else if(Sender->AsString == "M")
+	  Text = "MercadoPago Oscar";
+   else if(Sender->AsString == "N")
+	  Text = "MercadoPago Monica";
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfCuentas::CDSmedioDePagoChange(TField *Sender)
+{
+   QueryUpdate->Close();
+   QueryUpdate->SQL->Clear();
+   QueryUpdate->SQL->Add("UPDATE cuentas SET medioDePago = :mdp WHERE idCuenta = :id LIMIT 1");
+   QueryUpdate->ParamByName("id")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+
+   QueryUpdate->ParamByName("mdp")->AsString = Sender->AsString;
+
+   QueryUpdate->ExecSQL();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfCuentas::CDSfechaIngresoPagoChange(TField *Sender)
+{
+   QueryUpdate->Close();
+   QueryUpdate->SQL->Clear();
+   QueryUpdate->SQL->Add("UPDATE cuentas SET fechaIngresoPago = :fip WHERE idCuenta = :id LIMIT 1");
+   QueryUpdate->ParamByName("id")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+
+   QueryUpdate->ParamByName("fip")->AsDate = DateOf(Sender->AsDateTime);
+
+   QueryUpdate->ExecSQL();
 }
 //---------------------------------------------------------------------------
 

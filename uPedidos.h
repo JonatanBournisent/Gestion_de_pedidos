@@ -229,6 +229,36 @@ __published:	// IDE-managed Components
 	TMenuItem *Configuraralarmadeentrega1;
 	TMenuItem *N3;
 	TButton *Button28;
+	TButton *Button29;
+	TButton *Button30;
+	TButton *Button31;
+	TButton *Button32;
+	TButton *Button33;
+	TButton *Button34;
+	TButton *Button35;
+	TLabel *Label20;
+	TLabel *Label21;
+	TPanel *Panel21;
+	TMonthCalendar *MC;
+	TEdit *Edit3;
+	TMemo *Memo4;
+	TButton *Button36;
+	TButton *Button38;
+	TButton *Button39;
+	TLabel *Label22;
+	TLabel *Label23;
+	TMenuItem *Imprimirtodosestospedidos1;
+	TMenuItem *Imprimirtodosestoscomplementos1;
+	TButton *Button37;
+	TPopupMenu *PopupMenu3;
+	TMenuItem *Copiarsaludoyvalor1;
+	TPopupMenu *PopupMenu4;
+	TMenuItem *Copiarmensemanal1;
+	TComboBox *CBmp;
+	TLabel *Label24;
+	TButton *Button40;
+	TPopupMenu *PopupMenu5;
+	TMenuItem *Establecercomopredeterminado1;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall DTPChange(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
@@ -269,8 +299,6 @@ __published:	// IDE-managed Components
 	void __fastcall RG3Click(TObject *Sender);
 	void __fastcall RG4Click(TObject *Sender);
 	void __fastcall Button15Click(TObject *Sender);
-	void __fastcall DTPEnter(TObject *Sender);
-	void __fastcall DTPExit(TObject *Sender);
 	void __fastcall Button14Click(TObject *Sender);
 	void __fastcall ListBox1DblClick(TObject *Sender);
 	void __fastcall Button16Click(TObject *Sender);
@@ -335,6 +363,31 @@ __published:	// IDE-managed Components
 	void __fastcall Verinformacindelcliente1Click(TObject *Sender);
 	void __fastcall CopiarpedidoparaWhatsApp1Click(TObject *Sender);
 	void __fastcall Configuraralarmadeentrega1Click(TObject *Sender);
+	void __fastcall DTPExit(TObject *Sender);
+	void __fastcall Button29Click(TObject *Sender);
+	void __fastcall Button28Click(TObject *Sender);
+	void __fastcall Button30Click(TObject *Sender);
+	void __fastcall Button32Click(TObject *Sender);
+	void __fastcall Button31Click(TObject *Sender);
+	void __fastcall Button33Click(TObject *Sender);
+	void __fastcall Button34Click(TObject *Sender);
+	void __fastcall Button35Click(TObject *Sender);
+	void __fastcall edUnidadesChange(TObject *Sender);
+	void __fastcall Edit3KeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall Edit3Exit(TObject *Sender);
+	void __fastcall edUnidadesExit(TObject *Sender);
+	void __fastcall Button36Click(TObject *Sender);
+	void __fastcall Button38Click(TObject *Sender);
+	void __fastcall Button39Click(TObject *Sender);
+	void __fastcall Edit3Change(TObject *Sender);
+	void __fastcall MCClick(TObject *Sender);
+	void __fastcall Imprimirtodosestospedidos1Click(TObject *Sender);
+	void __fastcall Imprimirtodosestoscomplementos1Click(TObject *Sender);
+	void __fastcall Button37Click(TObject *Sender);
+	void __fastcall Copiarsaludoyvalor1Click(TObject *Sender);
+	void __fastcall Copiarmensemanal1Click(TObject *Sender);
+	void __fastcall Button40Click(TObject *Sender);
+	void __fastcall Establecercomopredeterminado1Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -370,7 +423,7 @@ public:		// User declarations
 
 	int contLineasImpresas; //cuenta las que se enviaron a la impresora
 	int cantLineas; //contiene la cantidad de lineas a imprimir
-    int cantidadPedidos;
+	int cantidadPedidos;
 
 	int llamadorAux;
 	bool cargandoOpciones;
@@ -381,6 +434,7 @@ public:		// User declarations
 	void actualizarInfoVentas(void);
 	int vTimer1;
 	int vTimer2;
+	float valorVianda;
 
 	TDate fechaPrevia;
 

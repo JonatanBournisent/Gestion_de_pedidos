@@ -5,6 +5,7 @@
 #pragma hdrstop
 
 #include "uCargarPagos.h"
+#include "uCuentas.h"
 #include "uSeleccionarCliente.h"
 #include "VariablesGlobales.h"
 //---------------------------------------------------------------------------
@@ -175,7 +176,7 @@ void __fastcall TfCargarPagos::CDSpagoRealizadoChange(TField *Sender)
 {
    QueryUpdate->SQL->Clear();
    QueryUpdate->SQL->Add("CALL actualizarCuenta(:fSemanal, :fMensual, :fechaActualizada , :unidades, "
-   						 ":pago, :valor ,:refCliente, :idC)");
+						 ":pago, :valor ,:refCliente, :idC)");
    QueryUpdate->ParamByName("fSemanal")->AsDate = DateOf(IncDay(StartOfTheWeek(Now()),-1));
    QueryUpdate->ParamByName("fMensual")->AsDate = DateOf(IncDay(StartOfTheMonth(Now()),-1));
    QueryUpdate->ParamByName("fechaActualizada")->AsDate = DTP->Date;
@@ -186,6 +187,11 @@ void __fastcall TfCargarPagos::CDSpagoRealizadoChange(TField *Sender)
    QueryUpdate->ParamByName("idC")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
    QueryUpdate->ExecSQL();
 
+   QueryUpdate->SQL->Clear();
+   QueryUpdate->SQL->Add("UPDATE cuentas SET fechaIngresoPago = :fp, medioDePago = 'A' WHERE idCuenta = :idC LIMIT 1");
+   QueryUpdate->ParamByName("fp")->AsDate = DateOf(DTP->DateTime);
+   QueryUpdate->ParamByName("idC")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+   QueryUpdate->ExecSQL();
 }
 
 //---------------------------------------------------------------------------
@@ -586,6 +592,17 @@ void __fastcall TfCargarPagos::Button9Click(TObject *Sender)
 void __fastcall TfCargarPagos::Aadiruncomentario1Click(TObject *Sender)
 {
    Button3Click(Button3);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfCargarPagos::Verestadodecuentadelcliente1Click(TObject *Sender)
+
+{
+   if(CDS->FieldByName("refCliente")->AsInteger > 2)
+   {
+	  fCuentas->idCliente = CDS->FieldByName("refCliente")->AsInteger;
+	  fCuentas->ShowModal();
+   }
 }
 //---------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@ object fModificarCliente: TfModificarCliente
   Top = 0
   BorderStyle = bsDialog
   Caption = ' Modificar datos de un cliente'
-  ClientHeight = 686
+  ClientHeight = 683
   ClientWidth = 738
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,18 +28,18 @@ object fModificarCliente: TfModificarCliente
     Left = 8
     Top = 193
     Width = 721
-    Height = 449
+    Height = 453
     Brush.Style = bsClear
   end
   inline Frame11: TFrame1
     Left = 19
     Top = 201
     Width = 700
-    Height = 434
+    Height = 443
     TabOrder = 0
     ExplicitLeft = 19
     ExplicitTop = 201
-    ExplicitHeight = 434
+    ExplicitHeight = 443
   end
   inline Frame21: TFrame2
     Left = 16

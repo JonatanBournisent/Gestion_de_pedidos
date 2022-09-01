@@ -13,6 +13,10 @@
 #include <Data.FMTBcd.hpp>
 #include <Data.SqlExpr.hpp>
 #include <Vcl.ExtCtrls.hpp>
+#include "frxClass.hpp"
+#include "frxExportBaseDialog.hpp"
+#include "frxExportImage.hpp"
+#include "frxRich.hpp"
 //---------------------------------------------------------------------------
 class TfMenuSemanal : public TForm
 {
@@ -51,6 +55,11 @@ __published:	// IDE-managed Components
 	TButton *Button18;
 	TTimer *Timer1;
 	TButton *Button19;
+	TfrxReport *frx_contenido_tapa;
+	TButton *Button20;
+	TfrxPNGExport *frxPNGExport1;
+	TfrxReport *frx_contenido_lunes;
+	TfrxRichObject *frxRichObject1;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
@@ -80,6 +89,7 @@ __published:	// IDE-managed Components
 	void __fastcall Button18Click(TObject *Sender);
 	void __fastcall Timer1Timer(TObject *Sender);
 	void __fastcall Button19Click(TObject *Sender);
+	void __fastcall Button20Click(TObject *Sender);
 
 
 

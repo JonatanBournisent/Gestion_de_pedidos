@@ -26,7 +26,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
   end
   object Button1: TButton
     Left = 57
-    Top = 328
+    Top = 350
     Width = 191
     Height = 25
     Caption = 'Imprimir planillas'
@@ -39,6 +39,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
     Width = 191
     Height = 22
     Style = csOwnerDrawFixed
+    DropDownCount = 15
     TabOrder = 1
     OnChange = ComboBox1Change
   end
@@ -47,13 +48,13 @@ object fImprimirPlanillas: TfImprimirPlanillas
     Top = 25
     Width = 260
     Height = 160
-    Date = 43928.875299664350000000
+    Date = 43928.362397094900000000
     TabOrder = 2
     OnClick = MCClick
   end
   object Button2: TButton
     Left = 57
-    Top = 280
+    Top = 309
     Width = 191
     Height = 25
     Caption = 'Previsualizar'
@@ -62,12 +63,36 @@ object fImprimirPlanillas: TfImprimirPlanillas
   end
   object Button3: TButton
     Left = 57
-    Top = 376
+    Top = 390
     Width = 191
     Height = 25
     Caption = 'Salir'
     TabOrder = 4
     OnClick = Button3Click
+  end
+  object CBxViernes: TCheckBox
+    Left = 58
+    Top = 240
+    Width = 191
+    Height = 15
+    Caption = 'Incluir pagos viernes'
+    TabOrder = 5
+  end
+  object CBxSabado: TCheckBox
+    Left = 58
+    Top = 262
+    Width = 191
+    Height = 15
+    Caption = 'Incluir pagos s'#225'bado'
+    TabOrder = 6
+  end
+  object CBxDeshabilitar: TCheckBox
+    Left = 58
+    Top = 282
+    Width = 191
+    Height = 17
+    Caption = 'Deshabilitar pagos'
+    TabOrder = 7
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -123,7 +148,37 @@ object fImprimirPlanillas: TfImprimirPlanillas
     end
     object CDSunid: TFMTBCDField
       FieldName = 'unid'
-      DisplayFormat = '____(#.00)'
+      DisplayFormat = '(#.00)'
+    end
+    object CDSdeuda: TFMTBCDField
+      FieldName = 'deuda'
+      OnGetText = CDSdeudaGetText
+      Size = 10
+    end
+    object CDSvalorPedido: TFMTBCDField
+      FieldName = 'valorPedido'
+      OnGetText = CDSvalorPedidoGetText
+      Size = 10
+    end
+    object CDSsaldoTotal: TFMTBCDField
+      FieldName = 'saldoTotal'
+      OnGetText = CDSsaldoTotalGetText
+      Size = 10
+    end
+    object CDSmedioPago: TWideStringField
+      FieldName = 'medioPago'
+      Size = 1
+    end
+    object CDSdiaPago: TIntegerField
+      FieldName = 'diaPago'
+    end
+    object CDSfrecuenciaPago: TIntegerField
+      FieldName = 'frecuenciaPago'
+    end
+    object CDSvar_dummy: TFMTBCDField
+      FieldName = 'var_dummy'
+      OnGetText = CDSvar_dummyGetText
+      Size = 10
     end
   end
   object DataSource1: TDataSource
@@ -148,7 +203,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
     PrintOptions.PrintOnSheet = 0
     PrintOptions.ShowDialog = False
     ReportOptions.CreateDate = 43926.507441562500000000
-    ReportOptions.LastChange = 44005.735897465270000000
+    ReportOptions.LastChange = 44801.798863842600000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       ''
@@ -275,7 +330,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = []
-        Height = 37.795275590551180000
+        Height = 37.795275590000000000
         ParentFont = False
         Top = 124.724490000000000000
         Width = 377.953000000000000000
@@ -369,7 +424,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
         object Memo4: TfrxMemoView
           AllowVectorExport = True
           Left = 345.826781420000000000
-          Top = 4.157480310000000000
+          Top = 5.157480310000000000
           Width = 28.890075000000000000
           Height = 18.897630470000000000
           AutoWidth = True
@@ -388,16 +443,97 @@ object fImprimirPlanillas: TfImprimirPlanillas
           ParentFont = False
           VAlign = vaCenter
         end
+        object Memo6: TfrxMemoView
+          AllowVectorExport = True
+          Top = 20.677180000000000000
+          Width = 49.133890000000000000
+          Height = 11.338590000000000000
+          AutoWidth = True
+          DataField = 'deuda'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[frxDBDataset1."deuda"]')
+          ParentFont = False
+        end
+        object Memo7: TfrxMemoView
+          AllowVectorExport = True
+          Left = 94.488250000000000000
+          Top = 20.677180000000000000
+          Width = 147.401670000000000000
+          Height = 11.338590000000000000
+          DataField = 'saldoTotal'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[frxDBDataset1."saldoTotal"]')
+          ParentFont = False
+        end
+        object Memo11: TfrxMemoView
+          AllowVectorExport = True
+          Left = 235.008040000000000000
+          Top = 20.677180000000000000
+          Width = 45.354360000000000000
+          Height = 11.338590000000000000
+          AutoWidth = True
+          DataField = 'valorPedido'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -8
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."valorPedido"]')
+          ParentFont = False
+        end
+        object Memo12: TfrxMemoView
+          AllowVectorExport = True
+          Left = 300.362400000000000000
+          Top = 3.779530000000000000
+          Width = 45.354360000000000000
+          Height = 18.897650000000000000
+          AutoWidth = True
+          DataField = 'var_dummy'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[frxDBDataset1."var_dummy"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
       end
       object Memo5: TfrxMemoView
         AllowVectorExport = True
-        Left = 464.882190000000000000
-        Top = 899.528140000000000000
-        Width = 136.063080000000000000
-        Height = 173.858380000000000000
+        Left = 434.645950000000000000
+        Top = 891.969080000000000000
+        Width = 166.299320000000000000
+        Height = 192.756030000000000000
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
-        Font.Height = -13
+        Font.Height = -15
         Font.Name = 'Arial'
         Font.Style = []
         Frame.Typ = []
@@ -427,7 +563,14 @@ object fImprimirPlanillas: TfImprimirPlanillas
       'numero=numero'
       'comp=comp'
       'bandGrand=bandGrand'
-      'unid=unid')
+      'unid=unid'
+      'deuda=deuda'
+      'valorPedido=valorPedido'
+      'saldoTotal=saldoTotal'
+      'medioPago=medioPago'
+      'diaPago=diaPago'
+      'frecuenciaPago=frecuenciaPago'
+      'var_dummy=var_dummy')
     DataSource = DataSource1
     BCDToCurrency = False
     Left = 512

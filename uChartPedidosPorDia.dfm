@@ -26,6 +26,8 @@ object fChartPedidosPorDia: TfChartPedidosPorDia
       'CANTIDAD DE VIANDAS EFECTIVAMENTE ENTREGADAS EN CADA D'#205'A DEL MES')
     BottomAxis.Title.Caption = 'D'#205'A DEL MES'
     LeftAxis.Title.Caption = 'CANTIDAD DE VIANDAS ENTREGADAS'
+    View3D = False
+    View3DOptions.Orthogonal = False
     TabOrder = 0
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = 13

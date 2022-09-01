@@ -443,5 +443,9 @@ object fCargarPagos: TfCargarPagos
       Caption = 'A'#241'adir un comentario'
       OnClick = Aadiruncomentario1Click
     end
+    object Verestadodecuentadelcliente1: TMenuItem
+      Caption = 'Ver estado de cuenta del cliente'
+      OnClick = Verestadodecuentadelcliente1Click
+    end
   end
 end

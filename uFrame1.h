@@ -93,6 +93,20 @@ __published:	// IDE-managed Components
 	TByteField *ClientDataSet1generarFactura;
 	TSQLQuery *QueryAux;
 	TWideStringField *ClientDataSet1tipo;
+	TDBEdit *DBEdBanco1;
+	TDBEdit *DBEdBanco2;
+	TDBEdit *DBEdBanco3;
+	TLabel *Label14;
+	TLabel *Label15;
+	TLabel *Label16;
+	TWideStringField *ClientDataSet1nombreBanco1;
+	TWideStringField *ClientDataSet1nombreBanco2;
+	TWideStringField *ClientDataSet1nombreBanco3;
+	TComboBox *CBFacturar;
+	TLabel *Label17;
+	TComboBox *CBmp;
+	TLabel *Label18;
+	TWideStringField *ClientDataSet1medioPagoDefecto;
 	void __fastcall DBEdNombreChange(TObject *Sender);
 	void __fastcall DBEdApellidoChange(TObject *Sender);
 	void __fastcall DBEdCalleChange(TObject *Sender);
@@ -103,6 +117,8 @@ __published:	// IDE-managed Components
 	void __fastcall DBCUITKeyUp(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall DBCUITExit(TObject *Sender);
 	void __fastcall CBCondicionFrenteIVAChange(TObject *Sender);
+	void __fastcall CBFacturarChange(TObject *Sender);
+	void __fastcall CBmpChange(TObject *Sender);
 
 
 private:	// User declarations

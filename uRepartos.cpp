@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
+#include <DateUtils.hpp>
 #pragma hdrstop
 
 #include "uRepartos.h"
@@ -148,7 +149,6 @@ void __fastcall TfRepartos::FormClose(TObject *Sender, TCloseAction &Action)
    ClientDataSet1->Active = false;
    Query1->Close();
    QueryAux->Close();
-   RG1->ItemIndex = 0;
 
    SQLConnection1->Close();
 }
@@ -160,44 +160,15 @@ void __fastcall TfRepartos::ComboBox1Change(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfRepartos::FormShow(TObject *Sender)
 {
-   QueryAux->Close();
-   QueryAux->SQL->Clear();
 
-   if(RG1->ItemIndex == 0)
-	  QueryAux->SQL->Add("SELECT idRepartidor, descripcion FROM repartidores ORDER BY descripcion");
+   if(DayOfTheWeek(Now()) == DaySaturday)
+   {
+	  RG1->ItemIndex = 1;
+   }
    else
-	  QueryAux->SQL->Add("SELECT idRepartidor, descripcion FROM repartidores WHERE reparteSabados = 1 ORDER BY descripcion");
-   QueryAux->Open();
+	  RG1->ItemIndex = 0;
 
-   ComboBox1->Clear();
-   ComboBox2->Clear();
-
-   int idx = 0;
-   QueryAux->First();
-   int idRepartidor = QueryAux->FieldByName("idRepartidor")->AsInteger;
-   while(!QueryAux->Eof)
-   {
-	  ComboBox1->Items->Add(QueryAux->FieldByName("descripcion")->AsString);
-	  ComboBox2->Items->Add(QueryAux->FieldByName("descripcion")->AsString);
-
-	  if(idx < 15)
-	  {
-		 ransferira1->Items[idx]->Visible = true;
-		 ransferira1->Items[idx]->Caption = QueryAux->FieldByName("descripcion")->AsString;
-      }
-	  QueryAux->Next();
-	  idx++;
-   }
-   while(idx < 15)
-   {
-	  ransferira1->Items[idx]->Visible = false;
-	  idx++;
-   }
-
-   QueryAux->Close();
-   ComboBox1->ItemIndex = 0;
-   ComboBox2->ItemIndex = -1;
-   actualizarPlanillas(idRepartidor);
+   RG1Click(Sender);
 }
 //---------------------------------------------------------------------------
 void __fastcall TfRepartos::RG1Click(TObject *Sender)

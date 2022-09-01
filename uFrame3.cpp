@@ -92,7 +92,10 @@ void TFrame3::restablecerFrame(void)
    ClientDataSet1->Active = true;
 
    if(llamador == 1)
+   {
 	  ClientDataSet1->Insert();
+      ClientDataSet1->FieldByName("admiteDoble")->AsInteger = 0;
+   }
    else if(llamador == 2)
 	  ClientDataSet1->Edit();
 
@@ -158,5 +161,6 @@ void __fastcall TFrame3::DBEdCodigoChange(TObject *Sender)
    ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
 }
 //---------------------------------------------------------------------------
+
 
 

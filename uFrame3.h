@@ -46,6 +46,7 @@ __published:	// IDE-managed Components
 	TSQLQuery *Query3;
 	TDBMemo *DBMemo1;
 	TSQLQuery *QueryAux;
+	TDBCheckBox *DBCheckBox1;
 	void __fastcall DBEdNombreChange(TObject *Sender);
 	void __fastcall DBEdCodigoChange(TObject *Sender);
 private:	// User declarations

@@ -3,7 +3,7 @@ object fModificarComida: TfModificarComida
   Top = 0
   BorderStyle = bsDialog
   Caption = ' Modificar una comida...'
-  ClientHeight = 496
+  ClientHeight = 535
   ClientWidth = 608
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object fModificarComida: TfModificarComida
     Left = 8
     Top = 202
     Width = 589
-    Height = 252
+    Height = 286
     Brush.Style = bsClear
   end
   object Shape1: TShape
@@ -54,16 +54,16 @@ object fModificarComida: TfModificarComida
     Left = 14
     Top = 212
     Width = 578
-    Height = 237
+    Height = 272
     TabOrder = 1
     ExplicitLeft = 14
     ExplicitTop = 212
     ExplicitWidth = 578
-    ExplicitHeight = 237
+    ExplicitHeight = 272
   end
   object Button1: TButton
     Left = 42
-    Top = 463
+    Top = 499
     Width = 130
     Height = 25
     Caption = 'Guardar'
@@ -72,7 +72,7 @@ object fModificarComida: TfModificarComida
   end
   object Button2: TButton
     Left = 235
-    Top = 464
+    Top = 500
     Width = 130
     Height = 25
     Caption = 'Cancelar'
@@ -81,7 +81,7 @@ object fModificarComida: TfModificarComida
   end
   object Button3: TButton
     Left = 429
-    Top = 464
+    Top = 500
     Width = 130
     Height = 25
     Caption = 'Salir'

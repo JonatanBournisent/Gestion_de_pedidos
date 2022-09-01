@@ -71,6 +71,8 @@ __published:	// IDE-managed Components
 	TShape *Shape3;
 	TLargeintField *CDS1cantDomicilios;
 	TFMTBCDField *CDS1cantViandas;
+	TLabel *Label9;
+	TButton *Button8;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormShow(TObject *Sender);
@@ -81,6 +83,7 @@ __published:	// IDE-managed Components
 	void __fastcall Button5Click(TObject *Sender);
 	void __fastcall Button7Click(TObject *Sender);
 	void __fastcall Button6Click(TObject *Sender);
+	void __fastcall Button8Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfDatos(TComponent* Owner);

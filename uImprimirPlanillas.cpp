@@ -69,13 +69,6 @@ void __fastcall TfImprimirPlanillas::Button1Click(TObject *Sender)
 		 CDS->Active = false;
 
 		 String q;
-		 q = "SELECT idReparto, refCliente, refRepartidor, posicion, esSabado, "
-			 "(SELECT txtComplemento FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS comp, "
-			 "(SELECT nroBandejas FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS bandGrand, "
-			 "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND nroUnidades <> nroBandejas AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS unid, "
-			 "(SELECT calle FROM clientes WHERE refCliente = idCliente LIMIT 1) AS calle, "
-			 "(SELECT numero FROM clientes WHERE refCliente = idCliente LIMIT 1) AS numero "
-			 "FROM repartos WHERE (refRepartidor = :rep AND esSabado = :sab) ORDER BY posicion";
 
 		 if(ComboBox1->ItemIndex != 0)
 		 {
@@ -84,7 +77,7 @@ void __fastcall TfImprimirPlanillas::Button1Click(TObject *Sender)
 
 			Query1->Close();
 			Query1->SQL->Clear();
-			Query1->SQL->Add(q);
+			Query1->SQL->Add(consulta);
 			Query1->ParamByName("rep")->AsInteger = idRepartidor;
 			Query1->ParamByName("sab")->AsInteger = esSabado;
 			Query1->ParamByName("d")->AsDate = MC->Date;
@@ -117,7 +110,7 @@ void __fastcall TfImprimirPlanillas::Button1Click(TObject *Sender)
 
 			   Query1->Close();
 			   Query1->SQL->Clear();
-			   Query1->SQL->Add(q);
+			   Query1->SQL->Add(consulta);
 			   Query1->ParamByName("rep")->AsInteger = QueryAux->FieldByName("refRepartidor")->AsInteger;
 			   Query1->ParamByName("sab")->AsInteger = esSabado;
 			   Query1->ParamByName("d")->AsDate = MC->Date;
@@ -164,10 +157,6 @@ void __fastcall TfImprimirPlanillas::FormShow(TObject *Sender)
    Button1->Enabled = false;
 }
 //---------------------------------------------------------------------------
-
-
-
-
 
 void __fastcall TfImprimirPlanillas::ComboBox1Change(TObject *Sender)
 {
@@ -220,6 +209,10 @@ void __fastcall TfImprimirPlanillas::MCClick(TObject *Sender)
    idRepartidor = 0;
 
    Button1->Enabled = true;
+
+   CBxViernes->Checked = false;
+   CBxSabado->Checked = false;
+   CBxDeshabilitar->Checked = false;
 }
 //---------------------------------------------------------------------------
 
@@ -250,20 +243,11 @@ void __fastcall TfImprimirPlanillas::Button2Click(TObject *Sender)
 
 		 CDS->Active = false;
 
-		 String q;
-		 q = "SELECT idReparto, refCliente, refRepartidor, posicion, esSabado, "
-			 "(SELECT txtComplemento FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) AS comp, "
-			 "(SELECT nroBandejas FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) AS bandGrand, "
-			 "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND nroUnidades <> nroBandejas AND cantidades.fecha = :d) LIMIT 1) AS unid, "
-			 "(SELECT calle FROM clientes WHERE refCliente = idCliente LIMIT 1) AS calle, "
-			 "(SELECT numero FROM clientes WHERE refCliente = idCliente LIMIT 1) AS numero "
-			 "FROM repartos WHERE (refRepartidor = :rep AND esSabado = :sab) ORDER BY posicion";
-
 		 if(ComboBox1->ItemIndex != 0)
 		 {
 			Query1->Close();
 			Query1->SQL->Clear();
-			Query1->SQL->Add(q);
+			Query1->SQL->Add(consulta);
 			Query1->ParamByName("rep")->AsInteger = idRepartidor;
 			Query1->ParamByName("sab")->AsInteger = esSabado;
 			Query1->ParamByName("d")->AsDate = MC->Date;
@@ -290,6 +274,220 @@ void __fastcall TfImprimirPlanillas::FormCreate(TObject *Sender)
    SQLConnection1->Params->Values["Database"] = dbName;
    SQLConnection1->Params->Values["User_Name"] = userName;
    SQLConnection1->Params->Values["Password"] = pass;
+
+   /*
+
+   consulta = "SELECT idReparto, refCliente, refRepartidor, posicion, esSabado, "
+			 "(SELECT txtComplemento FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS comp, "
+			 "(SELECT nroBandejas FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS bandGrand, "
+			 "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND nroUnidades <> nroBandejas AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS unid, "
+			 "(SELECT calle FROM clientes WHERE refCliente = idCliente LIMIT 1) AS calle, "
+			 "(SELECT numero FROM clientes WHERE refCliente = idCliente LIMIT 1) AS numero, "
+
+			 "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) "
+				"AS valorPedido, "
+
+			 "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) + (SELECT (acumuladoGlobal) AS acumGlobal FROM clientes WHERE refCliente = idCliente LIMIT 1) "
+				"AS saldoTotal, "
+
+			 "(SELECT (acumuladoGlobal - acumuladoParcial) AS deuda FROM clientes WHERE refCliente = idCliente LIMIT 1) AS deuda "
+
+			 "FROM repartos WHERE (refRepartidor = :rep AND esSabado = :sab) "
+
+			 "UNION ALL ("
+
+			 "SELECT 0 AS idReparto, refCliente, refRepartidor, 100 AS posicion, :sab AS esSabado, txtComplemento AS comp, "
+			 "nroBandejas AS bandGrand, nroUnidades AS unid, "
+			 "(SELECT calle FROM clientes WHERE refCliente = idCliente LIMIT 1) AS calle, "
+			 "(SELECT numero FROM clientes WHERE refCliente = idCliente LIMIT 1) AS numero, "
+
+			 "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) = idListaPrecio LIMIT 1) * nroUnidades * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) "
+				"AS valorPedido, "
+
+			 "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) * nroUnidades + (SELECT (acumuladoGlobal) AS acumGlobal FROM clientes WHERE refCliente = idCliente LIMIT 1) "
+				"AS saldoTotal, "
+
+			 "(SELECT (acumuladoGlobal - acumuladoParcial) AS deuda FROM clientes WHERE refCliente = idCliente LIMIT 1) AS deuda "
+
+			 "FROM cantidades WHERE (fecha = :d AND refRepartidor = :rep AND cargaManual = 1) )"
+
+
+
+			  "ORDER BY posicion"; */
+
+   consulta = "SELECT idReparto, refCliente, refRepartidor, posicion, esSabado, "
+			 "(SELECT txtComplemento FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS comp, "
+			 "(SELECT medioPago FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS medioPago, "
+			 "(SELECT nroBandejas FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS bandGrand, "
+			 "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND nroUnidades <> nroBandejas AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS unid, "
+			 "(SELECT calle FROM clientes WHERE refCliente = idCliente LIMIT 1) AS calle, "
+			 "(SELECT numero FROM clientes WHERE refCliente = idCliente LIMIT 1) AS numero, "
+			 "(SELECT refFrecuenciaPago FROM clientes WHERE refCliente = idCliente LIMIT 1) AS frecuenciaPago, "
+			 "(SELECT refDiaPago FROM clientes WHERE refCliente = idCliente LIMIT 1) AS diaPago, "
+
+			 "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) "
+				"AS valorPedido, "
+
+			 "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) + (SELECT (acumuladoGlobal) AS acumGlobal FROM clientes WHERE refCliente = idCliente LIMIT 1) "
+				"AS saldoTotal, "
+
+			 "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = repartos.refCliente LIMIT 1) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) + (SELECT (acumuladoGlobal) AS acumGlobal FROM clientes WHERE refCliente = idCliente LIMIT 1) "
+				"AS var_dummy, "
+
+			 "(SELECT (acumuladoGlobal - acumuladoParcial) AS deuda FROM clientes WHERE refCliente = idCliente LIMIT 1) AS deuda "
+
+			 "FROM repartos WHERE (refRepartidor = :rep AND esSabado = :sab) "
+
+			  "ORDER BY posicion";
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfImprimirPlanillas::CDSsaldoTotalValidate(TField *Sender)
+{
+   CDS->FieldByName("saldoTotal")->AsFloat = CDS->FieldByName("valorPedido")->AsFloat + CDS->FieldByName("deuda")->AsFloat;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfImprimirPlanillas::CDSdeudaGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(Sender->AsFloat == 0 || Sender->AsFloat > 30000)
+   {
+	  Text = "";
+	  return;
+   }
+   if(Sender->AsFloat > 0)
+   {
+	  Text = "Debe: " + FormatFloat("$0", Sender->AsFloat);
+	  return;
+   }
+   if(Sender->AsFloat < 0)
+   {
+	  Text = "A fav.: " + FormatFloat("$0", Sender->AsFloat * -1.0);
+	  return;
+   }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfImprimirPlanillas::CDSvalorPedidoGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(Sender->AsFloat == 0)
+   {
+	  Text = "";
+	  return;
+   }
+   if(Sender->AsFloat > 0)
+   {
+	  Text = "Valor: " + FormatFloat("$0", Sender->AsFloat);
+	  return;
+   }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfImprimirPlanillas::CDSsaldoTotalGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(Sender->AsFloat == 0 || Sender->AsFloat > 30000)
+   {
+	  Text = "";
+	  return;
+   }
+   if(Sender->AsFloat > 0)
+   {
+	  Text = "Saldo hoy: " + FormatFloat("$0", Sender->AsFloat);
+	  return;
+   }
+   if(Sender->AsFloat < 0)
+   {
+	  Text = "A fav. hoy: " + FormatFloat("$0", Sender->AsFloat * -1.0);
+	  return;
+   }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfImprimirPlanillas::CDSvar_dummyGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(CBxDeshabilitar->Checked)
+   {
+      Text = "";
+	  return;
+   }
+   if(Sender->DataSet->FieldByName("bandGrand")->AsInteger == 0)
+   {
+	  Text = "";
+	  return;
+   }
+   if(Sender->AsFloat < 0.0)
+   {
+	  Text = "NO";
+	  return;
+   }
+   if(Sender->DataSet->FieldByName("medioPago")->AsString != "A")
+   {
+	  Text = "NO";
+	  return;
+   }
+   if(Sender->DataSet->FieldByName("frecuenciaPago")->AsInteger == 1)
+   {
+	  Text = "$" + Sender->AsString;
+	  return;
+   }
+   if(Sender->DataSet->FieldByName("frecuenciaPago")->AsInteger == 2)
+   {
+	   if(DayOfTheWeek(MC->Date) == Sender->DataSet->FieldByName("diaPago")->AsInteger)
+	   {
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(CBxViernes->Checked && Sender->DataSet->FieldByName("diaPago")->AsInteger == 5)
+	   {
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(CBxSabado->Checked && Sender->DataSet->FieldByName("diaPago")->AsInteger == 6)
+	   {
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(Sender->DataSet->FieldByName("deuda")->AsFloat > 0.0)
+	   {
+		  Text = "$" + Sender->DataSet->FieldByName("deuda")->AsString;
+		  return;
+	   }
+	   Text = "NO";
+	   return;
+   }
+   if(Sender->DataSet->FieldByName("frecuenciaPago")->AsInteger == 3)
+   {
+	   if(Sender->DataSet->FieldByName("deuda")->AsFloat > 0.0)
+	   {
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(Sender->DataSet->FieldByName("deuda")->AsFloat > 0.0)
+	   {
+		  Text = "$" + Sender->DataSet->FieldByName("deuda")->AsString;
+		  return;
+	   }
+	   Text = "NO";
+	   return;
+   }
 }
 //---------------------------------------------------------------------------
 

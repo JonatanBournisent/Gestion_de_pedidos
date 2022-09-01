@@ -60,7 +60,8 @@ bool TFrame1::guardar(void)
    {
 	  ClientDataSet1->FieldByName("idCliente")->AsInteger = 0;
 	  ClientDataSet1->FieldByName("saldo")->AsFloat = 0.0;
-	  ClientDataSet1->FieldByName("tipo")->AsString = "O";
+	  ClientDataSet1->FieldByName("tipo")->AsString = CBFacturar->Text;
+	  ClientDataSet1->FieldByName("medioPagoDefecto")->AsString = CBmp->Text.SubString(1,1);
 	  ClientDataSet1->FieldByName("esVisible")->AsInteger = 0;
 	  ClientDataSet1->FieldByName("acumuladoGlobal")->AsFloat = 0.0;
 	  ClientDataSet1->FieldByName("acumuladoParcial")->AsFloat = 0.0;
@@ -254,6 +255,9 @@ void TFrame1::restablecerFrame(void)
    ClientDataSet5->Active = true;
    ClientDataSet4->Active = false;
 
+   CBFacturar->ItemIndex = 0;
+   CBmp->ItemIndex = 0;
+
    if(llamador == 1)
 	  ClientDataSet1->Filtered = false;
    else if(llamador == 2)
@@ -297,6 +301,19 @@ void TFrame1::restablecerFrame(void)
 		 conDNI = false;
 		 DBCUIT->MaxLength = 13;
 	  }
+	  for(int i=0;i<CBFacturar->Items->Count;i++)
+		 if(CBFacturar->Items->Strings[i] == ClientDataSet1->FieldByName("Tipo")->AsString)
+		 {
+			CBFacturar->ItemIndex = i;
+			break;
+		 }
+	  for(int i=0;i<CBmp->Items->Count;i++)
+		 if(CBmp->Items->Strings[i].SubString(1,1) == ClientDataSet1->FieldByName("medioPagoDefecto")->AsString)
+		 {
+			CBmp->ItemIndex = i;
+			break;
+		 }
+
 	  ClientDataSet1->Edit();
 	  modificando = true;
    }
@@ -331,6 +348,8 @@ void TFrame1::cerrarFrame(void)
    blockDBEdit = false;
    SQLConnection1->Close();
    CBCondicionFrenteIVA->ItemIndex = -1;
+   CBFacturar->ItemIndex = 0;
+   CBmp->ItemIndex = 0;
 }
 //---------------------------------------------------------------------------
 
@@ -473,4 +492,18 @@ void __fastcall TFrame1::CBCondicionFrenteIVAChange(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
+void __fastcall TFrame1::CBFacturarChange(TObject *Sender)
+{
+   if(ClientDataSet1->Active)
+      ClientDataSet1->FieldByName("tipo")->AsString = CBFacturar->Text.SubString(1,1);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFrame1::CBmpChange(TObject *Sender)
+{
+   if(ClientDataSet1->Active)
+	  ClientDataSet1->FieldByName("medioPagoDefecto")->AsString = CBmp->Text.SubString(1,1);
+}
+//---------------------------------------------------------------------------
 

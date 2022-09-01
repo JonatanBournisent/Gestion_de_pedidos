@@ -79,8 +79,8 @@ object fCuentas: TfCuentas
     ParentFont = False
   end
   object Label6: TLabel
-    Left = 440
-    Top = 177
+    Left = 387
+    Top = 176
     Width = 111
     Height = 13
     Caption = 'CTRL + F1 para buscar'
@@ -168,7 +168,42 @@ object fCuentas: TfCuentas
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 62
+        Width = 86
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'fechaIngresoPago'
+        Title.Alignment = taCenter
+        Title.Caption = 'Fecha Pago'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 77
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'medioDePago'
+        PickList.Strings = (
+          'A- Efectivo'
+          'B - Banco Oscar'
+          'C - Banco Monica'
+          'D - Banco Williams'
+          'M - MercadoPago Oscar'
+          'N - MercadoPago Monica')
+        Title.Alignment = taCenter
+        Title.Caption = 'Medio Pago'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 84
         Visible = True
       end
       item
@@ -191,7 +226,7 @@ object fCuentas: TfCuentas
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.573284375000000000
+    Date = 43949.281096805560000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1
@@ -228,7 +263,7 @@ object fCuentas: TfCuentas
     OnClick = Button1Click
   end
   object CheckBox1: TCheckBox
-    Left = 281
+    Left = 250
     Top = 175
     Width = 130
     Height = 17
@@ -366,6 +401,15 @@ object fCuentas: TfCuentas
         end>
     end
   end
+  object Button11: TButton
+    Left = 504
+    Top = 174
+    Width = 75
+    Height = 20
+    Caption = 'Importar CSV'
+    TabOrder = 13
+    OnClick = Button11Click
+  end
   object DataSource1: TDataSource
     DataSet = CDS
     Left = 834
@@ -409,6 +453,19 @@ object fCuentas: TfCuentas
     object CDSrep: TWideStringField
       FieldName = 'rep'
       Size = 5
+    end
+    object CDSfechaIngresoPago: TDateField
+      FieldName = 'fechaIngresoPago'
+      OnChange = CDSfechaIngresoPagoChange
+      OnGetText = CDSfechaIngresoPagoGetText
+      DisplayFormat = 'dd/mm/yyyy'
+      EditMask = '!99/99/0000;1;_'
+    end
+    object CDSmedioDePago: TWideStringField
+      FieldName = 'medioDePago'
+      OnChange = CDSmedioDePagoChange
+      OnGetText = CDSmedioDePagoGetText
+      Size = 1
     end
   end
   object DataSetProvider1: TDataSetProvider
@@ -511,5 +568,10 @@ object fCuentas: TfCuentas
     DataSet = CDS2
     Left = 578
     Top = 128
+  end
+  object OD1: TOpenDialog
+    DefaultExt = '.csv'
+    Filter = '*.csv'
+    Top = 152
   end
 end

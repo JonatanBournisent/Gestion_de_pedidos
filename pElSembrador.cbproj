@@ -299,6 +299,12 @@
             <DependentOn>uGestionDeGastos.h</DependentOn>
             <BuildOrder>48</BuildOrder>
         </CppCompile>
+        <CppCompile Include="uImportarPagosBancos.cpp">
+            <Form>fImportarPagosBancos</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>uImportarPagosBancos.h</DependentOn>
+            <BuildOrder>56</BuildOrder>
+        </CppCompile>
         <CppCompile Include="uImprimirCuentas.cpp">
             <Form>fImprimirCuentas</Form>
             <FormType>dfm</FormType>
@@ -464,55 +470,56 @@
         <FormResources Include="uModificarCliente.dfm"/>
         <FormResources Include="uMenuSemanal.dfm"/>
         <FormResources Include="uMenuDelDia.dfm"/>
-        <FormResources Include="uPedidos.dfm"/>
-        <FormResources Include="uMostrarPedidos.dfm"/>
         <FormResources Include="uModificarComida.dfm"/>
-        <FormResources Include="uMain.dfm"/>
+        <FormResources Include="uPedidos.dfm"/>
+        <FormResources Include="uPausa.dfm"/>
+        <FormResources Include="uMostrarPedidos.dfm"/>
         <FormResources Include="uImprimirResumenManual.dfm"/>
         <FormResources Include="uImprimirPlanillas.dfm"/>
         <FormResources Include="uImprimirCuentas.dfm"/>
+        <FormResources Include="uInfoCliente.dfm"/>
+        <FormResources Include="uMain.dfm"/>
         <FormResources Include="uIngredientes.dfm"/>
         <FormResources Include="uInformacionNutricional.dfm"/>
-        <FormResources Include="uInfoCliente.dfm"/>
-        <FormResources Include="uPrecios.dfm"/>
-        <FormResources Include="uVerComprobantesElectronicos.dfm"/>
         <FormResources Include="uVerCargaManual.dfm"/>
         <FormResources Include="uValorNutricional.dfm"/>
-        <FormResources Include="uVerHistorialPedidos.dfm"/>
         <FormResources Include="uSeleccionarComida.dfm"/>
-        <FormResources Include="uRecetas.dfm"/>
+        <FormResources Include="uVerComprobantesElectronicos.dfm"/>
+        <FormResources Include="uVerHistorialPedidos.dfm"/>
         <FormResources Include="uRastrearPagos.dfm"/>
         <FormResources Include="uProductos.dfm"/>
+        <FormResources Include="uPrecios.dfm"/>
+        <FormResources Include="uRecetas.dfm"/>
         <FormResources Include="uSeleccionarCliente.dfm"/>
         <FormResources Include="uRepartos.dfm"/>
         <FormResources Include="uRepartidores.dfm"/>
-        <FormResources Include="uGestionDeGastos.dfm"/>
+        <FormResources Include="uImportarPagosBancos.dfm"/>
         <FormResources Include="uChartPedidosPorHora.dfm"/>
         <FormResources Include="uChartPedidosPorDia.dfm"/>
         <FormResources Include="uChartComidasMasVendidas.dfm"/>
+        <FormResources Include="uClientesHabituales.dfm"/>
+        <FormResources Include="uConfiguraciones.dfm"/>
         <FormResources Include="uComprobantesX.dfm"/>
         <FormResources Include="uComidasExcluidas.dfm"/>
-        <FormResources Include="uClientesHabituales.dfm"/>
-        <FormResources Include="uChartCobrosPorDia.dfm"/>
         <FormResources Include="uAgregarCliente.dfm"/>
+        <FormResources Include="uAgregarComida.dfm"/>
+        <FormResources Include="uChartCobrosPorDia.dfm"/>
         <FormResources Include="uCargarPagos.dfm"/>
         <FormResources Include="uAlarma.dfm"/>
-        <FormResources Include="uAgregarComida.dfm"/>
-        <FormResources Include="uConfiguraciones.dfm"/>
         <FormResources Include="uFrame3.dfm"/>
         <FormResources Include="uFrame2.dfm"/>
         <FormResources Include="uFrame1.dfm"/>
+        <FormResources Include="uFrame4.dfm"/>
+        <FormResources Include="uGestionDeGastos.dfm"/>
         <FormResources Include="uGestionarAlarmas.dfm"/>
         <FormResources Include="uFrecuenciaComidas.dfm"/>
-        <FormResources Include="uFrame4.dfm"/>
-        <FormResources Include="uFormulaComidas.dfm"/>
         <FormResources Include="uDatos.dfm"/>
         <FormResources Include="uCuentas.dfm"/>
         <FormResources Include="uConfigurarAlarma.dfm"/>
+        <FormResources Include="uEmitirCompElectMonotributo.dfm"/>
+        <FormResources Include="uFormulaComidas.dfm"/>
         <FormResources Include="uFacturacionMensual.dfm"/>
         <FormResources Include="uEmitirComprobanteElectronico.dfm"/>
-        <FormResources Include="uEmitirCompElectMonotributo.dfm"/>
-        <FormResources Include="uPausa.dfm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

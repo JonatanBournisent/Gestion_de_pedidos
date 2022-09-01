@@ -7,55 +7,56 @@
 USEFORM("uModificarCliente.cpp", fModificarCliente);
 USEFORM("uMenuSemanal.cpp", fMenuSemanal);
 USEFORM("uMenuDelDia.cpp", fMenuDelDia);
-USEFORM("uPedidos.cpp", fPedidos);
-USEFORM("uMostrarPedidos.cpp", fMostrarPedidos);
 USEFORM("uModificarComida.cpp", fModificarComida);
-USEFORM("uMain.cpp", fMain);
+USEFORM("uPedidos.cpp", fPedidos);
+USEFORM("uPausa.cpp", fPausa);
+USEFORM("uMostrarPedidos.cpp", fMostrarPedidos);
 USEFORM("uImprimirResumenManual.cpp", fImprimirResumenManual);
 USEFORM("uImprimirPlanillas.cpp", fImprimirPlanillas);
 USEFORM("uImprimirCuentas.cpp", fImprimirCuentas);
+USEFORM("uInfoCliente.cpp", fInfoCliente);
+USEFORM("uMain.cpp", fMain);
 USEFORM("uIngredientes.cpp", fIngredientes);
 USEFORM("uInformacionNutricional.cpp", fInformacionNutricional);
-USEFORM("uInfoCliente.cpp", fInfoCliente);
-USEFORM("uPrecios.cpp", fPrecios);
-USEFORM("uVerComprobantesElectronicos.cpp", fVerComprobantesElectronicos);
 USEFORM("uVerCargaManual.cpp", fVerCargaManual);
 USEFORM("uValorNutricional.cpp", fValorNutricional);
-USEFORM("uVerHistorialPedidos.cpp", fVerHistorialPedidos);
 USEFORM("uSeleccionarComida.cpp", fSeleccionarComida);
-USEFORM("uRecetas.cpp", fRecetas);
+USEFORM("uVerComprobantesElectronicos.cpp", fVerComprobantesElectronicos);
+USEFORM("uVerHistorialPedidos.cpp", fVerHistorialPedidos);
 USEFORM("uRastrearPagos.cpp", fRastrearPagos);
 USEFORM("uProductos.cpp", fProductos);
+USEFORM("uPrecios.cpp", fPrecios);
+USEFORM("uRecetas.cpp", fRecetas);
 USEFORM("uSeleccionarCliente.cpp", fSeleccionarCliente);
 USEFORM("uRepartos.cpp", fRepartos);
 USEFORM("uRepartidores.cpp", fRepartidores);
-USEFORM("uGestionDeGastos.cpp", fGestionDeGastos);
 USEFORM("uChartPedidosPorHora.cpp", fChartPedidosPorHora);
 USEFORM("uChartPedidosPorDia.cpp", fChartPedidosPorDia);
 USEFORM("uChartComidasMasVendidas.cpp", fChartComidasMasVendidas);
+USEFORM("uClientesHabituales.cpp", fClientesHabituales);
+USEFORM("uConfiguraciones.cpp", fConfiguraciones);
 USEFORM("uComprobantesX.cpp", fComprobantesX);
 USEFORM("uComidasExcluidas.cpp", fComidasExcluidas);
-USEFORM("uClientesHabituales.cpp", fClientesHabituales);
-USEFORM("uChartCobrosPorDia.cpp", fChartCobrosPorDia);
 USEFORM("uAgregarCliente.cpp", fAgregarCliente);
+USEFORM("uAgregarComida.cpp", fAgregarComida);
+USEFORM("uChartCobrosPorDia.cpp", fChartCobrosPorDia);
 USEFORM("uCargarPagos.cpp", fCargarPagos);
 USEFORM("uAlarma.cpp", fAlarma);
-USEFORM("uAgregarComida.cpp", fAgregarComida);
-USEFORM("uConfiguraciones.cpp", fConfiguraciones);
 USEFORM("uFrame3.cpp", Frame3); /* TFrame: File Type */
 USEFORM("uFrame2.cpp", Frame2); /* TFrame: File Type */
 USEFORM("uFrame1.cpp", Frame1); /* TFrame: File Type */
+USEFORM("uFrame4.cpp", Frame4); /* TFrame: File Type */
+USEFORM("uGestionDeGastos.cpp", fGestionDeGastos);
 USEFORM("uGestionarAlarmas.cpp", fGestionarAlarmas);
 USEFORM("uFrecuenciaComidas.cpp", fFrecuenciaComidas);
-USEFORM("uFrame4.cpp", Frame4); /* TFrame: File Type */
-USEFORM("uFormulaComidas.cpp", fFormulaComidas);
 USEFORM("uDatos.cpp", fDatos);
 USEFORM("uCuentas.cpp", fCuentas);
 USEFORM("uConfigurarAlarma.cpp", fConfigurarAlarma);
+USEFORM("uEmitirCompElectMonotributo.cpp", fEmitirCompElectMonotributo);
+USEFORM("uFormulaComidas.cpp", fFormulaComidas);
 USEFORM("uFacturacionMensual.cpp", fFacturacionMensual);
 USEFORM("uEmitirComprobanteElectronico.cpp", fEmitirComprobanteElectronico);
-USEFORM("uEmitirCompElectMonotributo.cpp", fEmitirCompElectMonotributo);
-USEFORM("uPausa.cpp", fPausa);
+USEFORM("uImportarPagosBancos.cpp", fImportarPagosBancos);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
@@ -111,6 +112,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 		Application->CreateForm(__classid(TfFrecuenciaComidas), &fFrecuenciaComidas);
 		Application->CreateForm(__classid(TfInfoCliente), &fInfoCliente);
 		Application->CreateForm(__classid(TfPausa), &fPausa);
+		Application->CreateForm(__classid(TfImportarPagosBancos), &fImportarPagosBancos);
 		Application->Run();
 	}
 	catch (Exception &exception)
