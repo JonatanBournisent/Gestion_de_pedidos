@@ -328,8 +328,11 @@ void __fastcall TfImprimirPlanillas::FormCreate(TObject *Sender)
 			 "(SELECT medioPago FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS medioPago, "
 			 "(SELECT nroBandejas FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS bandGrand, "
 			 "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND nroUnidades <> nroBandejas AND cantidades.fecha = :d AND cargaManual = 0) LIMIT 1) AS unid, "
+			 "IFNULL((SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = DATE_ADD(:d, INTERVAL -1 DAY)) LIMIT 1), 0) AS unidAyer, "
 			 "(SELECT calle FROM clientes WHERE refCliente = idCliente LIMIT 1) AS calle, "
 			 "(SELECT numero FROM clientes WHERE refCliente = idCliente LIMIT 1) AS numero, "
+			 "(SELECT pagoAdelantado FROM clientes WHERE refCliente = idCliente LIMIT 1) AS pagoAdelantado, "
+			 "(SELECT CASE WHEN menuImpreso = 'S' THEN 1 ELSE 0 END FROM clientes WHERE refCliente = idCliente LIMIT 1) AS menuImpreso, "
 			 "(SELECT refFrecuenciaPago FROM clientes WHERE refCliente = idCliente LIMIT 1) AS frecuenciaPago, "
 			 "(SELECT refDiaPago FROM clientes WHERE refCliente = idCliente LIMIT 1) AS diaPago, "
 
@@ -353,6 +356,50 @@ void __fastcall TfImprimirPlanillas::FormCreate(TObject *Sender)
 			 "FROM repartos WHERE (refRepartidor = :rep AND esSabado = :sab) "
 
 			  "ORDER BY posicion";
+
+
+
+//consulta = "SELECT repartos.idReparto, repartos.refCliente, repartos.refRepartidor, repartos.posicion, repartos.esSabado, "
+//			 "cantidades2.txtComplemento AS comp, "
+//			 "cantidades2.medioPago AS medioPago, "
+//			 "cantidades2.nroBandejas AS bandGrand, "
+//			 "cantidades2.nroUnidades AS unid, "
+//			 "IFNULL((SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = DATE_ADD(:d, INTERVAL -1 DAY)) LIMIT 1), 0) AS unidAyer, "
+//			 "clientes2.calle AS calle, "
+//			 "clientes2.numero AS numero, "
+//			 "clientes2.pagoAdelantado AS pagoAdelantado, "
+//			 "CASE WHEN clientes2.menuImpreso = 'S' THEN 1 ELSE 0 END AS menuImpreso, "
+//			 "clientes2.refFrecuenciaPago AS frecuenciaPago, "
+//			 "clientes2.refDiaPago AS diaPago, "
+//
+//			 "(SELECT valor "
+//				"FROM listasPrecio WHERE "
+//					"clientes2.refListaPrecio = idListaPrecio LIMIT 1) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) * ((100.0 - clientes2.bonificacion) / 100.0) "
+//				"AS valorPedido, "
+//
+//			 "((SELECT valor "
+//				"FROM listasPrecio WHERE "
+//					"clientes2.refListaPrecio = idListaPrecio LIMIT 1) * ((100.0 - clientes2.bonificacion) / 100.0) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) + (clientes2.acumuladoGlobal)) "
+//				"AS saldoTotal, "
+//
+//			 "((SELECT valor "
+//				"FROM listasPrecio WHERE "
+//					"clientes2.refListaPrecio = idListaPrecio LIMIT 1) * ((100.0 - clientes2.bonificacion) / 100.0) * (SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = repartos.refCliente AND cantidades.fecha = :d) LIMIT 1) + (clientes2.acumuladoGlobal)) "
+//				"AS var_dummy, "
+//
+//			 "(clientes2.acumuladoGlobal - clientes2.acumuladoParcial) AS deuda "
+//
+//			 "FROM repartos "
+//			 " LEFT JOIN cantidades AS cantidades2 ON cantidades2.refCliente = repartos.refCliente AND cantidades2.fecha = :d AND cantidades2.cargaManual = 0"
+//			 " LEFT JOIN clientes AS clientes2 ON clientes2.idCliente = repartos.refCliente "
+//
+//			 " WHERE (repartos.refRepartidor = :rep AND repartos.esSabado = :sab) "
+//
+//			  "ORDER BY posicion";
+
+
+
+
 }
 //---------------------------------------------------------------------------
 
@@ -452,6 +499,12 @@ void __fastcall TfImprimirPlanillas::CDSvar_dummyGetText(TField *Sender, Unicode
    {
 	   if(DayOfTheWeek(MC->Date) == Sender->DataSet->FieldByName("diaPago")->AsInteger)
 	   {
+		  if(Sender->DataSet->FieldByName("pagoAdelantado")->AsString == "S")
+		  {
+			 Text = "???";
+			 return;
+		  }
+
 		  Text = "$" + Sender->AsString;
 		  return;
 	   }
@@ -488,6 +541,44 @@ void __fastcall TfImprimirPlanillas::CDSvar_dummyGetText(TField *Sender, Unicode
 	   Text = "NO";
 	   return;
    }
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfImprimirPlanillas::CDSmenuImpresoGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(CBxViernes->Checked || DayOfTheWeek(MC->Date) == 5)
+   {
+	   if(Sender->AsInteger == 1)
+	   {
+		  Text = "M";
+	   }
+	   else
+		  Text = "";
+
+	   return;
+   }
+
+   if((CBxSabado->Checked || DayOfTheWeek(MC->Date) == 6) && !(CBxViernes->Checked || DayOfTheWeek(MC->Date) == 5))
+   {
+	   if(CDS->FieldByName("unidAyer")->AsFloat > 0)
+	   {
+	      Text = "";
+		  return;
+	   }
+	   if(Sender->AsInteger == 1)
+	   {
+		  Text = "M";
+	   }
+	   else
+		  Text = "";
+
+	   return;
+   }
+
+   Text = "";
+   return;
 }
 //---------------------------------------------------------------------------
 

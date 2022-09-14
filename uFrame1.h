@@ -107,6 +107,10 @@ __published:	// IDE-managed Components
 	TComboBox *CBmp;
 	TLabel *Label18;
 	TWideStringField *ClientDataSet1medioPagoDefecto;
+	TDBCheckBox *DBCheckBox3;
+	TWideStringField *ClientDataSet1pagoAdelantado;
+	TDBCheckBox *DBCheckBox5;
+	TWideStringField *ClientDataSet1menuImpreso;
 	void __fastcall DBEdNombreChange(TObject *Sender);
 	void __fastcall DBEdApellidoChange(TObject *Sender);
 	void __fastcall DBEdCalleChange(TObject *Sender);

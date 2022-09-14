@@ -68,13 +68,23 @@ void __fastcall TFrame4::Edit1Change(TObject *Sender)
 
       q = "SELECT idComida, nombre, codigo, "
 		  "(SELECT descripcion FROM categoriacomidas WHERE refCategoriaComida = idCategoriaComida LIMIT 1) AS categoria "
-		  "FROM comidas WHERE (idComida > 1 AND (UPPER(nombre) LIKE :v OR UPPER(codigo) LIKE :v)) ORDER BY nombre LIMIT 15";
+		  "FROM comidas WHERE (idComida > 1 AND (UPPER(nombre) LIKE UPPER(:v) OR UPPER(codigo) LIKE UPPER(:v))) ORDER BY nombre LIMIT 30";
 
+
+	  String buscar = Edit1->Text;
+	  int pos;
+	  while(buscar.Pos(" "))
+	  {
+		  pos = buscar.Pos(" ");
+		  buscar = buscar.Delete(pos, 1);
+		  buscar = buscar.Insert("%", pos);
+	  }
+	  buscar = "%" + buscar + "%";
 
 	  Query1->Close();
 	  Query1->SQL->Clear();
 	  Query1->SQL->Add(q);
-	  Query1->ParamByName("v")->AsString = "%" + Edit1->Text.UpperCase() + "%";
+	  Query1->ParamByName("v")->AsString = buscar;
 	  Query1->Open();
 
 	  ClientDataSet1->Active = true;

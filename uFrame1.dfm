@@ -1,54 +1,54 @@
 object Frame1: TFrame1
   Left = 0
   Top = 0
-  Width = 700
+  Width = 703
   Height = 444
   TabOrder = 0
   object Label1: TLabel
     Left = 0
-    Top = 74
+    Top = 61
     Width = 37
     Height = 13
     Caption = 'Nombre'
   end
   object Label2: TLabel
     Left = 0
-    Top = 106
+    Top = 87
     Width = 37
     Height = 13
     Caption = 'Apellido'
   end
   object Label3: TLabel
     Left = 0
-    Top = 9
+    Top = 8
     Width = 23
     Height = 13
     Caption = 'Calle'
   end
   object Label4: TLabel
     Left = 0
-    Top = 41
+    Top = 34
     Width = 37
     Height = 13
     Caption = 'N'#250'mero'
   end
   object Label5: TLabel
     Left = 1
-    Top = 268
+    Top = 219
     Width = 94
     Height = 13
     Caption = 'Frecuencia de pago'
   end
   object Label6: TLabel
     Left = 1
-    Top = 333
+    Top = 272
     Width = 114
     Height = 13
     Caption = 'Lista de precio asociada'
   end
   object Label7: TLabel
     Left = 322
-    Top = 366
+    Top = 360
     Width = 78
     Height = 13
     Caption = 'Bonificacion [%]'
@@ -62,56 +62,56 @@ object Frame1: TFrame1
   end
   object Label10: TLabel
     Left = 1
-    Top = 301
+    Top = 246
     Width = 104
     Height = 13
     Caption = 'Dia para emitir detalle'
   end
   object Label8: TLabel
     Left = 0
-    Top = 138
+    Top = 113
     Width = 60
     Height = 13
     Caption = 'Raz'#243'n Social'
   end
   object Label11: TLabel
     Left = 0
-    Top = 171
+    Top = 140
     Width = 69
     Height = 13
     Caption = 'Domicilio Fiscal'
   end
   object Label12: TLabel
     Left = 1
-    Top = 236
+    Top = 193
     Width = 24
     Height = 13
     Caption = 'CUIT'
   end
   object Label13: TLabel
     Left = 1
-    Top = 203
+    Top = 166
     Width = 110
     Height = 13
     Caption = 'Condicion frente al IVA'
   end
   object Label14: TLabel
     Left = 1
-    Top = 366
+    Top = 300
     Width = 69
     Height = 13
     Caption = 'Nombre Banco'
   end
   object Label15: TLabel
     Left = 1
-    Top = 393
+    Top = 325
     Width = 69
     Height = 13
     Caption = 'Nombre Banco'
   end
   object Label16: TLabel
     Left = 1
-    Top = 421
+    Top = 350
     Width = 69
     Height = 13
     Caption = 'Nombre Banco'
@@ -132,7 +132,7 @@ object Frame1: TFrame1
   end
   object DBEdNombre: TDBEdit
     Left = 128
-    Top = 70
+    Top = 60
     Width = 187
     Height = 21
     DataField = 'nombre'
@@ -142,7 +142,7 @@ object Frame1: TFrame1
   end
   object DBEdApellido: TDBEdit
     Left = 128
-    Top = 103
+    Top = 87
     Width = 187
     Height = 21
     DataField = 'apellido'
@@ -152,7 +152,7 @@ object Frame1: TFrame1
   end
   object DBEdCalle: TDBEdit
     Left = 128
-    Top = 6
+    Top = 8
     Width = 187
     Height = 21
     DataField = 'calle'
@@ -162,7 +162,7 @@ object Frame1: TFrame1
   end
   object DBEdNumero: TDBEdit
     Left = 128
-    Top = 38
+    Top = 34
     Width = 187
     Height = 21
     DataField = 'numero'
@@ -172,7 +172,7 @@ object Frame1: TFrame1
   end
   object DBFrecPago: TDBLookupComboBox
     Left = 129
-    Top = 265
+    Top = 219
     Width = 144
     Height = 21
     DataField = 'refFrecuenciaPago'
@@ -184,7 +184,7 @@ object Frame1: TFrame1
   end
   object DBListaPrecio: TDBLookupComboBox
     Left = 129
-    Top = 330
+    Top = 272
     Width = 144
     Height = 21
     DataField = 'refListaPrecio'
@@ -196,7 +196,7 @@ object Frame1: TFrame1
   end
   object DBEdBonificacion: TDBEdit
     Left = 409
-    Top = 363
+    Top = 357
     Width = 57
     Height = 21
     DataField = 'bonificacion'
@@ -277,7 +277,7 @@ object Frame1: TFrame1
   end
   object DBDiaPago: TDBLookupComboBox
     Left = 129
-    Top = 297
+    Top = 245
     Width = 144
     Height = 21
     DataField = 'refDiaPago'
@@ -289,7 +289,7 @@ object Frame1: TFrame1
   end
   object DBCheckBox1: TDBCheckBox
     Left = 322
-    Top = 392
+    Top = 403
     Width = 161
     Height = 17
     Caption = 'Imprimir detalle de cuentas'
@@ -301,7 +301,7 @@ object Frame1: TFrame1
   end
   object DBRazonSocial: TDBEdit
     Left = 128
-    Top = 135
+    Top = 113
     Width = 187
     Height = 21
     DataField = 'razonSocial'
@@ -310,7 +310,7 @@ object Frame1: TFrame1
   end
   object DBDomicilioFiscal: TDBEdit
     Left = 128
-    Top = 168
+    Top = 140
     Width = 187
     Height = 21
     DataField = 'domicilioFiscal'
@@ -319,7 +319,7 @@ object Frame1: TFrame1
   end
   object DBCUIT: TDBEdit
     Left = 129
-    Top = 233
+    Top = 193
     Width = 144
     Height = 21
     DataField = 'CUIT'
@@ -332,7 +332,7 @@ object Frame1: TFrame1
   end
   object CBCondicionFrenteIVA: TComboBox
     Left = 129
-    Top = 200
+    Top = 166
     Width = 144
     Height = 22
     Style = csOwnerDrawFixed
@@ -341,7 +341,7 @@ object Frame1: TFrame1
   end
   object DBCheckBox2: TDBCheckBox
     Left = 322
-    Top = 420
+    Top = 423
     Width = 161
     Height = 17
     Caption = 'Generar factura electr'#243'nica'
@@ -353,7 +353,7 @@ object Frame1: TFrame1
   end
   object DBEdBanco1: TDBEdit
     Left = 129
-    Top = 363
+    Top = 298
     Width = 121
     Height = 21
     DataField = 'nombreBanco1'
@@ -362,7 +362,7 @@ object Frame1: TFrame1
   end
   object DBEdBanco2: TDBEdit
     Left = 129
-    Top = 390
+    Top = 323
     Width = 121
     Height = 21
     DataField = 'nombreBanco2'
@@ -371,7 +371,7 @@ object Frame1: TFrame1
   end
   object DBEdBanco3: TDBEdit
     Left = 129
-    Top = 418
+    Top = 348
     Width = 121
     Height = 21
     DataField = 'nombreBanco3'
@@ -409,6 +409,30 @@ object Frame1: TFrame1
       'D - Banco Williams'
       'M - MercadoPago Oscar'
       'N - MercadoPago Monica')
+  end
+  object DBCheckBox3: TDBCheckBox
+    Left = 322
+    Top = 383
+    Width = 162
+    Height = 17
+    Caption = 'Este cliente paga adelantado'
+    DataField = 'pagoAdelantado'
+    DataSource = DataSource1
+    TabOrder = 20
+    ValueChecked = 'S'
+    ValueUnchecked = 'N'
+  end
+  object DBCheckBox5: TDBCheckBox
+    Left = 3
+    Top = 375
+    Width = 150
+    Height = 17
+    Caption = 'Enviar men'#250' impreso'
+    DataField = 'menuImpreso'
+    DataSource = DataSource1
+    TabOrder = 21
+    ValueChecked = 'S'
+    ValueUnchecked = 'N'
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -532,6 +556,14 @@ object Frame1: TFrame1
     end
     object ClientDataSet1medioPagoDefecto: TWideStringField
       FieldName = 'medioPagoDefecto'
+      Size = 1
+    end
+    object ClientDataSet1pagoAdelantado: TWideStringField
+      FieldName = 'pagoAdelantado'
+      Size = 1
+    end
+    object ClientDataSet1menuImpreso: TWideStringField
+      FieldName = 'menuImpreso'
       Size = 1
     end
   end

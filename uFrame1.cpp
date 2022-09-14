@@ -279,6 +279,8 @@ void TFrame1::restablecerFrame(void)
 	  ClientDataSet1->FieldByName("refFrecuenciaPago")->AsInteger = 1;
 	  ClientDataSet1->FieldByName("refDiaPago")->AsInteger = 5;
 	  ClientDataSet1->FieldByName("refListaPrecio")->AsInteger = 1;
+	  ClientDataSet1->FieldByName("pagoAdelantado")->AsString = 'N';
+	  ClientDataSet1->FieldByName("menuImpreso")->AsString = 'N';
 	  CBCondicionFrenteIVA->ItemIndex = 2;
 	  Label12->Caption = "DNI:";
 	  ClientDataSet1->FieldByName("CUIT")->AsString = "00000000";

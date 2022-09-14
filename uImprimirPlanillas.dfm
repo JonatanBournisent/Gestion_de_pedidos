@@ -48,7 +48,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
     Top = 25
     Width = 260
     Height = 160
-    Date = 43928.362397094900000000
+    Date = 43928.312457754630000000
     TabOrder = 2
     OnClick = MCClick
   end
@@ -179,6 +179,18 @@ object fImprimirPlanillas: TfImprimirPlanillas
       FieldName = 'var_dummy'
       OnGetText = CDSvar_dummyGetText
       Size = 10
+    end
+    object CDSmenuImpreso: TLargeintField
+      FieldName = 'menuImpreso'
+      OnGetText = CDSmenuImpresoGetText
+    end
+    object CDSpagoAdelantado: TWideStringField
+      FieldName = 'pagoAdelantado'
+      Size = 1
+    end
+    object CDSunidAyer: TFMTBCDField
+      FieldName = 'unidAyer'
+      Size = 5
     end
   end
   object DataSource1: TDataSource
@@ -383,7 +395,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
           AllowVectorExport = True
           Left = 94.488250000000000000
           Top = 4.913385830000000000
-          Width = 146.055505000000000000
+          Width = 134.716915000000000000
           Height = 18.897630470000000000
           DataField = 'comp'
           DataSet = frxDBDataset1
@@ -402,7 +414,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
         end
         object Memo3: TfrxMemoView
           AllowVectorExport = True
-          Left = 279.685039370079000000
+          Left = 279.685039370000000000
           Top = 3.779527560000000000
           Width = 21.331015000000000000
           Height = 18.897630470000000000
@@ -524,6 +536,28 @@ object fImprimirPlanillas: TfImprimirPlanillas
           ParentFont = False
           VAlign = vaCenter
         end
+        object Memo13: TfrxMemoView
+          AllowVectorExport = True
+          Left = 207.874150000000000000
+          Top = 3.779530000000000000
+          Width = 30.236240000000000000
+          Height = 18.897650000000000000
+          AutoWidth = True
+          DataField = 'menuImpreso'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -21
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[frxDBDataset1."menuImpreso"]')
+          ParentFont = False
+          VAlign = vaCenter
+        end
       end
       object Memo5: TfrxMemoView
         AllowVectorExport = True
@@ -570,7 +604,8 @@ object fImprimirPlanillas: TfImprimirPlanillas
       'medioPago=medioPago'
       'diaPago=diaPago'
       'frecuenciaPago=frecuenciaPago'
-      'var_dummy=var_dummy')
+      'var_dummy=var_dummy'
+      'menuImpreso=menuImpreso')
     DataSource = DataSource1
     BCDToCurrency = False
     Left = 512

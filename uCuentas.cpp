@@ -306,6 +306,19 @@ void __fastcall TfCuentas::CDSpagoRealizadoChange(TField *Sender)
    QueryUpdate->ExecSQL();
 
    calcular(true);
+
+   if(DateOf(CDS->FieldByName("fechaIngresoPago")->AsDateTime) == StrToDate("01/01/1990"))
+   {
+	   QueryUpdate->Close();
+	   QueryUpdate->SQL->Clear();
+	   QueryUpdate->SQL->Add("UPDATE cuentas SET fechaIngresoPago = :fip WHERE idCuenta = :id LIMIT 1");
+	   QueryUpdate->ParamByName("id")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+
+	   QueryUpdate->ParamByName("fip")->AsDate = CDS->FieldByName("fecha")->AsDateTime;
+
+	   QueryUpdate->ExecSQL();
+	   CDS->Refresh();
+   }
 }
 //---------------------------------------------------------------------------
 
@@ -946,7 +959,7 @@ void __fastcall TfCuentas::CDSmedioDePagoChange(TField *Sender)
    QueryUpdate->SQL->Add("UPDATE cuentas SET medioDePago = :mdp WHERE idCuenta = :id LIMIT 1");
    QueryUpdate->ParamByName("id")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
 
-   QueryUpdate->ParamByName("mdp")->AsString = Sender->AsString;
+   QueryUpdate->ParamByName("mdp")->AsString = Sender->AsString.UpperCase();
 
    QueryUpdate->ExecSQL();
 }

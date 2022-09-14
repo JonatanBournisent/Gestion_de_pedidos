@@ -3,7 +3,7 @@ object fSeleccionarComida: TfSeleccionarComida
   Top = 0
   BorderStyle = bsDialog
   Caption = ' Seleccionar una comida'
-  ClientHeight = 238
+  ClientHeight = 351
   ClientWidth = 576
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
