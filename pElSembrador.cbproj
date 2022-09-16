@@ -52,7 +52,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <AllPackageLibs>rtl.lib;vcl.lib;dbrtl.lib;dbexpress.lib;DbxCommonDriver.lib;DBXMySQLDriver.lib;vcldb.lib;dsnap.lib;frx22.lib;fs22.lib;vclx.lib;vclimg.lib;frxDB22.lib;fsDB22.lib;frxe22.lib;xmlrtl.lib;soaprtl.lib;inet.lib;soapserver.lib;TeeDB.lib;TeeUI.lib;Tee.lib;VclSmp.lib;fqb220.lib</AllPackageLibs>
+        <AllPackageLibs>rtl.lib;vcl.lib;dbrtl.lib;dbexpress.lib;DbxCommonDriver.lib;DBXMySQLDriver.lib;vcldb.lib;dsnap.lib;frx22.lib;fs22.lib;vclx.lib;vclimg.lib;frxDB22.lib;fsDB22.lib;frxe22.lib;xmlrtl.lib;soaprtl.lib;inet.lib;soapserver.lib;TeeDB.lib;TeeUI.lib;Tee.lib;VclSmp.lib;fqb220.lib;FireDAC.lib;FireDACSqliteDriver.lib;FireDACCommonDriver.lib;FireDACCommon.lib</AllPackageLibs>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Multithreaded>true</Multithreaded>
         <ProjectType>CppVCLApplication</ProjectType>
@@ -114,7 +114,7 @@
         <Icon_MainIcon>pElSembrador_Icon3.ico</Icon_MainIcon>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <LinkPackageStatics>rtl.lib;vcl.lib;dbrtl.lib;dbexpress.lib;DbxCommonDriver.lib;DBXMySQLDriver.lib;vcldb.lib;dsnap.lib;frx22.lib;fs22.lib;vclx.lib;vclimg.lib;frxDB22.lib;fsDB22.lib;frxe22.lib;xmlrtl.lib;soaprtl.lib;inet.lib;soapserver.lib;TeeDB.lib;TeeUI.lib;Tee.lib;VclSmp.lib;fqb220.lib</LinkPackageStatics>
+        <LinkPackageStatics>rtl.lib;vcl.lib;dbrtl.lib;dbexpress.lib;DbxCommonDriver.lib;DBXMySQLDriver.lib;vcldb.lib;dsnap.lib;frx22.lib;fs22.lib;vclx.lib;vclimg.lib;frxDB22.lib;fsDB22.lib;frxe22.lib;xmlrtl.lib;soaprtl.lib;inet.lib;soapserver.lib;TeeDB.lib;TeeUI.lib;Tee.lib;VclSmp.lib;fqb220.lib;FireDAC.lib;FireDACSqliteDriver.lib;FireDACCommonDriver.lib;FireDACCommon.lib</LinkPackageStatics>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Defines>NDEBUG;$(Defines)</Defines>

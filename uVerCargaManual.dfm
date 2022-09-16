@@ -4,7 +4,7 @@ object fVerCargaManual: TfVerCargaManual
   BorderStyle = bsDialog
   Caption = ' Clientes que se deben anotar manualmente'
   ClientHeight = 656
-  ClientWidth = 978
+  ClientWidth = 1223
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,12 @@ object fVerCargaManual: TfVerCargaManual
   object DBGrid1: TDBGrid
     Left = 8
     Top = 8
-    Width = 962
+    Width = 1209
     Height = 611
     DataSource = DataSource3
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -16
+    Font.Height = -13
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -50,7 +50,7 @@ object fVerCargaManual: TfVerCargaManual
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 138
+        Width = 117
         Visible = True
       end
       item
@@ -64,7 +64,7 @@ object fVerCargaManual: TfVerCargaManual
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 66
+        Width = 64
         Visible = True
       end
       item
@@ -77,7 +77,7 @@ object fVerCargaManual: TfVerCargaManual
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 248
+        Width = 206
         Visible = True
       end
       item
@@ -85,13 +85,13 @@ object fVerCargaManual: TfVerCargaManual
         Expanded = False
         FieldName = 'bandGrand'
         Title.Alignment = taCenter
-        Title.Caption = 'Nro bandejas'
+        Title.Caption = 'N'#176' Band'
         Title.Font.Charset = DEFAULT_CHARSET
         Title.Font.Color = clWindowText
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 94
+        Width = 63
         Visible = True
       end
       item
@@ -99,13 +99,13 @@ object fVerCargaManual: TfVerCargaManual
         Expanded = False
         FieldName = 'cantViandas'
         Title.Alignment = taCenter
-        Title.Caption = 'Nro Viandas'
+        Title.Caption = 'N'#176' Viand.'
         Title.Font.Charset = DEFAULT_CHARSET
         Title.Font.Color = clWindowText
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 99
+        Width = 70
         Visible = True
       end
       item
@@ -119,12 +119,38 @@ object fVerCargaManual: TfVerCargaManual
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 277
+        Width = 205
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'var_dummy'
+        Title.Alignment = taCenter
+        Title.Caption = 'Pago'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'comentarios'
+        Title.Alignment = taCenter
+        Title.Caption = 'Comentarios'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 334
         Visible = True
       end>
   end
   object Button1: TButton
-    Left = 376
+    Left = 511
     Top = 625
     Width = 225
     Height = 25
@@ -133,11 +159,11 @@ object fVerCargaManual: TfVerCargaManual
     OnClick = Button1Click
   end
   object MC: TMonthCalendar
-    Left = 623
-    Top = 543
+    Left = 295
+    Top = 623
     Width = 191
     Height = 160
-    Date = 43981.875778171300000000
+    Date = 43981.420817037040000000
     TabOrder = 2
     Visible = False
   end
@@ -189,6 +215,34 @@ object fVerCargaManual: TfVerCargaManual
     end
     object ClientDataSet3reparto: TIntegerField
       FieldName = 'reparto'
+    end
+    object ClientDataSet3comentarios: TWideStringField
+      FieldName = 'comentarios'
+      OnGetText = ClientDataSet3comentariosGetText
+      Size = 100
+    end
+    object ClientDataSet3var_dummy: TFMTBCDField
+      FieldName = 'var_dummy'
+      OnGetText = ClientDataSet3var_dummyGetText
+      Size = 10
+    end
+    object ClientDataSet3deuda: TFMTBCDField
+      FieldName = 'deuda'
+      Size = 10
+    end
+    object ClientDataSet3pagoAdelantado: TWideStringField
+      FieldName = 'pagoAdelantado'
+      Size = 1
+    end
+    object ClientDataSet3medioPago: TWideStringField
+      FieldName = 'medioPago'
+      Size = 1
+    end
+    object ClientDataSet3diaPago: TLargeintField
+      FieldName = 'diaPago'
+    end
+    object ClientDataSet3frecuenciaPago: TLargeintField
+      FieldName = 'frecuenciaPago'
     end
   end
   object SQLConnection1: TSQLConnection

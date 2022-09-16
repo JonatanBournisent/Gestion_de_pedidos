@@ -4,7 +4,7 @@ object fCuentas: TfCuentas
   BorderStyle = bsDialog
   Caption = ' Revisar estado de cuenta'
   ClientHeight = 658
-  ClientWidth = 932
+  ClientWidth = 931
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -86,7 +86,7 @@ object fCuentas: TfCuentas
     Caption = 'CTRL + F1 para buscar'
   end
   object DBGrid1: TDBGrid
-    Left = 4
+    Left = 3
     Top = 201
     Width = 920
     Height = 449
@@ -210,7 +210,7 @@ object fCuentas: TfCuentas
         Expanded = False
         FieldName = 'obs'
         Title.Alignment = taCenter
-        Title.Caption = 'Obs.'
+        Title.Caption = 'Comentarios'
         Title.Font.Charset = DEFAULT_CHARSET
         Title.Font.Color = clWindowText
         Title.Font.Height = -12
@@ -226,7 +226,7 @@ object fCuentas: TfCuentas
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.281096805560000000
+    Date = 43949.936687222220000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1
@@ -529,6 +529,10 @@ object fCuentas: TfCuentas
     object Verpedidosdeesteda1: TMenuItem
       Caption = 'Ver pedidos de este d'#237'a'
       OnClick = Verpedidosdeesteda1Click
+    end
+    object Asignarpagoseleccionado1: TMenuItem
+      Caption = 'Asignar pago seleccionado'
+      OnClick = Asignarpagoseleccionado1Click
     end
   end
   object Timer1: TTimer

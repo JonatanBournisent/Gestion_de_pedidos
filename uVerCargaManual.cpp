@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
+#include <DateUtils.hpp>
 #pragma hdrstop
 
 #include "uVerCargaManual.h"
@@ -28,9 +29,22 @@ void __fastcall TfVerCargaManual::FormShow(TObject *Sender)
    QueryCantidad->SQL->Clear();
    String q;
 
-   q = "SELECT idCantidad, refCliente, nroBandejas AS bandGrand, nroUnidades AS cantViandas, txtComplemento AS complemento, (sectorReparto + 1) AS reparto, "
+   q = "SELECT idCantidad, refCliente, medioPago, nroBandejas AS bandGrand, nroUnidades AS cantViandas, txtComplemento AS complemento, (sectorReparto + 1) AS reparto, "
 	   "(SELECT descripcion FROM repartidores WHERE repartidores.idRepartidor = cantidades.refRepartidor LIMIT 1) AS repartidor, "
-	   "(SELECT CONCAT(calle, ' ' ,numero) FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) AS cliente "
+	   "(SELECT CONCAT(calle, ' ' ,numero) FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) AS cliente, "
+	   "(SELECT GROUP_CONCAT(DISTINCT comentario SEPARATOR ' & ') FROM pedidos WHERE refCantidad = cantidades.idCantidad) AS comentarios, "
+
+	   "(SELECT pagoAdelantado FROM clientes WHERE refCliente = idCliente LIMIT 1) AS pagoAdelantado, "
+	   "(SELECT refFrecuenciaPago FROM clientes WHERE cantidades.refCliente = idCliente LIMIT 1) AS frecuenciaPago, "
+	   "(SELECT refDiaPago FROM clientes WHERE cantidades.refCliente = idCliente LIMIT 1) AS diaPago, "
+
+	   "(SELECT valor "
+				"FROM listasPrecio WHERE "
+					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = refCliente LIMIT 1) * nroUnidades + (SELECT (acumuladoGlobal) AS acumGlobal FROM clientes WHERE refCliente = idCliente LIMIT 1) "
+	   "AS var_dummy, "
+
+	   "(SELECT (acumuladoGlobal - acumuladoParcial) AS deuda FROM clientes WHERE refCliente = idCliente LIMIT 1) AS deuda "
+
 	   "FROM cantidades WHERE cargaManual = 1 AND fecha = :fecha "
 	   "ORDER BY repartidor, reparto";
 
@@ -98,6 +112,85 @@ void __fastcall TfVerCargaManual::FormCreate(TObject *Sender)
    SQLConnection1->Params->Values["Database"] = dbName;
    SQLConnection1->Params->Values["User_Name"] = userName;
    SQLConnection1->Params->Values["Password"] = pass;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfVerCargaManual::ClientDataSet3comentariosGetText(TField *Sender,
+          UnicodeString &Text, bool DisplayText)
+{
+   if(Sender->AsString.Pos(" / ") == 1)
+   {
+	  Text = Sender->AsString.SubString(3,Sender->AsString.Length() - 3);
+   }
+   else
+	  Text = Sender->AsString;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfVerCargaManual::ClientDataSet3var_dummyGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText)
+{
+   if(Sender->AsFloat < 0.0)
+   {
+	  Text = "NO";
+	  return;
+   }
+   if(Sender->DataSet->FieldByName("medioPago")->AsString != "A")
+   {
+	  Text = "NO";
+	  return;
+   }
+   if(Sender->DataSet->FieldByName("frecuenciaPago")->AsInteger == 1)
+   {
+	  Text = "$" + Sender->AsString;
+	  return;
+   }
+   if(Sender->DataSet->FieldByName("frecuenciaPago")->AsInteger == 2)
+   {
+	   if(DayOfTheWeek(MC->Date) == Sender->DataSet->FieldByName("diaPago")->AsInteger)
+	   {
+		  if(Sender->DataSet->FieldByName("pagoAdelantado")->AsString == "S")
+		  {
+			 Text = "???";
+			 return;
+		  }
+
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(Sender->DataSet->FieldByName("diaPago")->AsInteger == 5)
+	   {
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(Sender->DataSet->FieldByName("diaPago")->AsInteger == 6)
+	   {
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(Sender->DataSet->FieldByName("deuda")->AsFloat > 0.0)
+	   {
+		  Text = "$" + Sender->DataSet->FieldByName("deuda")->AsString;
+		  return;
+	   }
+	   Text = "NO";
+	   return;
+   }
+   if(Sender->DataSet->FieldByName("frecuenciaPago")->AsInteger == 3)
+   {
+	   if(Sender->DataSet->FieldByName("deuda")->AsFloat > 0.0)
+	   {
+		  Text = "$" + Sender->AsString;
+		  return;
+	   }
+	   if(Sender->DataSet->FieldByName("deuda")->AsFloat > 0.0)
+	   {
+		  Text = "$" + Sender->DataSet->FieldByName("deuda")->AsString;
+		  return;
+	   }
+	   Text = "NO";
+	   return;
+   }
 }
 //---------------------------------------------------------------------------
 

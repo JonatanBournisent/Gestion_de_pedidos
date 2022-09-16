@@ -4,7 +4,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
   BorderStyle = bsDialog
   Caption = ' Imprimir planillas'
   ClientHeight = 443
-  ClientWidth = 304
+  ClientWidth = 871
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -48,7 +48,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
     Top = 25
     Width = 260
     Height = 160
-    Date = 43928.312457754630000000
+    Date = 43928.805878773150000000
     TabOrder = 2
     OnClick = MCClick
   end

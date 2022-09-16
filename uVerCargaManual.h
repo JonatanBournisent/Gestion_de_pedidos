@@ -36,6 +36,13 @@ __published:	// IDE-managed Components
 	TMonthCalendar *MC;
 	TIntegerField *ClientDataSet3refCliente;
 	TIntegerField *ClientDataSet3reparto;
+	TWideStringField *ClientDataSet3comentarios;
+	TFMTBCDField *ClientDataSet3var_dummy;
+	TFMTBCDField *ClientDataSet3deuda;
+	TWideStringField *ClientDataSet3pagoAdelantado;
+	TWideStringField *ClientDataSet3medioPago;
+	TLargeintField *ClientDataSet3diaPago;
+	TLargeintField *ClientDataSet3frecuenciaPago;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall Button1Click(TObject *Sender);
@@ -43,6 +50,10 @@ __published:	// IDE-managed Components
           TColumn *Column, TGridDrawState State);
 	void __fastcall DBGrid1DblClick(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall ClientDataSet3comentariosGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText);
+	void __fastcall ClientDataSet3var_dummyGetText(TField *Sender, UnicodeString &Text,
+          bool DisplayText);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfVerCargaManual(TComponent* Owner);

@@ -825,6 +825,10 @@ void __fastcall TfCuentas::Button11Click(TObject *Sender)
 
    String strFecha, strPago, strCliente, strNombreCliente, s, infoCliente;
 
+
+   fImportarPagosBancos->FDMemTable1->Close();
+   fImportarPagosBancos->FDMemTable1->Open();
+
    bool flag;
    for (int i = 0; i < infoBanco->Count; i++)
    {
@@ -881,6 +885,15 @@ void __fastcall TfCuentas::Button11Click(TObject *Sender)
 			 while(strPago.Pos(".") > 0)
 				strPago = strPago.Delete(strPago.Pos("."), 1);
 
+
+
+			 fImportarPagosBancos->FDMemTable1->Append();
+			 fImportarPagosBancos->FDMemTable1->FieldByName("fecha")->AsDateTime = StrToDate(strFecha);
+			 fImportarPagosBancos->FDMemTable1->FieldByName("cliente")->AsString = strNombreCliente;
+			 fImportarPagosBancos->FDMemTable1->FieldByName("valor")->AsString = strPago;
+			 fImportarPagosBancos->FDMemTable1->FieldByName("idCliente")->AsString = strCliente;
+			 fImportarPagosBancos->FDMemTable1->Post();
+
 			 cliente->Add(strCliente);
 			 direccionCliente->Add(strNombreCliente);
 			 pago->Add(strPago);
@@ -898,15 +911,6 @@ void __fastcall TfCuentas::Button11Click(TObject *Sender)
 		 pago->Add(strPago);
 		 fecha->Add(strFecha);
 	  }
-   }
-
-   fImportarPagosBancos->ListBox1->Clear();
-   for (int i = 0; i < cliente->Count; i++)
-   {
-	  while(fecha->Strings[i].Length() < 12)
-		 fecha->Strings[i] = fecha->Strings[i] + " ";
-
-	  fImportarPagosBancos->ListBox1->Items->Add(fecha->Strings[i] + direccionCliente->Strings[i] + "-----> " + pago->Strings[i]);
    }
    fImportarPagosBancos->Show();
 
@@ -975,6 +979,68 @@ void __fastcall TfCuentas::CDSfechaIngresoPagoChange(TField *Sender)
    QueryUpdate->ParamByName("fip")->AsDate = DateOf(Sender->AsDateTime);
 
    QueryUpdate->ExecSQL();
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfCuentas::Asignarpagoseleccionado1Click(TObject *Sender)
+{
+   if(!fImportarPagosBancos->FDMemTable1->Active)
+	  return;
+   if(fImportarPagosBancos->FDMemTable1->FieldByName("idCliente")->AsInteger != idCliente)
+	  return;
+
+
+   String cuentaBancaria;
+   switch(fImportarPagosBancos->RadioGroup1->ItemIndex)
+   {
+	  case 0: cuentaBancaria = "B";
+	  break;
+
+	  case 1: cuentaBancaria = "C";
+	  break;
+
+	  case 2: cuentaBancaria = "D";
+	  break;
+
+	  default: cuentaBancaria = "A";
+	  break;
+   }
+
+   QueryUpdate->SQL->Clear();
+   QueryUpdate->SQL->Add("CALL actualizarCuenta(:fSemanal, :fMensual, :fechaActualizada , :unidades, :pago, :valor ,:refCliente, :idC)");
+   QueryUpdate->ParamByName("fSemanal")->AsDate = DateOf(IncDay(StartOfTheWeek(Now()),-1));
+   QueryUpdate->ParamByName("fMensual")->AsDate = DateOf(IncDay(StartOfTheMonth(Now()),-1));
+   QueryUpdate->ParamByName("fechaActualizada")->AsDate = DateOf(CDS->FieldByName("fecha")->AsDateTime);
+   QueryUpdate->ParamByName("refCliente")->AsInteger = idCliente;
+   QueryUpdate->ParamByName("unidades")->AsFloat = CDS->FieldByName("unidades")->AsFloat;
+   QueryUpdate->ParamByName("pago")->AsFloat = fImportarPagosBancos->FDMemTable1->FieldByName("valor")->AsFloat;
+   QueryUpdate->ParamByName("valor")->AsFloat = CDS->FieldByName("valorUnidad")->AsFloat;
+   QueryUpdate->ParamByName("idC")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+   QueryUpdate->ExecSQL();
+
+   calcular(true);
+
+
+   QueryUpdate->Close();
+   QueryUpdate->SQL->Clear();
+   QueryUpdate->SQL->Add("UPDATE cuentas SET fechaIngresoPago = :fip WHERE idCuenta = :id LIMIT 1");
+   QueryUpdate->ParamByName("id")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+   QueryUpdate->ParamByName("fip")->AsDate = fImportarPagosBancos->FDMemTable1->FieldByName("fecha")->AsDateTime;
+   QueryUpdate->ExecSQL();
+
+   QueryUpdate->Close();
+   QueryUpdate->SQL->Clear();
+   QueryUpdate->SQL->Add("UPDATE cuentas SET medioDePago = :mdp WHERE idCuenta = :id LIMIT 1");
+   QueryUpdate->ParamByName("id")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+
+   QueryUpdate->ParamByName("mdp")->AsString = cuentaBancaria;
+
+   QueryUpdate->ExecSQL();
+
+   CDS->Refresh();
+
+
 }
 //---------------------------------------------------------------------------
 
