@@ -450,6 +450,25 @@ object fPedidos: TfPedidos
     Height = 13
     Caption = 'Medio de pago'
   end
+  object Button41: TButton
+    Left = 729
+    Top = 227
+    Width = 109
+    Height = 25
+    Caption = 'Imprimir Ofi.'
+    TabOrder = 78
+    OnClick = Button41Click
+  end
+  object Button40: TButton
+    Left = 611
+    Top = 102
+    Width = 75
+    Height = 19
+    Caption = 'Actualizar'
+    PopupMenu = PopupMenu5
+    TabOrder = 77
+    OnClick = Button40Click
+  end
   object CBmp: TComboBox
     Left = 535
     Top = 124
@@ -489,12 +508,13 @@ object fPedidos: TfPedidos
     TabOrder = 63
   end
   object Button22: TButton
-    Left = 729
-    Top = 264
-    Width = 213
+    Left = 915
+    Top = 259
+    Width = 102
     Height = 25
     Caption = 'Copiar lista de complementos especiales'
     TabOrder = 57
+    Visible = False
     OnClick = Mem
   end
   object Button20: TButton
@@ -526,7 +546,7 @@ object fPedidos: TfPedidos
   end
   object Button17: TButton
     Left = 728
-    Top = 233
+    Top = 260
     Width = 214
     Height = 25
     Caption = 'Imprimir complementos especiales'
@@ -647,8 +667,8 @@ object fPedidos: TfPedidos
     TabOrder = 41
   end
   object Button4: TButton
-    Left = 728
-    Top = 194
+    Left = 729
+    Top = 195
     Width = 109
     Height = 25
     Caption = 'Imprimir 2'#176
@@ -1146,7 +1166,7 @@ object fPedidos: TfPedidos
   end
   object Edit2: TEdit
     Left = 853
-    Top = 196
+    Top = 209
     Width = 89
     Height = 21
     Alignment = taCenter
@@ -1162,7 +1182,7 @@ object fPedidos: TfPedidos
   end
   object CheckBox1: TCheckBox
     Left = 853
-    Top = 167
+    Top = 180
     Width = 89
     Height = 17
     Caption = 'L'#237'mite de l'#237'neas'
@@ -1276,8 +1296,8 @@ object fPedidos: TfPedidos
     OnClick = Panel19Click
   end
   object Memo3: TMemo
-    Left = 907
-    Top = 265
+    Left = 941
+    Top = 259
     Width = 28
     Height = 18
     Lines.Strings = (
@@ -1916,16 +1936,6 @@ object fPedidos: TfPedidos
     PopupMenu = PopupMenu3
     TabOrder = 75
     OnClick = Button37Click
-  end
-  object Button40: TButton
-    Left = 611
-    Top = 102
-    Width = 75
-    Height = 19
-    Caption = 'Actualizar'
-    PopupMenu = PopupMenu5
-    TabOrder = 77
-    OnClick = Button40Click
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'

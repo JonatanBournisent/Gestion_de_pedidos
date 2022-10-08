@@ -273,6 +273,7 @@ __published:	// IDE-managed Components
 	TPopupMenu *PopupMenu10;
 	TMenuItem *Viandasparaoficinas1;
 	TMenuItem *Menudeldaparaoficinas1;
+	TButton *Button41;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall DTPChange(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
@@ -411,6 +412,7 @@ __published:	// IDE-managed Components
 	void __fastcall Informacinparaoficinas1Click(TObject *Sender);
 	void __fastcall Viandasparaoficinas1Click(TObject *Sender);
 	void __fastcall Menudeldaparaoficinas1Click(TObject *Sender);
+	void __fastcall Button41Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -442,6 +444,8 @@ public:		// User declarations
 	void verClienteSeleccionado(int idCliente);
 
 	void imprimirEtiquetas(int llamador);
+	void imprimirEtiquetasOficinas(void);
+	void procesoImpresionEtiquetasPedidosOficinas(void);
 	void imprimirComplementos(void);
 
 	int contLineasImpresas; //cuenta las que se enviaron a la impresora

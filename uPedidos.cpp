@@ -290,7 +290,6 @@ String TfPedidos::getImpresoraEtiquetas(void)
 
 void TfPedidos::procesoImpresionEtiquetasPedidos(int reparto)
 {
-
 	int refComida1, refComida2, refComida3, nroApaAnt;
 	String c1, c2, c3, c4, comentario, cliente, repartidor, nroReparto;
 	bool c1Esp, c2Esp, c3Esp;
@@ -437,7 +436,153 @@ void TfPedidos::procesoImpresionEtiquetasPedidos(int reparto)
 
 	   CDSEtiquetas->First();
 	}
+}
+//--------------------------------------------------------------------------
 
+void TfPedidos::procesoImpresionEtiquetasPedidosOficinas(void)
+{
+	int refComida1, refComida2, refComida3, nroApaAnt;
+	String c1, c2, c3, c4, comentario, cliente, repartidor, nroReparto;
+	bool c1Esp, c2Esp, c3Esp;
+	bool comentarioEsp;
+
+	bool etiquetaIzq = true;
+
+	while (!CDSEtiquetas->Eof) {
+
+	   c1 = CDSEtiquetas->FieldByName("c1")->AsString;
+	   c2 = CDSEtiquetas->FieldByName("c2")->AsString;
+	   c3 = "OFICINAS";
+	   c4 = "";
+	   comentario = CDSEtiquetas->FieldByName("comentario")->AsString;
+	   cliente = CDSEtiquetas->FieldByName("Numero")->AsString;
+	   repartidor = CDSEtiquetas->FieldByName("Repartidor")->AsString;
+	   nroReparto = CDSEtiquetas->FieldByName("salidaRep")->AsString;
+
+	   refComida1 = CDSEtiquetas->FieldByName("refComida1")->AsInteger;
+	   refComida2 = CDSEtiquetas->FieldByName("refComida2")->AsInteger;
+	   refComida3 = CDSEtiquetas->FieldByName("refComida3")->AsInteger;
+	   nroApaAnt = CDSEtiquetas->FieldByName("nroApa")->AsInteger;
+
+	   c1Esp = esOpcionEspecial(refComida1);
+	   c2Esp = esOpcionEspecial(refComida2);
+	   c3Esp = true;
+
+	   comentarioEsp = false;
+	   if(CDSEtiquetas->FieldByName("comentarioParaCocina")->AsInteger != 0)
+		  comentarioEsp = true;
+
+
+	   completarEtiquetaPedido(c1, c2, c3, c4, cliente, repartidor, nroReparto,
+								  comentario, etiquetaIzq, c1Esp, c2Esp, c3Esp,
+								  comentarioEsp, false);
+
+	   etiquetaIzq = !etiquetaIzq;
+
+	   CDSEtiquetas->Next();
+
+	   if (!CDSEtiquetas->Eof) {
+
+		   bool huboCambio = false;
+
+		   if (CDSEtiquetas->FieldByName("refComida1")->AsInteger != refComida1 ||
+			   CDSEtiquetas->FieldByName("refComida2")->AsInteger != refComida2 ||
+			   CDSEtiquetas->FieldByName("refComida3")->AsInteger != refComida3) {
+
+			   huboCambio = true;
+		   }
+
+		   if (!etiquetaIzq && nroApaAnt > 1 && huboCambio) {
+
+			   completarEtiquetaPedido("", "", "", "", "", "", "",
+									   "", false, false, false, false,
+									   false, true);
+
+			   etiquetaIzq = !etiquetaIzq;
+			   CDSEtiquetas->Prior();
+		   }
+		   else	{
+
+			   c1 = CDSEtiquetas->FieldByName("c1")->AsString;
+			   c2 = CDSEtiquetas->FieldByName("c2")->AsString;
+			   c3 = "OFICINAS";
+			   c4 = "";
+			   comentario = CDSEtiquetas->FieldByName("comentario")->AsString;
+			   cliente = CDSEtiquetas->FieldByName("Numero")->AsString;
+			   repartidor = CDSEtiquetas->FieldByName("Repartidor")->AsString;
+			   nroReparto = CDSEtiquetas->FieldByName("salidaRep")->AsString;
+
+			   refComida1 = CDSEtiquetas->FieldByName("refComida1")->AsInteger;
+			   refComida2 = CDSEtiquetas->FieldByName("refComida2")->AsInteger;
+			   refComida3 = CDSEtiquetas->FieldByName("refComida3")->AsInteger;
+			   nroApaAnt = CDSEtiquetas->FieldByName("nroApa")->AsInteger;
+
+			   c1Esp = esOpcionEspecial(refComida1);
+			   c2Esp = esOpcionEspecial(refComida2);
+			   c3Esp = true;
+
+			   comentarioEsp = false;
+			   if(CDSEtiquetas->FieldByName("comentarioParaCocina")->AsInteger != 0)
+				  comentarioEsp = true;
+
+
+			   completarEtiquetaPedido(c1, c2, c3, c4, cliente, repartidor, nroReparto,
+										  comentario, etiquetaIzq, c1Esp, c2Esp, c3Esp,
+										  comentarioEsp, false);
+
+			   etiquetaIzq = !etiquetaIzq;
+		   }
+	   }
+	   else	if (!etiquetaIzq) {
+
+		   completarEtiquetaPedido("", "", "", "", "", "", "",
+									   "", false, false, false, false,
+									   false, true);
+	   }
+
+	   frxReport1->PrepareReport(true);
+	   frxReport1->Print();
+
+	   contLineasImpresas++;
+
+	   if(contLineasImpresas >= cantLineas)
+	   {
+		   fPausa->ShowModal();
+	   }
+
+
+
+	   CDSEtiquetas->Next();
+	}
+
+
+	if(Application->MessageBox(L"Las etiqueteas se imprimieron correctamente?" ,L"Impresión correcta?",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDYES)
+	{
+	   QueryEtiquetas->Close();
+	   CDSEtiquetas->Active = false;
+
+	   QueryAux->Close();
+	   QueryAux->SQL->Clear();
+	   QueryAux->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE momento >= :mi AND momento <= :mf AND refProducto = 2");
+	   QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+	   QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+	   QueryAux->ExecSQL();
+
+	   Edit2->Text = "10000";
+	   CheckBox1->Checked = false;
+	}
+	else
+	{
+	   Panel10->Left = (fPedidos->Width - Panel10->Width) / 2;
+	   Panel10->Top = (fPedidos->Height - Panel10->Height) / 2;
+	   Panel10->Visible = true;
+
+	   Application->MessageBox(L"Seleccionar próxima etiqueta a imprimir y presionar el botón." ,L"Seleccione punto de partida",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
+
+	   CDSEtiquetas->First();
+
+	   llamadorAux = 5; //Para distinguir etiquetas para viandas de oficina.
+	}
 }
 //--------------------------------------------------------------------------
 
@@ -535,7 +680,7 @@ void TfPedidos::imprimirEtiquetas(int llamador)
 	QueryAux->Close();
 	QueryAux->SQL->Clear();
 
-	QueryAux->SQL->Add("SELECT COUNT(*) AS cantidadPedidos FROM pedidos WHERE momento >= :mi AND momento <= :mf AND omitirEtiqueta = 0 AND etiquetaImpresa = 0 AND "
+	QueryAux->SQL->Add("SELECT COUNT(*) AS cantidadPedidos FROM pedidos WHERE momento >= :mi AND momento <= :mf AND omitirEtiqueta = 0 AND etiquetaImpresa = 0 AND refProducto = 1 AND "
 					   "refCliente IN (SELECT refCliente FROM cantidades WHERE sectorReparto = :sr AND fecha = :f)");
 
     QueryAux->ParamByName("f")->AsDate = DTP->DateTime;
@@ -565,7 +710,7 @@ void TfPedidos::imprimirEtiquetas(int llamador)
 
 	String q;
 
-	q = "SELECT p.refCliente, p.comentario, p.refComida1, p.refComida2, p.refComida3, g.nroApa, p.comentarioParaCocina, "
+	q = "SELECT p.refCliente, p.comentario, p.refComida1, p.refComida2, p.refProducto, p.refComida3, g.nroApa, p.comentarioParaCocina, "
 
 	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida1 = comidas.idComida) LIMIT 1) AS c1, "
 	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida2 = comidas.idComida) LIMIT 1) AS c2, "
@@ -584,7 +729,6 @@ void TfPedidos::imprimirEtiquetas(int llamador)
 	"INNER JOIN( "
 
 	"SELECT refComida1, refComida2, refComida3, refCliente, comentarioParaCocina, COUNT(*) AS nroApa FROM pedidos "
-//	"WHERE DATE(momento) = :f "
 	"WHERE momento >= :mi AND momento <= :mf "
 	"AND refCliente IN (SELECT refCliente FROM cantidades WHERE fecha = :f AND sectorReparto = :sr) "
 	"AND etiquetaImpresa = 0 "
@@ -598,10 +742,10 @@ void TfPedidos::imprimirEtiquetas(int llamador)
 	"AND p.refComida2 = g.refComida2 "
 	"AND p.refComida3 = g.refComida3 "
 	"AND p.comentarioParaCocina = g.comentarioParaCocina "
-//	"AND DATE(p.momento) = :f "
 	"AND p.momento >= :mi AND p.momento <= :mf "
 	"AND p.etiquetaImpresa = 0 "
 	"AND p.omitirEtiqueta = 0 "
+	"AND p.refProducto = 1 "
 	"ORDER BY comentarioParaCocina, nroApa DESC, refComida1, refComida2";
 
 
@@ -622,9 +766,103 @@ void TfPedidos::imprimirEtiquetas(int llamador)
 	CDSEtiquetas->First();
 
 	procesoImpresionEtiquetasPedidos(llamador);
+}
 
+//--------------------------------------------------------------------------
+
+void TfPedidos::imprimirEtiquetasOficinas(void)
+{
+	if (getImpresoraEtiquetas() != "NO_CONFIGURADA") {
+		frxReport1->PrintOptions->Printer = getImpresoraEtiquetas();
+	}
+	else return;
+
+
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+
+	QueryAux->SQL->Add("SELECT COUNT(*) AS cantidadPedidos FROM pedidos WHERE momento >= :mi AND momento <= :mf AND omitirEtiqueta = 0 AND etiquetaImpresa = 0 AND refProducto = 2");
+
+	QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+	QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+	QueryAux->Open();
+	cantidadPedidos = QueryAux->FieldByName("cantidadPedidos")->AsInteger;
+	QueryAux->Close();
+
+
+	if (cantidadPedidos == 0) {
+
+	  Application->MessageBox(L"No hay pedidos para imprimir :(" ,L"No hay nada para imprimir",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
+	  return;
+	}
+
+	String msg;
+	if (cantidadPedidos > 50)
+	  msg = "Se van a imprimir " + IntToStr(cantidadPedidos) + " pedidos para oficinas :D . Desea continuar?";
+	else
+	  msg = "Se van a imprimir " + IntToStr(cantidadPedidos) + " pedidos para oficinas. Desea continuar?";
+
+	if (Application->MessageBox(msg.w_str() ,L"Imprimir etiquetas?",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) != IDYES)
+	  return;
+
+
+	String q;
+
+	q = "SELECT p.refCliente, p.comentario, p.refComida1, p.refComida2, p.refProducto, p.refComida3, g.nroApa, p.comentarioParaCocina, "
+
+	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida1 = comidas.idComida) LIMIT 1) AS c1, "
+	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida2 = comidas.idComida) LIMIT 1) AS c2, "
+	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida3 = comidas.idComida) LIMIT 1) AS c3, "
+	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida4 = comidas.idComida) LIMIT 1) AS c4, "
+
+	"(SELECT refRepartidor FROM cantidades WHERE (p.refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
+	"(SELECT sectorReparto + 1 FROM cantidades WHERE (p.refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
+
+	"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
+
+	"(SELECT numero FROM clientes WHERE (p.refCliente = clientes.idCliente) LIMIT 1) AS Numero "
+
+	"FROM pedidos p "
+
+	"INNER JOIN( "
+
+	"SELECT refComida1, refComida2, refComida3, refCliente, comentarioParaCocina, COUNT(*) AS nroApa FROM pedidos "
+	"WHERE momento >= :mi AND momento <= :mf "
+	"AND etiquetaImpresa = 0 "
+	"AND omitirEtiqueta = 0 "
+	"GROUP BY refComida1, refComida2, refComida3, comentarioParaCocina "//ORDER BY nroApa DESC, refComida1, refComida2 "
+
+	") g ON "
+
+	"p.refComida1 = g.refComida1 "
+	"AND p.refComida2 = g.refComida2 "
+	"AND p.refComida3 = g.refComida3 "
+	"AND p.comentarioParaCocina = g.comentarioParaCocina "
+	"AND p.momento >= :mi AND p.momento <= :mf "
+	"AND p.etiquetaImpresa = 0 "
+	"AND p.omitirEtiqueta = 0 "
+	"AND p.refProducto = 2 "
+	"ORDER BY comentarioParaCocina, nroApa DESC, refComida1, refComida2";
+
+
+	CDSEtiquetas->Active = false;
+	QueryEtiquetas->Close();
+	QueryEtiquetas->SQL->Clear();
+	QueryEtiquetas->SQL->Add(q);
+	QueryEtiquetas->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+	QueryEtiquetas->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+	QueryEtiquetas->ParamByName("una")->AsString = una;
+	QueryEtiquetas->ParamByName("ens")->AsString = ens;
+	QueryEtiquetas->Open();
+	CDSEtiquetas->Active = true;
+
+
+	CDSEtiquetas->First();
+
+	procesoImpresionEtiquetasPedidosOficinas(); //llamador para indicar que son viandas para oficinas
 }
 //--------------------------------------------------------------------------
+
 
 void TfPedidos::imprimirComplementos(void)
 {
@@ -2746,7 +2984,12 @@ void __fastcall TfPedidos::Button5Click(TObject *Sender)
 {
    Panel10->Visible = false;
 
-   procesoImpresionEtiquetasPedidos(llamadorAux);
+   if(llamadorAux == 5)
+   {
+	  procesoImpresionEtiquetasPedidosOficinas();
+   }
+   else
+      procesoImpresionEtiquetasPedidos(llamadorAux);
 }
 //---------------------------------------------------------------------------
 
@@ -5171,6 +5414,24 @@ void __fastcall TfPedidos::Menudeldaparaoficinas1Click(TObject *Sender)
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
    Beep();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Button41Click(TObject *Sender)
+{
+   Button3->Enabled = false;
+   Button4->Enabled = false;
+   Button17->Enabled = false;
+   puedeSalir = false;
+
+   contLineasImpresas = 0;
+   cantLineas = StrToInt(Edit2->Text);
+   imprimirEtiquetasOficinas();
+
+   Button3->Enabled = true;
+   Button4->Enabled = true;
+   Button17->Enabled = true;
+   puedeSalir = true;
 }
 //---------------------------------------------------------------------------
 
