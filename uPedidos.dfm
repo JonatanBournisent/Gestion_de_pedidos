@@ -4,7 +4,7 @@ object fPedidos: TfPedidos
   BorderIcons = [biSystemMenu]
   Caption = 'Gestion de pedidos y planillas  "El Sembrador"'
   ClientHeight = 678
-  ClientWidth = 1337
+  ClientWidth = 1336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -450,6 +450,21 @@ object fPedidos: TfPedidos
     Height = 13
     Caption = 'Medio de pago'
   end
+  object CBmp: TComboBox
+    Left = 535
+    Top = 124
+    Width = 174
+    Height = 22
+    Style = csOwnerDrawFixed
+    TabOrder = 76
+    Items.Strings = (
+      'A- Efectivo'
+      'B - Banco Oscar'
+      'C - Banco Monica'
+      'D - Banco Williams'
+      'M - MercadoPago Oscar'
+      'N - MercadoPago Monica')
+  end
   object Button27: TButton
     Left = 718
     Top = 583
@@ -483,8 +498,8 @@ object fPedidos: TfPedidos
     OnClick = Mem
   end
   object Button20: TButton
-    Left = 878
-    Top = 357
+    Left = 865
+    Top = 300
     Width = 75
     Height = 25
     Caption = 'Button20'
@@ -1583,6 +1598,7 @@ object fPedidos: TfPedidos
     Width = 186
     Height = 25
     Caption = 'Control de pedidos habituales'
+    PopupMenu = PopupMenu7
     TabOrder = 61
     OnClick = Button25Click
   end
@@ -1662,6 +1678,7 @@ object fPedidos: TfPedidos
     Font.Style = []
     ParentFont = False
     ParentShowHint = False
+    PopupMenu = PopupMenu6
     ShowHint = True
     TabOrder = 65
     OnClick = Button28Click
@@ -1699,6 +1716,7 @@ object fPedidos: TfPedidos
     Font.Style = []
     ParentFont = False
     ParentShowHint = False
+    PopupMenu = PopupMenu9
     ShowHint = True
     TabOrder = 67
     OnClick = Button30Click
@@ -1717,6 +1735,7 @@ object fPedidos: TfPedidos
     Font.Style = []
     ParentFont = False
     ParentShowHint = False
+    PopupMenu = PopupMenu10
     ShowHint = True
     TabOrder = 68
     OnClick = Button31Click
@@ -1753,6 +1772,7 @@ object fPedidos: TfPedidos
     Font.Style = [fsBold]
     ParentFont = False
     ParentShowHint = False
+    PopupMenu = PopupMenu8
     ShowHint = True
     TabOrder = 70
     OnClick = Button33Click
@@ -1823,7 +1843,7 @@ object fPedidos: TfPedidos
       Width = 260
       Height = 160
       MultiSelect = True
-      Date = 43949.355480428240000000
+      Date = 43949.479812141200000000
       EndDate = 43949.000000000000000000
       MaxSelectRange = 500
       PopupMenu = PopupMenu1
@@ -1896,21 +1916,6 @@ object fPedidos: TfPedidos
     PopupMenu = PopupMenu3
     TabOrder = 75
     OnClick = Button37Click
-  end
-  object CBmp: TComboBox
-    Left = 535
-    Top = 124
-    Width = 174
-    Height = 22
-    Style = csOwnerDrawFixed
-    TabOrder = 76
-    Items.Strings = (
-      'A- Efectivo'
-      'B - Banco Oscar'
-      'C - Banco Monica'
-      'D - Banco Williams'
-      'M - MercadoPago Oscar'
-      'N - MercadoPago Monica')
   end
   object Button40: TButton
     Left = 611
@@ -3102,6 +3107,10 @@ object fPedidos: TfPedidos
       Caption = 'Copiar men'#250' semanal'
       OnClick = Copiarmensemanal1Click
     end
+    object Menudeldaparaoficinas1: TMenuItem
+      Caption = 'Menu del d'#237'a para oficinas'
+      OnClick = Menudeldaparaoficinas1Click
+    end
   end
   object PopupMenu5: TPopupMenu
     Left = 648
@@ -3109,6 +3118,59 @@ object fPedidos: TfPedidos
     object Establecercomopredeterminado1: TMenuItem
       Caption = 'Cambiar y establecer como predeterminado'
       OnClick = Establecercomopredeterminado1Click
+    end
+  end
+  object PopupMenu6: TPopupMenu
+    Left = 560
+    Top = 584
+    object BDRecibimoselsig1: TMenuItem
+      Caption = 'BD - Recibimos el sig...'
+      OnClick = BDRecibimoselsig1Click
+    end
+    object BDVananecesitarvia1: TMenuItem
+      Caption = 'BD - Van a necesitar via...'
+      OnClick = BDVananecesitarvia1Click
+    end
+    object Errorpedidojueves1: TMenuItem
+      Caption = 'Error pedido jueves...'
+      OnClick = Errorpedidojueves1Click
+    end
+  end
+  object PopupMenu7: TPopupMenu
+    Left = 416
+    Top = 632
+    object Verclientesquenormalmentesolicitan1: TMenuItem
+      Caption = 'Ver clientes que normalmente solicitan'
+      OnClick = Verclientesquenormalmentesolicitan1Click
+    end
+  end
+  object PopupMenu8: TPopupMenu
+    Left = 640
+    Top = 648
+    object DatosdeMonica1: TMenuItem
+      Caption = 'Copiar datos de Monica'
+      OnClick = DatosdeMonica1Click
+    end
+    object CopiardatosdeWilliams1: TMenuItem
+      Caption = 'Copiar datos de Williams'
+      OnClick = CopiardatosdeWilliams1Click
+    end
+  end
+  object PopupMenu9: TPopupMenu
+    Left = 640
+    Top = 608
+    object Informacinparaoficinas1: TMenuItem
+      Caption = 'Informaci'#243'n para oficinas'
+      OnClick = Informacinparaoficinas1Click
+    end
+  end
+  object PopupMenu10: TPopupMenu
+    Left = 600
+    Top = 640
+    object Viandasparaoficinas1: TMenuItem
+      Caption = 'Viandas para oficinas'
+      Default = True
+      OnClick = Viandasparaoficinas1Click
     end
   end
 end

@@ -259,6 +259,20 @@ __published:	// IDE-managed Components
 	TButton *Button40;
 	TPopupMenu *PopupMenu5;
 	TMenuItem *Establecercomopredeterminado1;
+	TPopupMenu *PopupMenu6;
+	TMenuItem *BDRecibimoselsig1;
+	TMenuItem *BDVananecesitarvia1;
+	TMenuItem *Errorpedidojueves1;
+	TPopupMenu *PopupMenu7;
+	TMenuItem *Verclientesquenormalmentesolicitan1;
+	TPopupMenu *PopupMenu8;
+	TMenuItem *DatosdeMonica1;
+	TMenuItem *CopiardatosdeWilliams1;
+	TPopupMenu *PopupMenu9;
+	TMenuItem *Informacinparaoficinas1;
+	TPopupMenu *PopupMenu10;
+	TMenuItem *Viandasparaoficinas1;
+	TMenuItem *Menudeldaparaoficinas1;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall DTPChange(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
@@ -388,6 +402,15 @@ __published:	// IDE-managed Components
 	void __fastcall Copiarmensemanal1Click(TObject *Sender);
 	void __fastcall Button40Click(TObject *Sender);
 	void __fastcall Establecercomopredeterminado1Click(TObject *Sender);
+	void __fastcall BDRecibimoselsig1Click(TObject *Sender);
+	void __fastcall BDVananecesitarvia1Click(TObject *Sender);
+	void __fastcall Errorpedidojueves1Click(TObject *Sender);
+	void __fastcall Verclientesquenormalmentesolicitan1Click(TObject *Sender);
+	void __fastcall DatosdeMonica1Click(TObject *Sender);
+	void __fastcall CopiardatosdeWilliams1Click(TObject *Sender);
+	void __fastcall Informacinparaoficinas1Click(TObject *Sender);
+	void __fastcall Viandasparaoficinas1Click(TObject *Sender);
+	void __fastcall Menudeldaparaoficinas1Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -430,6 +453,9 @@ public:		// User declarations
 	bool blockRGTexto;	//bloquea el evento onclick del RGTexto para que no se dispare cuando cambio el itemindex manualmente
 	bool cargandoPedido; //igual que el blockRGTexto pero mas general
 	bool puedeSalir;
+	bool advertirMismoCliente;  //intenta mitigar el error donde se carga un nuevo pedido pero en el cliente anterior
+	bool advertirRevisarCantidades; //intenta mitigar el error donde se agrega o elimina un pedido y no se actualiza la cantidad
+
 
 	void actualizarInfoVentas(void);
 	int vTimer1;

@@ -2,8 +2,8 @@ object fImportarPagosBancos: TfImportarPagosBancos
   Left = 0
   Top = 0
   Caption = 'Importar pagos por .CSV'
-  ClientHeight = 771
-  ClientWidth = 776
+  ClientHeight = 694
+  ClientWidth = 585
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object fImportarPagosBancos: TfImportarPagosBancos
   object DBGrid1: TDBGrid
     Left = 8
     Top = 8
-    Width = 761
-    Height = 625
+    Width = 569
+    Height = 593
     DataSource = DataSource1
     TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
@@ -53,7 +53,7 @@ object fImportarPagosBancos: TfImportarPagosBancos
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 562
+        Width = 372
         Visible = True
       end
       item
@@ -72,9 +72,9 @@ object fImportarPagosBancos: TfImportarPagosBancos
   end
   object RadioGroup1: TRadioGroup
     Left = 8
-    Top = 655
+    Top = 607
     Width = 185
-    Height = 90
+    Height = 82
     Caption = 'Cuenta bancaria'
     ItemIndex = 0
     Items.Strings = (

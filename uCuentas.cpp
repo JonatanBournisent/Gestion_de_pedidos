@@ -567,7 +567,7 @@ void __fastcall TfCuentas::Button8Click(TObject *Sender)
    QueryAux->Close();
 
    if(error)
-      ShowMessage("ERROR: Hay mas datos para incluir en la factura pero no hay mas renglones disponibles. Deberá solucionar el inconveniente realizando la misma de forma manual");
+	  ShowMessage("ERROR: Hay mas datos para incluir en la factura pero no hay mas renglones disponibles. Deberá solucionar el inconveniente realizando la misma de forma manual");
 }
 //---------------------------------------------------------------------------
 
@@ -885,15 +885,6 @@ void __fastcall TfCuentas::Button11Click(TObject *Sender)
 			 while(strPago.Pos(".") > 0)
 				strPago = strPago.Delete(strPago.Pos("."), 1);
 
-
-
-			 fImportarPagosBancos->FDMemTable1->Append();
-			 fImportarPagosBancos->FDMemTable1->FieldByName("fecha")->AsDateTime = StrToDate(strFecha);
-			 fImportarPagosBancos->FDMemTable1->FieldByName("cliente")->AsString = strNombreCliente;
-			 fImportarPagosBancos->FDMemTable1->FieldByName("valor")->AsString = strPago;
-			 fImportarPagosBancos->FDMemTable1->FieldByName("idCliente")->AsString = strCliente;
-			 fImportarPagosBancos->FDMemTable1->Post();
-
 			 cliente->Add(strCliente);
 			 direccionCliente->Add(strNombreCliente);
 			 pago->Add(strPago);
@@ -912,6 +903,20 @@ void __fastcall TfCuentas::Button11Click(TObject *Sender)
 		 fecha->Add(strFecha);
 	  }
    }
+
+
+
+   for(int i = 0; i<cliente->Count; i++)
+   {
+      fImportarPagosBancos->FDMemTable1->Append();
+	  fImportarPagosBancos->FDMemTable1->FieldByName("fecha")->AsDateTime = StrToDate(fecha->Strings[i]);
+	  fImportarPagosBancos->FDMemTable1->FieldByName("cliente")->AsString = direccionCliente->Strings[i];
+	  fImportarPagosBancos->FDMemTable1->FieldByName("valor")->AsString = pago->Strings[i];
+	  fImportarPagosBancos->FDMemTable1->FieldByName("idCliente")->AsString = cliente->Strings[i];
+	  fImportarPagosBancos->FDMemTable1->Post();
+   }
+
+
    fImportarPagosBancos->Show();
 
    delete infoBanco;
@@ -941,17 +946,17 @@ void __fastcall TfCuentas::CDSfechaIngresoPagoGetText(TField *Sender, UnicodeStr
 void __fastcall TfCuentas::CDSmedioDePagoGetText(TField *Sender, UnicodeString &Text,
           bool DisplayText)
 {
-   if(Sender->AsString == "A")
+   if(Sender->AsString.UpperCase() == "A")
 	  Text = "Efectivo";
-   else if(Sender->AsString == "B")
+   else if(Sender->AsString.UpperCase() == "B")
 	  Text = "Banco Oscar";
-   else if(Sender->AsString == "C")
+   else if(Sender->AsString.UpperCase() == "C")
 	  Text = "Banco Monica";
-   else if(Sender->AsString == "D")
+   else if(Sender->AsString.UpperCase() == "D")
 	  Text = "Banco Williams";
-   else if(Sender->AsString == "M")
+   else if(Sender->AsString.UpperCase() == "M")
 	  Text = "MercadoPago Oscar";
-   else if(Sender->AsString == "N")
+   else if(Sender->AsString.UpperCase() == "N")
 	  Text = "MercadoPago Monica";
 }
 //---------------------------------------------------------------------------
@@ -1006,6 +1011,21 @@ void __fastcall TfCuentas::Asignarpagoseleccionado1Click(TObject *Sender)
 	  default: cuentaBancaria = "A";
 	  break;
    }
+
+
+   QueryAux->Close();
+   QueryAux->SQL->Clear();
+   QueryAux->SQL->Add("SELECT idCuenta FROM cuentas WHERE pagoRealizado = :pago AND fechaIngresoPago = :fip AND refCliente = :refCliente AND medioDePago = :mdp");
+   QueryAux->ParamByName("refCliente")->AsInteger = idCliente;
+   QueryAux->ParamByName("fip")->AsDate = fImportarPagosBancos->FDMemTable1->FieldByName("fecha")->AsDateTime;
+   QueryAux->ParamByName("mdp")->AsString = cuentaBancaria;
+   QueryAux->ParamByName("pago")->AsFloat = fImportarPagosBancos->FDMemTable1->FieldByName("valor")->AsFloat;
+   QueryAux->Open();
+   if(!QueryAux->IsEmpty())
+	  Application->MessageBox(L"Ya existe un pago con las mismas características" ,L"¡ATENCIÓN!", MB_OK | MB_ICONWARNING | MB_DEFBUTTON1);
+   QueryAux->Close();
+
+
 
    QueryUpdate->SQL->Clear();
    QueryUpdate->SQL->Add("CALL actualizarCuenta(:fSemanal, :fMensual, :fechaActualizada , :unidades, :pago, :valor ,:refCliente, :idC)");

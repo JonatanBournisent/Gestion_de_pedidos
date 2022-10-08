@@ -18,18 +18,19 @@ USEFORM("uInfoCliente.cpp", fInfoCliente);
 USEFORM("uMain.cpp", fMain);
 USEFORM("uIngredientes.cpp", fIngredientes);
 USEFORM("uInformacionNutricional.cpp", fInformacionNutricional);
+USEFORM("uPrecios.cpp", fPrecios);
 USEFORM("uVerCargaManual.cpp", fVerCargaManual);
 USEFORM("uValorNutricional.cpp", fValorNutricional);
-USEFORM("uSeleccionarComida.cpp", fSeleccionarComida);
+USEFORM("uSospechosos.cpp", fSospechosos);
 USEFORM("uVerComprobantesElectronicos.cpp", fVerComprobantesElectronicos);
 USEFORM("uVerHistorialPedidos.cpp", fVerHistorialPedidos);
+USEFORM("uRecetas.cpp", fRecetas);
 USEFORM("uRastrearPagos.cpp", fRastrearPagos);
 USEFORM("uProductos.cpp", fProductos);
-USEFORM("uPrecios.cpp", fPrecios);
-USEFORM("uRecetas.cpp", fRecetas);
+USEFORM("uRepartidores.cpp", fRepartidores);
+USEFORM("uSeleccionarComida.cpp", fSeleccionarComida);
 USEFORM("uSeleccionarCliente.cpp", fSeleccionarCliente);
 USEFORM("uRepartos.cpp", fRepartos);
-USEFORM("uRepartidores.cpp", fRepartidores);
 USEFORM("uChartPedidosPorHora.cpp", fChartPedidosPorHora);
 USEFORM("uChartPedidosPorDia.cpp", fChartPedidosPorDia);
 USEFORM("uChartComidasMasVendidas.cpp", fChartComidasMasVendidas);
@@ -42,21 +43,23 @@ USEFORM("uAgregarComida.cpp", fAgregarComida);
 USEFORM("uChartCobrosPorDia.cpp", fChartCobrosPorDia);
 USEFORM("uCargarPagos.cpp", fCargarPagos);
 USEFORM("uAlarma.cpp", fAlarma);
+USEFORM("uConfigurarAlarma.cpp", fConfigurarAlarma);
+USEFORM("uFrame4.cpp", Frame4); /* TFrame: File Type */
 USEFORM("uFrame3.cpp", Frame3); /* TFrame: File Type */
 USEFORM("uFrame2.cpp", Frame2); /* TFrame: File Type */
-USEFORM("uFrame1.cpp", Frame1); /* TFrame: File Type */
-USEFORM("uFrame4.cpp", Frame4); /* TFrame: File Type */
+USEFORM("uFrecuenciaComidas.cpp", fFrecuenciaComidas);
+USEFORM("uImportarPagosBancos.cpp", fImportarPagosBancos);
 USEFORM("uGestionDeGastos.cpp", fGestionDeGastos);
 USEFORM("uGestionarAlarmas.cpp", fGestionarAlarmas);
-USEFORM("uFrecuenciaComidas.cpp", fFrecuenciaComidas);
+USEFORM("uEmitirCompElectMonotributo.cpp", fEmitirCompElectMonotributo);
 USEFORM("uDatos.cpp", fDatos);
 USEFORM("uCuentas.cpp", fCuentas);
-USEFORM("uConfigurarAlarma.cpp", fConfigurarAlarma);
-USEFORM("uEmitirCompElectMonotributo.cpp", fEmitirCompElectMonotributo);
+USEFORM("uEmitirComprobanteElectronico.cpp", fEmitirComprobanteElectronico);
+USEFORM("uFrame1.cpp", Frame1); /* TFrame: File Type */
 USEFORM("uFormulaComidas.cpp", fFormulaComidas);
 USEFORM("uFacturacionMensual.cpp", fFacturacionMensual);
-USEFORM("uEmitirComprobanteElectronico.cpp", fEmitirComprobanteElectronico);
-USEFORM("uImportarPagosBancos.cpp", fImportarPagosBancos);
+USEFORM("uMenuOficina.cpp", fMenuOficina);
+USEFORM("uFrameMenuOficina.cpp", frameMenuOficina); /* TFrame: File Type */
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
@@ -113,6 +116,8 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 		Application->CreateForm(__classid(TfInfoCliente), &fInfoCliente);
 		Application->CreateForm(__classid(TfPausa), &fPausa);
 		Application->CreateForm(__classid(TfImportarPagosBancos), &fImportarPagosBancos);
+		Application->CreateForm(__classid(TfSospechosos), &fSospechosos);
+		Application->CreateForm(__classid(TfMenuOficina), &fMenuOficina);
 		Application->Run();
 	}
 	catch (Exception &exception)

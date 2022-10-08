@@ -122,7 +122,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <Icon_MainIcon>pElSembrador_Icon3.ico</Icon_MainIcon>
-        <LinkPackageStatics>rtl.lib;vcl.lib;dbrtl.lib;dbexpress.lib;DbxCommonDriver.lib;DBXMySQLDriver.lib;vcldb.lib;dsnap.lib;frx22.lib;fs22.lib;vclx.lib;vclimg.lib;frxDB22.lib;fsDB22.lib;frxe22.lib;xmlrtl.lib;soaprtl.lib;inet.lib;soapserver.lib;TeeDB.lib;TeeUI.lib;Tee.lib;VclSmp.lib;fqb220.lib</LinkPackageStatics>
+        <LinkPackageStatics>rtl.lib;vcl.lib;dbrtl.lib;dbexpress.lib;DbxCommonDriver.lib;DBXMySQLDriver.lib;vcldb.lib;dsnap.lib;frx22.lib;fs22.lib;vclx.lib;vclimg.lib;frxDB22.lib;fsDB22.lib;frxe22.lib;xmlrtl.lib;soaprtl.lib;inet.lib;soapserver.lib;TeeDB.lib;TeeUI.lib;Tee.lib;VclSmp.lib;fqb220.lib;FireDAC.lib;FireDACSqliteDriver.lib;FireDACCommonDriver.lib;FireDACCommon.lib</LinkPackageStatics>
         <DynamicRTL>false</DynamicRTL>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <BCC_EnableRTTI>false</BCC_EnableRTTI>
@@ -281,6 +281,13 @@
             <DependentOn>uFrame4.h</DependentOn>
             <BuildOrder>15</BuildOrder>
         </CppCompile>
+        <CppCompile Include="uFrameMenuOficina.cpp">
+            <Form>frameMenuOficina</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+            <DependentOn>uFrameMenuOficina.h</DependentOn>
+            <BuildOrder>59</BuildOrder>
+        </CppCompile>
         <CppCompile Include="uFrecuenciaComidas.cpp">
             <Form>fFrecuenciaComidas</Form>
             <FormType>dfm</FormType>
@@ -352,6 +359,12 @@
             <FormType>dfm</FormType>
             <DependentOn>uMenuDelDia.h</DependentOn>
             <BuildOrder>19</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="uMenuOficina.cpp">
+            <Form>fMenuOficina</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>uMenuOficina.h</DependentOn>
+            <BuildOrder>58</BuildOrder>
         </CppCompile>
         <CppCompile Include="uMenuSemanal.cpp">
             <Form>fMenuSemanal</Form>
@@ -437,6 +450,12 @@
             <DependentOn>uSeleccionarComida.h</DependentOn>
             <BuildOrder>17</BuildOrder>
         </CppCompile>
+        <CppCompile Include="uSospechosos.cpp">
+            <Form>fSospechosos</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>uSospechosos.h</DependentOn>
+            <BuildOrder>57</BuildOrder>
+        </CppCompile>
         <CppCompile Include="uValorNutricional.cpp">
             <Form>fValorNutricional</Form>
             <FormType>dfm</FormType>
@@ -481,19 +500,19 @@
         <FormResources Include="uMain.dfm"/>
         <FormResources Include="uIngredientes.dfm"/>
         <FormResources Include="uInformacionNutricional.dfm"/>
+        <FormResources Include="uPrecios.dfm"/>
         <FormResources Include="uVerCargaManual.dfm"/>
         <FormResources Include="uValorNutricional.dfm"/>
-        <FormResources Include="uSeleccionarComida.dfm"/>
+        <FormResources Include="uSospechosos.dfm"/>
         <FormResources Include="uVerComprobantesElectronicos.dfm"/>
         <FormResources Include="uVerHistorialPedidos.dfm"/>
+        <FormResources Include="uRecetas.dfm"/>
         <FormResources Include="uRastrearPagos.dfm"/>
         <FormResources Include="uProductos.dfm"/>
-        <FormResources Include="uPrecios.dfm"/>
-        <FormResources Include="uRecetas.dfm"/>
+        <FormResources Include="uRepartidores.dfm"/>
+        <FormResources Include="uSeleccionarComida.dfm"/>
         <FormResources Include="uSeleccionarCliente.dfm"/>
         <FormResources Include="uRepartos.dfm"/>
-        <FormResources Include="uRepartidores.dfm"/>
-        <FormResources Include="uImportarPagosBancos.dfm"/>
         <FormResources Include="uChartPedidosPorHora.dfm"/>
         <FormResources Include="uChartPedidosPorDia.dfm"/>
         <FormResources Include="uChartComidasMasVendidas.dfm"/>
@@ -506,20 +525,23 @@
         <FormResources Include="uChartCobrosPorDia.dfm"/>
         <FormResources Include="uCargarPagos.dfm"/>
         <FormResources Include="uAlarma.dfm"/>
+        <FormResources Include="uConfigurarAlarma.dfm"/>
+        <FormResources Include="uFrame4.dfm"/>
         <FormResources Include="uFrame3.dfm"/>
         <FormResources Include="uFrame2.dfm"/>
-        <FormResources Include="uFrame1.dfm"/>
-        <FormResources Include="uFrame4.dfm"/>
+        <FormResources Include="uFrecuenciaComidas.dfm"/>
+        <FormResources Include="uImportarPagosBancos.dfm"/>
         <FormResources Include="uGestionDeGastos.dfm"/>
         <FormResources Include="uGestionarAlarmas.dfm"/>
-        <FormResources Include="uFrecuenciaComidas.dfm"/>
+        <FormResources Include="uEmitirCompElectMonotributo.dfm"/>
         <FormResources Include="uDatos.dfm"/>
         <FormResources Include="uCuentas.dfm"/>
-        <FormResources Include="uConfigurarAlarma.dfm"/>
-        <FormResources Include="uEmitirCompElectMonotributo.dfm"/>
+        <FormResources Include="uEmitirComprobanteElectronico.dfm"/>
+        <FormResources Include="uFrame1.dfm"/>
         <FormResources Include="uFormulaComidas.dfm"/>
         <FormResources Include="uFacturacionMensual.dfm"/>
-        <FormResources Include="uEmitirComprobanteElectronico.dfm"/>
+        <FormResources Include="uMenuOficina.dfm"/>
+        <FormResources Include="uFrameMenuOficina.dfm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -986,12 +1008,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>

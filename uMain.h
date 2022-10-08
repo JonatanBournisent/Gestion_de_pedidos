@@ -106,6 +106,7 @@ __published:	// IDE-managed Components
 	TMenuItem *Composiciondecomidas1;
 	TMenuItem *InformacionNutricional1;
 	TMenuItem *Frecuencias1;
+	TMenuItem *Gestionarmenparaoficinas1;
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button3Click(TObject *Sender);
@@ -168,6 +169,7 @@ __published:	// IDE-managed Components
 	void __fastcall Composiciondecomidas1Click(TObject *Sender);
 	void __fastcall InformacionNutricional1Click(TObject *Sender);
 	void __fastcall Frecuencias1Click(TObject *Sender);
+	void __fastcall Gestionarmenparaoficinas1Click(TObject *Sender);
 
 
 private:	// User declarations

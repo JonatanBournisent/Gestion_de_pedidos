@@ -23,16 +23,6 @@ __fastcall TFrame4::TFrame4(TComponent* Owner)
 
 void TFrame4::restablecerFrame(void)
 {
-//   TIniFile *Configuraciones;
-//   String Dir = GetCurrentDir()+"//Config.ini";
-//   Configuraciones = new TIniFile(Dir);
-//
-//   SQLConnection1->Params->Values["HostName"] = Configuraciones->ReadString("MySQLServer","Servidor", "127.0.0.1");
-//   SQLConnection1->Params->Values["User_Name"] = "elsembrador";
-//   SQLConnection1->Params->Values["Password"] = "*-elsembrador63/*";
-//
-//   delete Configuraciones;
-
    SQLConnection1->Params->Values["HostName"] = servidor;
    SQLConnection1->Params->Values["Database"] = dbName;
    SQLConnection1->Params->Values["User_Name"] = userName;
@@ -66,12 +56,14 @@ void __fastcall TFrame4::Edit1Change(TObject *Sender)
 //		  "(SELECT descripcion FROM categoriacomidas WHERE refCategoriaComida = idCategoriaComida LIMIT 1) AS categoria "
 //		  "FROM comidas WHERE (idComida > 1 AND (UPPER(nombre) LIKE :v OR UPPER(codigo) LIKE :v)) ORDER BY nombre LIMIT 10";
 
-      q = "SELECT idComida, nombre, codigo, "
+	  q = "SELECT idComida, nombre, codigo, IF(UPPER(nombre) LIKE :v1, 0, 1) AS esIgual, "           // (CHAR_LENGTH(nombre) - CHAR_LENGTH(:v1)) AS difLon,
 		  "(SELECT descripcion FROM categoriacomidas WHERE refCategoriaComida = idCategoriaComida LIMIT 1) AS categoria "
-		  "FROM comidas WHERE (idComida > 1 AND (UPPER(nombre) LIKE UPPER(:v) OR UPPER(codigo) LIKE UPPER(:v))) ORDER BY nombre LIMIT 30";
+		  "FROM comidas WHERE (idComida > 1 AND (UPPER(nombre) LIKE UPPER(:v) OR UPPER(codigo) LIKE UPPER(:v))) ORDER BY esIgual, nombre LIMIT 50";    //ABS(difLon),
 
 
 	  String buscar = Edit1->Text;
+	  String buscarAux = buscar + "%";
+	  buscarAux = buscarAux.UpperCase();
 	  int pos;
 	  while(buscar.Pos(" "))
 	  {
@@ -85,6 +77,7 @@ void __fastcall TFrame4::Edit1Change(TObject *Sender)
 	  Query1->SQL->Clear();
 	  Query1->SQL->Add(q);
 	  Query1->ParamByName("v")->AsString = buscar;
+	  Query1->ParamByName("v1")->AsString = buscarAux;
 	  Query1->Open();
 
 	  ClientDataSet1->Active = true;

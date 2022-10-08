@@ -38,6 +38,7 @@
 #include "uComprobantesX.h"
 #include "uGestionDeGastos.h"
 #include "uFormulaComidas.h"
+#include "uMenuOficina.h"
 
 
 //---------------------------------------------------------------------------
@@ -621,6 +622,12 @@ void __fastcall TfMain::InformacionNutricional1Click(TObject *Sender)
 void __fastcall TfMain::Frecuencias1Click(TObject *Sender)
 {
    fFrecuenciaComidas->ShowModal();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfMain::Gestionarmenparaoficinas1Click(TObject *Sender)
+{
+   fMenuOficina->ShowModal();
 }
 //---------------------------------------------------------------------------
 

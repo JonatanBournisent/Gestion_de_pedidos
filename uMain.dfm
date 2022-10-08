@@ -455,6 +455,10 @@ object fMain: TfMain
         Caption = 'Gestionar men'#250' semanal'
         OnClick = Gestionarmensemanal1Click
       end
+      object Gestionarmenparaoficinas1: TMenuItem
+        Caption = 'Gestionar men'#250' para oficinas'
+        OnClick = Gestionarmenparaoficinas1Click
+      end
       object Gestinderecetas1: TMenuItem
         Caption = 'Gesti'#243'n de recetas'
         OnClick = Gestinderecetas1Click

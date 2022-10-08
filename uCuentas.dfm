@@ -216,7 +216,7 @@ object fCuentas: TfCuentas
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 459
+        Width = 270
         Visible = True
       end>
   end
@@ -226,7 +226,7 @@ object fCuentas: TfCuentas
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.936687222220000000
+    Date = 43949.510613356480000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1
