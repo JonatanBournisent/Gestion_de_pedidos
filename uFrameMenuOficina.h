@@ -49,6 +49,8 @@ __published:	// IDE-managed Components
 	TCheckBox *cerrado;
 	TLabel *Label1;
 	TMenuItem *Modificarestaopcin1;
+	TMenuItem *Copiarestemen1;
+	TMemo *Memo1;
 	void __fastcall DBGrid1DblClick(TObject *Sender);
 	void __fastcall CDS1esLightGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
 	void __fastcall CDS1esVeggieGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
@@ -63,6 +65,7 @@ __published:	// IDE-managed Components
 	void __fastcall CheckBox1Click(TObject *Sender);
 	void __fastcall CheckBox2Click(TObject *Sender);
 	void __fastcall Modificarestaopcin1Click(TObject *Sender);
+	void __fastcall Copiarestemen1Click(TObject *Sender);
 
 
 private:	// User declarations

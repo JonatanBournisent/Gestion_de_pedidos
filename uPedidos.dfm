@@ -610,7 +610,7 @@ object fPedidos: TfPedidos
   end
   object Panel1: TPanel
     Left = 347
-    Top = 354
+    Top = 355
     Width = 39
     Height = 242
     BevelOuter = bvNone
@@ -772,6 +772,7 @@ object fPedidos: TfPedidos
     Height = 22
     Style = csOwnerDrawFixed
     TabOrder = 6
+    OnChange = cbRefProductoChange
   end
   object cbRefMedioContacto: TComboBox
     Left = 719
@@ -1704,7 +1705,7 @@ object fPedidos: TfPedidos
     OnClick = Button28Click
   end
   object Button29: TButton
-    Left = 605
+    Left = 607
     Top = 602
     Width = 30
     Height = 32
@@ -1936,6 +1937,15 @@ object fPedidos: TfPedidos
     PopupMenu = PopupMenu3
     TabOrder = 75
     OnClick = Button37Click
+  end
+  object rgOficinas: TRadioGroup
+    Left = 8
+    Top = 355
+    Width = 703
+    Height = 241
+    Caption = 'Men'#250' para oficinas'
+    TabOrder = 79
+    OnClick = rgOficinasClick
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'

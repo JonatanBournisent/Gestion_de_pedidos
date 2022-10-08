@@ -1287,6 +1287,70 @@ void TfPedidos::CargarOpciones(void)
 		 Panel9->Top = RG1->Top + 16 + 24 * 8;
 	  }
    }
+
+//-----CARGO OPCIONES PARA OFICINAS---------------------------------------------
+
+   QueryAux->Close();
+   QueryAux->SQL->Clear();
+   QueryAux->SQL->Add("SELECT orden, fecha, refComida1, refComida2, esLight, esVeggie, "
+							  "(SELECT nombre FROM comidas WHERE idComida = refComida1) AS c1, "
+							  "(SELECT nombre FROM comidas WHERE idComida = refComida2) AS c2 "
+					  "FROM menuoficinas "
+					  "WHERE fecha = :fecha "
+					  "ORDER BY orden"
+					 );
+
+   QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
+   QueryAux->Open();
+
+   QueryAux->First();
+
+
+   rgOficinas->Items->Clear();
+
+   String o, c1, c2, L, V;
+
+   int idx = 0;
+   while(!QueryAux->Eof)
+   {
+	  o = QueryAux->FieldByName("orden")->AsString;
+	  c1 = QueryAux->FieldByName("c1")->AsString;
+	  c2 = QueryAux->FieldByName("c2")->AsString;
+	  L = QueryAux->FieldByName("esLight")->AsString;
+	  V = QueryAux->FieldByName("esVeggie")->AsString;
+
+	  if(L == "S")
+		 L = " (Light)";
+	  else
+		 L = "";
+
+	  if(V == "S")
+		 V = " (Veggie)";
+	  else
+		 V = "";
+
+	  if(c1 != c2)
+		 rgOficinas->Items->Add("Opción " + o + ": " + c1 + " + " + c2 + L + V);
+	  else
+		 rgOficinas->Items->Add("Opción " + o + ": " + c1 + L + V);
+
+
+	  arrOpOficinaP1[idx] = QueryAux->FieldByName("refComida1")->AsInteger;
+	  arrOpOficinaP2[idx] = QueryAux->FieldByName("refComida2")->AsInteger;
+
+	  idx += 1;
+	  QueryAux->Next();
+   }
+   QueryAux->Close();
+
+   arrOpOficinaP1[idx] = 1;
+   arrOpOficinaP2[idx] = 1;
+   rgOficinas->Items->Add("Ninguna");
+
+
+
+
+
    Edit1->Enabled = true;
    Button9->Enabled = true;
    cargandoOpciones = false;
@@ -1313,6 +1377,7 @@ void TfPedidos::RestablecerFormulario(void)
    QueryEtiquetas->Close();
    QueryGenCad->Close();
    QueryInfo->Close();
+   rgOficinas->Visible = false;
 
    advertirRevisarCantidades = false;
 
@@ -1608,6 +1673,7 @@ void __fastcall TfPedidos::FormShow(TObject *Sender)
    CheckBox1->Checked = false;
    Label20->Caption = "";
    Label21->Caption = "";
+   rgOficinas->Visible = false;
 
    cbRefMedioContacto->Clear();
    QueryAux->Close();
@@ -1751,6 +1817,8 @@ void __fastcall TfPedidos::Button2Click(TObject *Sender)
 
 void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
 {
+   cargandoOpciones = true;
+
    RG1->Enabled = false;
    RG2->Enabled = false;
    RG3->Enabled = false;
@@ -1867,7 +1935,43 @@ void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
    idOpEsp3Old = idOpEsp3;
    idOpEsp4Old = idOpEsp4;
 
-   //actualizarInfoVentas();
+
+
+   if(cbRefProducto->ItemIndex == 1) //Oficinas
+   {
+	  bool encontrado = false;
+	  for(int i = 0; i < rgOficinas->Items->Count; i++)
+	  {
+		 if(rc1 == arrOpOficinaP1[i] && rc2 == arrOpOficinaP2[i])
+		 {
+			rgOficinas->ItemIndex = i;
+			encontrado = true;
+			break;
+		 }
+	  }
+	  if(!encontrado)
+	  {
+	     rgOficinas->ItemIndex = rgOficinas->Items->Count - 1;
+	  }
+
+	  rgOficinas->Visible = true;
+
+	  Image1->Enabled = false;
+	  Image2->Enabled = false;
+	  Image3->Enabled = false;
+	  Image4->Enabled = false;
+   }
+   else
+   {
+	  rgOficinas->Visible = false;
+
+	  Image1->Enabled = true;
+	  Image2->Enabled = true;
+	  Image3->Enabled = true;
+	  Image4->Enabled = true;
+   }
+
+
 
    RG1->Enabled = true;
    RG2->Enabled = true;
@@ -1887,6 +1991,8 @@ void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
    vTimer1 = 0;
    Panel18->Visible = true;
    Timer1->Enabled = true;
+
+   cargandoOpciones = false;
 }
 //---------------------------------------------------------------------------
 
@@ -2114,15 +2220,15 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 	  Query1->SQL->Add("SELECT MAX(idCantidad) FROM cantidades");
 	  Query1->Open();
 	  idCantidad = Query1->Fields->Fields[0]->AsInteger;
-      Query1->Close();
+	  Query1->Close();
    }
 
    int nroRec;
    bool modificado = false;
    if(modificandoPedido)
    {
-      modificado = true;
-      nroRec = ClientDataSet2->RecNo;
+	  modificado = true;
+	  nroRec = ClientDataSet2->RecNo;
 	  if(idOpEsp1Old != 0 && idOpEsp1Old != idOpEsp1)
 	  {
 		 Query1->Close();
@@ -2196,7 +2302,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
 	  if(RG4->ItemIndex == ni && idOpEsp4 > 1)
 	  {
-	     pedidoEspecial = true;
+		 pedidoEspecial = true;
 		 Query1->ParamByName("rc4")->AsInteger = idOpEsp4;
 	  }
 	  else
@@ -2228,7 +2334,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp1;
 			Query1->ParamByName("rp")->AsInteger = idMod;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
 		 }
 
@@ -2241,7 +2347,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp2;
 			Query1->ParamByName("rp")->AsInteger = idMod;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
 		 }
 
@@ -2254,7 +2360,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp3;
 			Query1->ParamByName("rp")->AsInteger = idMod;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
 		 }
 
@@ -2267,9 +2373,9 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp4;
 			Query1->ParamByName("rp")->AsInteger = idMod;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
-	     }
+		 }
 	  }
 
 	  modificandoPedido = false;
@@ -2284,7 +2390,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 	  Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 	  Query1->ParamByName("rc")->AsInteger = idCliSel;
 	  Query1->ParamByName("rp")->AsInteger = cbRefProducto->ItemIndex + 1;
-      Query1->ParamByName("refCantidad")->AsInteger = idCantidad;
+	  Query1->ParamByName("refCantidad")->AsInteger = idCantidad;
 
 	  if(RG1->ItemIndex == ni && idOpEsp1 > 1)
 	  {
@@ -2312,7 +2418,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
 	  if(RG4->ItemIndex == ni && idOpEsp4 > 1)
 	  {
-	     pedidoEspecial = true;
+		 pedidoEspecial = true;
 		 Query1->ParamByName("rc4")->AsInteger = idOpEsp4;
 	  }
 	  else
@@ -2350,7 +2456,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp1;
 			Query1->ParamByName("rp")->AsInteger = id;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
 		 }
 
@@ -2363,7 +2469,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp2;
 			Query1->ParamByName("rp")->AsInteger = id;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
 		 }
 
@@ -2376,7 +2482,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp3;
 			Query1->ParamByName("rp")->AsInteger = id;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
 		 }
 
@@ -2389,9 +2495,9 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp4;
 			Query1->ParamByName("rp")->AsInteger = id;
-            Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
+			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
 			Query1->ExecSQL();
-	     }
+		 }
 	  }
 
    }
@@ -2400,7 +2506,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
    if(existeCantidad)
    {
-      Query1->Close();
+	  Query1->Close();
 	  Query1->SQL->Clear();
 	  Query1->SQL->Add("UPDATE cantidades SET nroUnidades = :cant, nroBandejas = :nb, txtComplemento = :txComp, medioPago = :mp "
 					   "WHERE (idCantidad = :id) LIMIT 1");
@@ -2430,6 +2536,9 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
    Label6->Caption = "";
    Label7->Caption = "";
 
+
+   rgOficinas->ItemIndex = rgOficinas->Items->Count - 1;
+
    modificandoPedido = false;
    idMod = 0;
    cargandoOpciones = false;
@@ -2437,7 +2546,9 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
    CBParaCocina->Checked = false;
    edComentario->Text = "";
    cbRefProducto->ItemIndex = 0;
+
    cbRefMedioContacto->ItemIndex = 0;
+   rgOficinas->Visible = false;
 
    if(Sender != Button1)
    {
@@ -5410,7 +5521,58 @@ void __fastcall TfPedidos::Viandasparaoficinas1Click(TObject *Sender)
 void __fastcall TfPedidos::Menudeldaparaoficinas1Click(TObject *Sender)
 {
    Memo2->Clear();
-   Memo2->Lines->LoadFromFile("MenuOficinas.txt", TEncoding::UTF8);
+
+   QueryAux->Close();
+   QueryAux->SQL->Clear();
+   QueryAux->SQL->Add("SELECT orden, fecha, refComida1, refComida2, esLight, esVeggie, "
+							  "(SELECT nombre FROM comidas WHERE idComida = refComida1) AS c1, "
+							  "(SELECT nombre FROM comidas WHERE idComida = refComida2) AS c2 "
+					  "FROM menuoficinas "
+					  "WHERE fecha = :fecha "
+					  "ORDER BY orden"
+					 );
+
+   QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
+   QueryAux->Open();
+
+   QueryAux->First();
+
+
+   Memo2->Lines->Add(L"📋 *Menú para oficinas: " + FormatDateTime("dddd dd/mm/yyyy", DTP->DateTime) + "*");
+   Memo2->Lines->Add("");
+
+   String o, c1, c2, L, V;
+   while(!QueryAux->Eof)
+   {
+	  o = QueryAux->FieldByName("orden")->AsString;
+	  c1 = QueryAux->FieldByName("c1")->AsString;
+	  c2 = QueryAux->FieldByName("c2")->AsString;
+	  L = QueryAux->FieldByName("esLight")->AsString;
+	  V = QueryAux->FieldByName("esVeggie")->AsString;
+
+	  if(L == "S")
+		 L = " *(Light)*";
+	  else
+		 L = "";
+
+	  if(V == "S")
+		 V = " *(Veggie)*";
+	  else
+		 V = "";
+
+	  if(c1 != c2)
+		 Memo2->Lines->Add("Opción " + o + ": " + c1 + " + " + c2 + L + V);
+	  else
+		 Memo2->Lines->Add("Opción " + o + ": " + c1 + L + V);
+
+	  QueryAux->Next();
+   }
+   QueryAux->Close();
+
+   Memo2->Lines->Add("");
+   Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", valorVianda * 0.5) + ".");
+   Memo2->Lines->Add(L"🛵 Precio de envío: $150.");
+
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
    Beep();
@@ -5432,6 +5594,115 @@ void __fastcall TfPedidos::Button41Click(TObject *Sender)
    Button4->Enabled = true;
    Button17->Enabled = true;
    puedeSalir = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::cbRefProductoChange(TObject *Sender)
+{
+   if(cbRefProducto->ItemIndex == 1)
+   {
+	  rgOficinas->Visible = true;
+
+	  Image1->Enabled = false;
+	  Image2->Enabled = false;
+	  Image3->Enabled = false;
+	  Image4->Enabled = false;
+   }
+   else
+   {
+	  rgOficinas->Visible = false;
+
+	  Image1->Enabled = true;
+	  Image2->Enabled = true;
+	  Image3->Enabled = true;
+	  Image4->Enabled = true;
+   }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::rgOficinasClick(TObject *Sender)
+{
+   if(cargandoOpciones)
+	  return;
+
+
+   idOpEsp1 = 0;
+   idOpEsp2 = 0;
+   idOpEsp3 = 1;
+   idOpEsp4 = 1;
+
+   Label4->Caption = "";
+   Label5->Caption = "";
+   Label6->Caption = "";
+   Label7->Caption = "";
+
+   RG1->ItemIndex = RG1->Items->Count - 1;
+   RG2->ItemIndex = RG2->Items->Count - 1;
+   RG3->ItemIndex = RG3->Items->Count - 1;
+   RG4->ItemIndex = RG4->Items->Count - 1;
+
+
+   int c1 = arrOpOficinaP1[rgOficinas->ItemIndex];
+   int c2 = arrOpOficinaP2[rgOficinas->ItemIndex];
+
+   bool encontrado = false;
+   for(int i = 0; i < RG1->Items->Count; i++)
+   {
+	  if(arrIdComida[i] == c1)
+	  {
+		 RG1->ItemIndex = i;
+		 encontrado = true;
+		 break;
+	  }
+   }
+
+   if(!encontrado)
+   {
+	  idOpEsp1 = c1;
+
+	  QueryAux->Close();
+	  QueryAux->SQL->Clear();
+	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
+	  QueryAux->ParamByName("id")->AsInteger = c1;
+	  QueryAux->Open();
+	  Label4->Caption = QueryAux->FieldByName("codigo")->AsString;
+	  QueryAux->Close();
+   }
+
+   encontrado = false;
+   for(int i = 0; i < RG2->Items->Count; i++)
+   {
+	  if(arrIdComida[i] == c2)
+	  {
+		 RG2->ItemIndex = i;
+		 encontrado = true;
+		 break;
+	  }
+   }
+
+   if(!encontrado)
+   {
+	  idOpEsp2 = c2;
+
+	  QueryAux->Close();
+	  QueryAux->SQL->Clear();
+	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
+	  QueryAux->ParamByName("id")->AsInteger = c2;
+	  QueryAux->Open();
+	  Label5->Caption = QueryAux->FieldByName("codigo")->AsString;
+	  QueryAux->Close();
+   }
+
+
+   if(rgOficinas->ItemIndex == rgOficinas->Items->Count - 1)
+   {
+	  RG1->ItemIndex = RG1->Items->Count - 1;
+	  RG1->ItemIndex = RG1->Items->Count - 1;
+	  idOpEsp1 = 0;
+	  idOpEsp2 = 0;
+	  Label4->Caption = "";
+	  Label5->Caption = "";
+   }
 }
 //---------------------------------------------------------------------------
 

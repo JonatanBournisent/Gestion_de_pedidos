@@ -274,6 +274,7 @@ __published:	// IDE-managed Components
 	TMenuItem *Viandasparaoficinas1;
 	TMenuItem *Menudeldaparaoficinas1;
 	TButton *Button41;
+	TRadioGroup *rgOficinas;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall DTPChange(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
@@ -413,6 +414,8 @@ __published:	// IDE-managed Components
 	void __fastcall Viandasparaoficinas1Click(TObject *Sender);
 	void __fastcall Menudeldaparaoficinas1Click(TObject *Sender);
 	void __fastcall Button41Click(TObject *Sender);
+	void __fastcall cbRefProductoChange(TObject *Sender);
+	void __fastcall rgOficinasClick(TObject *Sender);
 
 
 private:	// User declarations
@@ -421,6 +424,9 @@ public:		// User declarations
 
 	bool mostroMsg1;
 	bool mostroMsg2;
+
+	int arrOpOficinaP1[10];
+	int arrOpOficinaP2[10];
 
 	int arrIdComida[9];
 	String opciones[9];

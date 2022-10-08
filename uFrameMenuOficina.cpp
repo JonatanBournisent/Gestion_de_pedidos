@@ -373,3 +373,41 @@ void __fastcall TframeMenuOficina::Modificarestaopcin1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TframeMenuOficina::Copiarestemen1Click(TObject *Sender)
+{
+   CDS1->First();
+   Memo1->Clear();
+
+   String p1, p2, esLight, esVeggie;
+   while(!CDS1->Eof)
+   {
+	  p1 = CDS1->FieldByName("plato1")->AsString;
+	  p2 = CDS1->FieldByName("plato2")->AsString;
+	  esLight = CDS1->FieldByName("esLight")->AsString;
+	  esVeggie = CDS1->FieldByName("esVeggie")->AsString;
+
+	  if(esLight == 1)
+		 esLight = " (Light)";
+	  else
+		 esLight = "";
+
+	  p2 = p2.LowerCase();
+
+	  if(esVeggie == 1)
+		 esVeggie = " (Veggie)";
+	  else
+		 esVeggie = "";
+
+	  if(p1.LowerCase() != p2)      //CDS1->RecNo) + ". " +
+		 Memo1->Lines->Add(IntToStr(p1 + " con " + p2 + esLight + esVeggie);
+	  else
+		 Memo1->Lines->Add(IntToStr(p1 + esLight + esVeggie);
+
+	  CDS1->Next();
+   }
+
+   Memo1->SelectAll();
+   Memo1->CopyToClipboard();
+}
+//---------------------------------------------------------------------------
+

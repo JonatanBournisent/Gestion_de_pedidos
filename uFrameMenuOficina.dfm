@@ -173,6 +173,17 @@ object frameMenuOficina: TframeMenuOficina
     Visible = False
     OnClick = cerradoClick
   end
+  object Memo1: TMemo
+    Left = 384
+    Top = 49
+    Width = 185
+    Height = 89
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 3
+    Visible = False
+    WordWrap = False
+  end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
     DriverName = 'MySQL'
@@ -256,7 +267,8 @@ object frameMenuOficina: TframeMenuOficina
     Top = 133
   end
   object PopupMenu1: TPopupMenu
-    Top = 45
+    Left = 16
+    Top = 61
     object Moverhaciaarriba1: TMenuItem
       Caption = 'Mover hacia arriba'
       OnClick = Moverhaciaarriba1Click
@@ -276,6 +288,10 @@ object frameMenuOficina: TframeMenuOficina
     object Modificarestaopcin1: TMenuItem
       Caption = 'Modificar esta opci'#243'n'
       OnClick = Modificarestaopcin1Click
+    end
+    object Copiarestemen1: TMenuItem
+      Caption = 'Copiar este men'#250
+      OnClick = Copiarestemen1Click
     end
   end
 end
