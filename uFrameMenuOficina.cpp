@@ -398,10 +398,10 @@ void __fastcall TframeMenuOficina::Copiarestemen1Click(TObject *Sender)
 	  else
 		 esVeggie = "";
 
-	  if(p1.LowerCase() != p2)      //CDS1->RecNo) + ". " +
-		 Memo1->Lines->Add(IntToStr(p1 + " con " + p2 + esLight + esVeggie);
+	  if(p1.LowerCase() != p2)      //IntToStr(CDS1->RecNo) + ". " +
+		 Memo1->Lines->Add(p1 + " con " + p2 + esLight + esVeggie);
 	  else
-		 Memo1->Lines->Add(IntToStr(p1 + esLight + esVeggie);
+		 Memo1->Lines->Add(p1 + esLight + esVeggie);
 
 	  CDS1->Next();
    }

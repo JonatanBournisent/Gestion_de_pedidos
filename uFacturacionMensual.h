@@ -41,6 +41,9 @@ __published:	// IDE-managed Components
 	TMenuItem *EmitirCompMonotributo1;
 	TWideStringField *CDS1tipo;
 	TSQLQuery *QueryUpdate;
+	TLabel *Label2;
+	TLabel *Label3;
+	TButton *Button2;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -52,9 +55,11 @@ __published:	// IDE-managed Components
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall EmitirCompMonotributo1Click(TObject *Sender);
 	void __fastcall CDS1tipoChange(TField *Sender);
+	void __fastcall Button2Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfFacturacionMensual(TComponent* Owner);
+	String _directorioGuararFacturas;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfFacturacionMensual *fFacturacionMensual;

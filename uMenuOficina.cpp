@@ -21,6 +21,10 @@ __fastcall TfMenuOficina::TfMenuOficina(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TfMenuOficina::FormShow(TObject *Sender)
 {
+   MC1->MultiSelect = false;
+   MC1->Date = Now();
+   MC1->MultiSelect = true;
+
    MC1->Date = StartOfTheWeek(Now());
    MC1->EndDate = IncDay(MC1->Date,5);
 

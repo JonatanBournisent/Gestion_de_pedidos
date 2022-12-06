@@ -135,6 +135,8 @@ public:		// User declarations
 	float valorUnidad;
 	float calcular(void);
 	void mostrarCliente(int refCliente);
+
+	String directorioGuararFacturas;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfEmitirComprobanteElectronico *fEmitirComprobanteElectronico;

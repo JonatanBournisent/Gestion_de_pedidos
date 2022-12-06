@@ -226,7 +226,7 @@ object fCuentas: TfCuentas
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.510613356480000000
+    Date = 43949.282404490740000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1
@@ -575,7 +575,7 @@ object fCuentas: TfCuentas
   end
   object OD1: TOpenDialog
     DefaultExt = '.csv'
-    Filter = '*.csv'
+    Filter = 'Archivos *.CSV|*.csv'
     Top = 152
   end
 end

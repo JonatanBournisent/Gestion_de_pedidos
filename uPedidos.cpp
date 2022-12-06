@@ -413,7 +413,7 @@ void TfPedidos::procesoImpresionEtiquetasPedidos(int reparto)
 
 	   QueryAux->Close();
 	   QueryAux->SQL->Clear();
-	   QueryAux->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (momento >= :mi AND momento <= :mf "
+	   QueryAux->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (momento >= :mi AND momento <= :mf AND refProducto = 1 "
 						  "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = :sr)");
 //	   QueryAux->ParamByName("f")->AsDate = DTP->Date;
 	   QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
@@ -2546,6 +2546,11 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
    CBParaCocina->Checked = false;
    edComentario->Text = "";
    cbRefProducto->ItemIndex = 0;
+
+   Image1->Enabled = true;
+   Image2->Enabled = true;
+   Image3->Enabled = true;
+   Image4->Enabled = true;
 
    cbRefMedioContacto->ItemIndex = 0;
    rgOficinas->Visible = false;

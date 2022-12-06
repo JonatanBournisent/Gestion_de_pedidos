@@ -2,6 +2,7 @@
 
 #include <vcl.h>
 #include <DateUtils.hpp>
+#include <FileCtrl.hpp>
 #pragma hdrstop
 
 #include "uFacturacionMensual.h"
@@ -35,18 +36,12 @@ void __fastcall TfFacturacionMensual::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfFacturacionMensual::FormShow(TObject *Sender)
 {
+   _directorioGuararFacturas = "";
+   Label3->Caption = "";
+
    MC->MultiSelect = false;
    MC->Date = Now();
    MC->MultiSelect = true;
-
-   CDS1->Active = false;
-   Query1->Close();
-   Query1->SQL->Clear();
-   String q;
-   q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo FROM clientes WHERE clientes.generarFactura = 1 ORDER BY cliente";
-   Query1->SQL->Add(q);
-   Query1->Open();
-   CDS1->Active = true;
 
    if(DayOfTheMonth(Now()) <= 5)	//si es menos del 5 de este mes, asume que se trabaja sobre el mes anterior
    {
@@ -58,9 +53,27 @@ void __fastcall TfFacturacionMensual::FormShow(TObject *Sender)
 	  MC->Date = StartOfTheMonth(Now());
 	  MC->EndDate = EndOfTheMonth(Now());
    }
+
+   CDS1->Active = false;
+   Query1->Close();
+   Query1->SQL->Clear();
+   String q;
+   q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo "
+	   " FROM clientes "
+	   " WHERE clientes.generarFactura = 1 AND "
+	   " clientes.idCliente IN "
+			" (SELECT refCliente FROM cantidades WHERE fecha >= :fi AND fecha <= :ff GROUP BY refCliente) "
+	   " ORDER BY cliente";
+   Query1->SQL->Add(q);
+   Query1->ParamByName("fi")->AsDate = MC->Date;
+   Query1->ParamByName("ff")->AsDate = MC->EndDate;
+   Query1->Open();
+   CDS1->Active = true;
+
    EmitirCompMonotributo1->Visible = false;
    DBGrid1->Columns->Items[1]->Visible = false;
    DBGrid1->Columns->Items[0]->Width = 255;
+
 }
 //---------------------------------------------------------------------------
 void __fastcall TfFacturacionMensual::FormClose(TObject *Sender, TCloseAction &Action)
@@ -119,6 +132,7 @@ void __fastcall TfFacturacionMensual::Verdetalledecuenta1Click(TObject *Sender)
 void __fastcall TfFacturacionMensual::Iraemitircomprobante1Click(TObject *Sender)
 
 {
+
    QueryAux->Close();
    QueryAux->SQL->Clear();
    QueryAux->SQL->Add("SELECT SUM(unidades) AS cantidad, valorUnidad FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND refCliente = :refCliente GROUP BY valorUnidad ORDER BY valorUnidad");
@@ -138,6 +152,9 @@ void __fastcall TfFacturacionMensual::Iraemitircomprobante1Click(TObject *Sender
    fEmitirComprobanteElectronico->Edit10->MaxLength = 40;
    fEmitirComprobanteElectronico->Edit13->MaxLength = 40;
    fEmitirComprobanteElectronico->Edit16->MaxLength = 40;
+
+   fEmitirComprobanteElectronico->directorioGuararFacturas = fFacturacionMensual->_directorioGuararFacturas;
+
 
    int i = 0;
    bool error = false;
@@ -198,15 +215,6 @@ void __fastcall TfFacturacionMensual::FormKeyDown(TObject *Sender, WORD &Key, TS
 	  DBGrid1->Columns->Items[1]->Visible = true;
 	  DBGrid1->Columns->Items[0]->Width = 202;
 
-	  CDS1->Active = false;
-	  Query1->Close();
-	  Query1->SQL->Clear();
-	  String q;
-	  q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo FROM clientes WHERE clientes.generarFactura = 1 ORDER BY tipo DESC, cliente";
-	  Query1->SQL->Add(q);
-	  Query1->Open();
-	  CDS1->Active = true;
-
 	  if(DayOfTheMonth(Now()) <= 5)
 	  {
 		 MC->Date = StartOfTheMonth(IncDay(Now(), -10));      //mes pasado
@@ -217,6 +225,25 @@ void __fastcall TfFacturacionMensual::FormKeyDown(TObject *Sender, WORD &Key, TS
 		 MC->Date = StartOfTheMonth(Now());
 		 MC->EndDate = EndOfTheMonth(Now());
 	  }
+
+	  CDS1->Active = false;
+	  Query1->Close();
+	  Query1->SQL->Clear();
+	  String q;
+//	  q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo FROM clientes WHERE clientes.generarFactura = 1 ORDER BY tipo DESC, cliente";
+	  q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo "
+	   " FROM clientes "
+	   " WHERE clientes.generarFactura = 1 AND "
+	   " clientes.idCliente IN "
+			" (SELECT refCliente FROM cantidades WHERE fecha >= :fi AND fecha <= :ff GROUP BY refCliente) "
+	   " ORDER BY tipo DESC, cliente";
+
+
+	  Query1->SQL->Add(q);
+	  Query1->ParamByName("fi")->AsDate = MC->Date;
+	  Query1->ParamByName("ff")->AsDate = MC->EndDate;
+	  Query1->Open();
+	  CDS1->Active = true;
    }
 }
 //---------------------------------------------------------------------------
@@ -321,6 +348,15 @@ void __fastcall TfFacturacionMensual::CDS1tipoChange(TField *Sender)
    QueryUpdate->ParamByName("tipo")->AsString = CDS1->FieldByName("tipo")->AsString;
    QueryUpdate->ParamByName("idCliente")->AsInteger = CDS1->FieldByName("idCliente")->AsInteger;
    QueryUpdate->ExecSQL();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfFacturacionMensual::Button2Click(TObject *Sender)
+{
+   if(SelectDirectory("Directorio para guardar facturas", "", _directorioGuararFacturas) == true)
+   {
+	  Label3->Caption = _directorioGuararFacturas;
+   }
 }
 //---------------------------------------------------------------------------
 

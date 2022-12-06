@@ -4,7 +4,7 @@ object fFacturacionMensual: TfFacturacionMensual
   BorderStyle = bsDialog
   Caption = ' Lista de clientes para facturaci'#243'n electr'#243'nica mensual'
   ClientHeight = 644
-  ClientWidth = 578
+  ClientWidth = 561
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -34,6 +34,22 @@ object fFacturacionMensual: TfFacturacionMensual
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 314
+    Top = 296
+    Width = 171
+    Height = 13
+    Caption = 'Directorio para guardar las facturas'
+    Visible = False
+  end
+  object Label3: TLabel
+    Left = 314
+    Top = 331
+    Width = 31
+    Height = 13
+    Caption = 'Label3'
+    Visible = False
   end
   object DBGrid1: TDBGrid
     Left = 8
@@ -84,7 +100,7 @@ object fFacturacionMensual: TfFacturacionMensual
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.401495636570000000
+    Date = 43949.238183900470000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1
@@ -100,6 +116,16 @@ object fFacturacionMensual: TfFacturacionMensual
     Caption = 'Salir'
     TabOrder = 2
     OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 314
+    Top = 248
+    Width = 239
+    Height = 25
+    Caption = 'Definir directorio para guardar facturas'
+    TabOrder = 3
+    Visible = False
+    OnClick = Button2Click
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'

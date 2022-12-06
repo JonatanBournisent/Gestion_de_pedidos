@@ -3,7 +3,7 @@ object fMenuOficina: TfMenuOficina
   Top = 0
   Caption = 'Men'#250' semanal para oficinas'
   ClientHeight = 547
-  ClientWidth = 1032
+  ClientWidth = 1102
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +11,7 @@ object fMenuOficina: TfMenuOficina
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   OnClose = FormClose
   OnMouseWheelDown = FormMouseWheelDown
   OnMouseWheelUp = FormMouseWheelUp
@@ -18,8 +19,8 @@ object fMenuOficina: TfMenuOficina
   PixelsPerInch = 96
   TextHeight = 13
   object Button1: TButton
-    Left = 14
-    Top = 175
+    Left = 49
+    Top = 174
     Width = 75
     Height = 25
     Caption = 'Anterior'
@@ -27,8 +28,8 @@ object fMenuOficina: TfMenuOficina
     OnClick = Button1Click
   end
   object Button2: TButton
-    Left = 111
-    Top = 175
+    Left = 146
+    Top = 174
     Width = 81
     Height = 25
     Caption = 'Siguiente'
@@ -38,18 +39,19 @@ object fMenuOficina: TfMenuOficina
   object MC1: TMonthCalendar
     Left = 8
     Top = 8
-    Width = 191
+    Width = 261
     Height = 160
     MultiSelect = True
-    Date = 44841.440608773150000000
+    Date = 44841.279102581020000000
     EndDate = 44841.000000000000000000
     TabOrder = 2
   end
   object ScrollBox1: TScrollBox
-    Left = 205
+    Left = 275
     Top = 8
     Width = 820
     Height = 539
+    HorzScrollBar.Position = 9
     HorzScrollBar.Smooth = True
     HorzScrollBar.Style = ssHotTrack
     HorzScrollBar.Tracking = True
@@ -57,52 +59,52 @@ object fMenuOficina: TfMenuOficina
     VertScrollBar.Tracking = True
     TabOrder = 3
     inline frameMenuOficina1: TframeMenuOficina
-      Left = 10
+      Left = 1
       Top = 3
       Width = 798
       Height = 169
       TabOrder = 0
-      ExplicitLeft = 10
+      ExplicitLeft = 1
       ExplicitTop = 3
       ExplicitWidth = 798
     end
     inline frameMenuOficina2: TframeMenuOficina
-      Left = 10
+      Left = 1
       Top = 184
       Width = 798
       Height = 169
       TabOrder = 1
-      ExplicitLeft = 10
+      ExplicitLeft = 1
       ExplicitTop = 184
       ExplicitWidth = 798
     end
     inline frameMenuOficina3: TframeMenuOficina
-      Left = 10
+      Left = 1
       Top = 366
       Width = 798
       Height = 169
       TabOrder = 2
-      ExplicitLeft = 10
+      ExplicitLeft = 1
       ExplicitTop = 366
       ExplicitWidth = 798
     end
     inline frameMenuOficina4: TframeMenuOficina
-      Left = 10
+      Left = 1
       Top = 552
       Width = 798
       Height = 169
       TabOrder = 3
-      ExplicitLeft = 10
+      ExplicitLeft = 1
       ExplicitTop = 552
       ExplicitWidth = 798
     end
     inline frameMenuOficina5: TframeMenuOficina
-      Left = 10
+      Left = 1
       Top = 736
       Width = 798
       Height = 169
       TabOrder = 4
-      ExplicitLeft = 10
+      ExplicitLeft = 1
       ExplicitTop = 736
       ExplicitWidth = 798
     end

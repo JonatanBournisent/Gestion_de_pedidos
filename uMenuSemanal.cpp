@@ -223,11 +223,18 @@ void __fastcall TfMenuSemanal::FormShow(TObject *Sender)
    delete Configuraciones;
 
 
+   MC1->MultiSelect = false;
+   MC1->Date = Now();
+   MC1->MultiSelect = true;
 
    MC1->Date = StartOfTheWeek(Now());
    MC1->EndDate = IncDay(MC1->Date,5);
 
+   MC2->MultiSelect = false;
    MC2->Date = StartOfTheWeek(IncWeek(MC1->Date, -52));
+   MC2->MultiSelect = true;
+
+
    MC2->EndDate = IncDay(MC2->Date,5);
 
    Button18->Enabled = true;

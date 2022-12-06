@@ -1119,6 +1119,7 @@ void __fastcall TfEmitirComprobanteElectronico::FormShow(TObject *Sender)
 	  //Button10->Enabled = true;
 
 	  MC->Date = Now();
+	  directorioGuararFacturas = "";
 }
 //---------------------------------------------------------------------------
 
