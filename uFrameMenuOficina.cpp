@@ -24,6 +24,7 @@ __fastcall TframeMenuOficina::TframeMenuOficina(TComponent* Owner)
 //---------------------------------------------------------------------------
 void TframeMenuOficina::inicializar(TDate fechaIni)
 {
+
    fecha = fechaIni;
    SQLConnection1->Params->Values["HostName"] = servidor;
    SQLConnection1->Params->Values["Database"] = dbName;
@@ -32,7 +33,8 @@ void TframeMenuOficina::inicializar(TDate fechaIni)
 
    cerrado->Checked = false;
 
-   Panel1->Hide();
+	Panel1->Hide();
+	Panel2->Hide();
 
    Label1->Caption = FormatDateTime("dddd dd/mm", fecha );
    String s = Label1->Caption;
@@ -41,7 +43,35 @@ void TframeMenuOficina::inicializar(TDate fechaIni)
    s = s.Insert(fst.UpperCase(),1);
    Label1->Caption = s;
 
-   mostrarMenu();
+	mostrarMenu();
+
+
+
+	String q;
+	q = "SELECT refComida1 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida1 WHERE fecha = :fecha AND idComida != 1			 \
+			UNION ALL                                                                                                                                                                \
+			SELECT refComida2 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida2 WHERE fecha = :fecha AND idComida != 1         \
+			UNION ALL                                                                                                                                                                \
+			SELECT refComida3 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida3 WHERE fecha = :fecha AND idComida != 1         \
+			UNION ALL                                                                                                                                                                \
+			SELECT refComida4 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida4 WHERE fecha = :fecha AND idComida != 1         \
+			UNION ALL                                                                                                                                                                \
+			SELECT refComida5 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida5 WHERE fecha = :fecha AND idComida != 1         \
+			UNION ALL                                                                                                                                                                \
+			SELECT refComida6 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida6 WHERE fecha = :fecha AND idComida != 1         \
+			UNION ALL                                                                                                                                                                \
+			SELECT refComida7 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida7 WHERE fecha = :fecha AND idComida != 1         \
+			UNION ALL                                                                                                                                                                \
+			SELECT refComida8 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida8 WHERE fecha = :fecha AND idComida != 1";
+
+
+	CDS2->Active = false ;
+	QueryMenuNormal->Close();
+	QueryMenuNormal->SQL->Clear();
+	QueryMenuNormal->SQL->Add(q);
+	QueryMenuNormal->ParamByName("fecha")->AsDate = fecha;
+	QueryMenuNormal->Open();
+	CDS2->Active = true;
 }
 //---------------------------------------------------------------------------
 void TframeMenuOficina::cerrar(void)
@@ -49,7 +79,9 @@ void TframeMenuOficina::cerrar(void)
    QueryAux->Close();
    QueryUpdate->Close();
    CDS1->Active = false;
-   Query1->Close();
+	Query1->Close();
+	CDS2->Active = false ;
+	QueryMenuNormal->Close();
 }
 //---------------------------------------------------------------------------
 void TframeMenuOficina::mostrarMenu(void)
@@ -231,6 +263,7 @@ void __fastcall TframeMenuOficina::Agregaropcin1Click(TObject *Sender)
    CheckBox1->Checked = false;
    CheckBox2->Checked = false;
    Panel1->Show();
+//   Button3Click(Sender);
 }
 //---------------------------------------------------------------------------
 void __fastcall TframeMenuOficina::Eliminaropcin1Click(TObject *Sender)
@@ -292,7 +325,7 @@ void __fastcall TframeMenuOficina::cerradoClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TframeMenuOficina::Button3Click(TObject *Sender)
 {
-   fSeleccionarComida->ShowModal();
+	fSeleccionarComida->ShowModal();
    if(fSeleccionarComida->idSeleccionado == 0)
 	  return;
 
@@ -303,7 +336,8 @@ void __fastcall TframeMenuOficina::Button3Click(TObject *Sender)
    QueryUpdate->ParamByName("rc")->AsInteger = fSeleccionarComida->idSeleccionado;
    QueryUpdate->ExecSQL();
 
-   CDS1->Refresh();
+	CDS1->Refresh();
+	Button4Click(Sender);
 }
 //---------------------------------------------------------------------------
 void __fastcall TframeMenuOficina::Button4Click(TObject *Sender)
@@ -408,6 +442,91 @@ void __fastcall TframeMenuOficina::Copiarestemen1Click(TObject *Sender)
 
    Memo1->SelectAll();
    Memo1->CopyToClipboard();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TframeMenuOficina::Button1Click(TObject *Sender)
+{
+	Agregaropcin1Click(Sender);
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TframeMenuOficina::Button2Click(TObject *Sender)
+{
+//	String q;
+//	q = "SELECT refComida1 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida1 WHERE fecha = :fecha AND idComida != 1			 \
+//			UNION ALL                                                                                                                                                                \
+//			SELECT refComida2 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida2 WHERE fecha = :fecha AND idComida != 1         \
+//			UNION ALL                                                                                                                                                                \
+//			SELECT refComida3 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida3 WHERE fecha = :fecha AND idComida != 1         \
+//			UNION ALL                                                                                                                                                                \
+//			SELECT refComida4 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida4 WHERE fecha = :fecha AND idComida != 1         \
+//			UNION ALL                                                                                                                                                                \
+//			SELECT refComida5 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida5 WHERE fecha = :fecha AND idComida != 1         \
+//			UNION ALL                                                                                                                                                                \
+//			SELECT refComida6 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida6 WHERE fecha = :fecha AND idComida != 1         \
+//			UNION ALL                                                                                                                                                                \
+//			SELECT refComida7 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida7 WHERE fecha = :fecha AND idComida != 1         \
+//			UNION ALL                                                                                                                                                                \
+//			SELECT refComida8 AS idComida, nombre FROM menuDelDia LEFT JOIN comidas ON comidas.idComida = menudeldia.refComida8 WHERE fecha = :fecha AND idComida != 1";
+//
+//
+//	CDS2->Active = false ;
+//	QueryMenuNormal->Close();
+//	QueryMenuNormal->SQL->Clear();
+//	QueryMenuNormal->SQL->Add(q);
+//	QueryMenuNormal->ParamByName("fecha")->AsDate = fecha;
+//	QueryMenuNormal->Open();
+//	CDS2->Active = true;
+
+
+	Panel2->Show();
+	nroPlato = 1;
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TframeMenuOficina::Button6Click(TObject *Sender)
+{
+	Panel2->Show();
+	nroPlato = 2;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TframeMenuOficina::DBGrid2DblClick(TObject *Sender)
+{
+//	Panel2->Hide();
+
+
+
+
+	QueryUpdate->Close();
+   QueryUpdate->SQL->Clear();
+	if (nroPlato == 1) {
+		QueryUpdate->SQL->Add("UPDATE menuoficinas SET refComida1 = :rc WHERE idMenuOficinas = :idMO LIMIT 1");
+	}
+	else if (nroPlato == 2) {
+		QueryUpdate->SQL->Add("UPDATE menuoficinas SET refComida2 = :rc WHERE idMenuOficinas = :idMO LIMIT 1");
+	}
+
+
+
+
+	QueryUpdate->ParamByName("idMO")->AsInteger = CDS1->FieldByName("idMenuOficinas")->AsInteger;
+   QueryUpdate->ParamByName("rc")->AsInteger = CDS2->FieldByName("idComida")->AsInteger;
+   QueryUpdate->ExecSQL();
+
+	CDS1->Refresh();
+
+	if (nroPlato == 1) {
+		nroPlato = 2;
+	}
+	else if (nroPlato == 2) {
+		Panel2->Hide();
+	}
+
 }
 //---------------------------------------------------------------------------
 

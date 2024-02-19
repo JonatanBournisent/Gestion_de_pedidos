@@ -33,7 +33,8 @@ void __fastcall TfMenuOficina::FormShow(TObject *Sender)
    frameMenuOficina2->inicializar(IncDay(StartOfTheWeek(MC1->Date), 1));
    frameMenuOficina3->inicializar(IncDay(StartOfTheWeek(MC1->Date), 2));
    frameMenuOficina4->inicializar(IncDay(StartOfTheWeek(MC1->Date), 3));
-   frameMenuOficina5->inicializar(IncDay(StartOfTheWeek(MC1->Date), 4));
+	frameMenuOficina5->inicializar(IncDay(StartOfTheWeek(MC1->Date), 4));
+	ScrollBox1->VertScrollBar->Position = 0;
 }
 //---------------------------------------------------------------------------
 void TfMenuOficina::mostrarMenu(void)

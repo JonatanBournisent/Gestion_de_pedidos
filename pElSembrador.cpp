@@ -6,51 +6,54 @@
 //---------------------------------------------------------------------------
 USEFORM("uModificarCliente.cpp", fModificarCliente);
 USEFORM("uMenuSemanal.cpp", fMenuSemanal);
-USEFORM("uMenuDelDia.cpp", fMenuDelDia);
+USEFORM("uMenuOficina.cpp", fMenuOficina);
 USEFORM("uModificarComida.cpp", fModificarComida);
 USEFORM("uPedidos.cpp", fPedidos);
 USEFORM("uPausa.cpp", fPausa);
 USEFORM("uMostrarPedidos.cpp", fMostrarPedidos);
+USEFORM("uMenuDelDia.cpp", fMenuDelDia);
+USEFORM("uInfoCliente.cpp", fInfoCliente);
 USEFORM("uImprimirResumenManual.cpp", fImprimirResumenManual);
 USEFORM("uImprimirPlanillas.cpp", fImprimirPlanillas);
-USEFORM("uImprimirCuentas.cpp", fImprimirCuentas);
-USEFORM("uInfoCliente.cpp", fInfoCliente);
+USEFORM("uInformacionNutricional.cpp", fInformacionNutricional);
+USEFORM("uMensajes.cpp", fMensajes);
 USEFORM("uMain.cpp", fMain);
 USEFORM("uIngredientes.cpp", fIngredientes);
-USEFORM("uInformacionNutricional.cpp", fInformacionNutricional);
-USEFORM("uPrecios.cpp", fPrecios);
 USEFORM("uVerCargaManual.cpp", fVerCargaManual);
 USEFORM("uValorNutricional.cpp", fValorNutricional);
 USEFORM("uSospechosos.cpp", fSospechosos);
 USEFORM("uVerComprobantesElectronicos.cpp", fVerComprobantesElectronicos);
 USEFORM("uVerHistorialPedidos.cpp", fVerHistorialPedidos);
-USEFORM("uRecetas.cpp", fRecetas);
+USEFORM("uSeleccionarComida.cpp", fSeleccionarComida);
 USEFORM("uRastrearPagos.cpp", fRastrearPagos);
 USEFORM("uProductos.cpp", fProductos);
-USEFORM("uRepartidores.cpp", fRepartidores);
-USEFORM("uSeleccionarComida.cpp", fSeleccionarComida);
+USEFORM("uPrecios.cpp", fPrecios);
+USEFORM("uRecetas.cpp", fRecetas);
 USEFORM("uSeleccionarCliente.cpp", fSeleccionarCliente);
 USEFORM("uRepartos.cpp", fRepartos);
+USEFORM("uRepartidores.cpp", fRepartidores);
+USEFORM("uImprimirCuentas.cpp", fImprimirCuentas);
+USEFORM("uClientesHabituales.cpp", fClientesHabituales);
 USEFORM("uChartPedidosPorHora.cpp", fChartPedidosPorHora);
 USEFORM("uChartPedidosPorDia.cpp", fChartPedidosPorDia);
-USEFORM("uChartComidasMasVendidas.cpp", fChartComidasMasVendidas);
-USEFORM("uClientesHabituales.cpp", fClientesHabituales);
+USEFORM("uComidasExcluidas.cpp", fComidasExcluidas);
+USEFORM("uConfigurarAlarma.cpp", fConfigurarAlarma);
 USEFORM("uConfiguraciones.cpp", fConfiguraciones);
 USEFORM("uComprobantesX.cpp", fComprobantesX);
-USEFORM("uComidasExcluidas.cpp", fComidasExcluidas);
+USEFORM("uChartComidasMasVendidas.cpp", fChartComidasMasVendidas);
 USEFORM("uAgregarCliente.cpp", fAgregarCliente);
 USEFORM("uAgregarComida.cpp", fAgregarComida);
 USEFORM("uChartCobrosPorDia.cpp", fChartCobrosPorDia);
 USEFORM("uCargarPagos.cpp", fCargarPagos);
 USEFORM("uAlarma.cpp", fAlarma);
-USEFORM("uConfigurarAlarma.cpp", fConfigurarAlarma);
+USEFORM("uFrameMenuOficina.cpp", frameMenuOficina); /* TFrame: File Type */
 USEFORM("uFrame4.cpp", Frame4); /* TFrame: File Type */
 USEFORM("uFrame3.cpp", Frame3); /* TFrame: File Type */
-USEFORM("uFrame2.cpp", Frame2); /* TFrame: File Type */
 USEFORM("uFrecuenciaComidas.cpp", fFrecuenciaComidas);
 USEFORM("uImportarPagosBancos.cpp", fImportarPagosBancos);
 USEFORM("uGestionDeGastos.cpp", fGestionDeGastos);
 USEFORM("uGestionarAlarmas.cpp", fGestionarAlarmas);
+USEFORM("uFrame2.cpp", Frame2); /* TFrame: File Type */
 USEFORM("uEmitirCompElectMonotributo.cpp", fEmitirCompElectMonotributo);
 USEFORM("uDatos.cpp", fDatos);
 USEFORM("uCuentas.cpp", fCuentas);
@@ -58,8 +61,7 @@ USEFORM("uEmitirComprobanteElectronico.cpp", fEmitirComprobanteElectronico);
 USEFORM("uFrame1.cpp", Frame1); /* TFrame: File Type */
 USEFORM("uFormulaComidas.cpp", fFormulaComidas);
 USEFORM("uFacturacionMensual.cpp", fFacturacionMensual);
-USEFORM("uMenuOficina.cpp", fMenuOficina);
-USEFORM("uFrameMenuOficina.cpp", frameMenuOficina); /* TFrame: File Type */
+USEFORM("uGraficos2.cpp", fGraficos2);
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
@@ -118,6 +120,8 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 		Application->CreateForm(__classid(TfImportarPagosBancos), &fImportarPagosBancos);
 		Application->CreateForm(__classid(TfSospechosos), &fSospechosos);
 		Application->CreateForm(__classid(TfMenuOficina), &fMenuOficina);
+		Application->CreateForm(__classid(TfMensajes), &fMensajes);
+		Application->CreateForm(__classid(TfGraficos2), &fGraficos2);
 		Application->Run();
 	}
 	catch (Exception &exception)

@@ -29,7 +29,7 @@ void __fastcall TfVerCargaManual::FormShow(TObject *Sender)
    QueryCantidad->SQL->Clear();
    String q;
 
-   q = "SELECT idCantidad, refCliente, medioPago, nroBandejas AS bandGrand, nroUnidades AS cantViandas, txtComplemento AS complemento, (sectorReparto + 1) AS reparto, "
+   q = "SELECT idCantidad, refCliente, medioPago, nroBandejas AS bandGrand, nroUnidades AS cantViandas, txtComplemento AS complemento, (sectorReparto + 1) AS reparto, valorTotal AS var_dummy, "
 	   "(SELECT descripcion FROM repartidores WHERE repartidores.idRepartidor = cantidades.refRepartidor LIMIT 1) AS repartidor, "
 	   "(SELECT CONCAT(calle, ' ' ,numero) FROM clientes WHERE clientes.idCliente = cantidades.refCliente LIMIT 1) AS cliente, "
 	   "(SELECT GROUP_CONCAT(DISTINCT comentario SEPARATOR ' & ') FROM pedidos WHERE refCantidad = cantidades.idCantidad) AS comentarios, "
@@ -37,16 +37,16 @@ void __fastcall TfVerCargaManual::FormShow(TObject *Sender)
 	   "(SELECT pagoAdelantado FROM clientes WHERE refCliente = idCliente LIMIT 1) AS pagoAdelantado, "
 	   "(SELECT refFrecuenciaPago FROM clientes WHERE cantidades.refCliente = idCliente LIMIT 1) AS frecuenciaPago, "
 	   "(SELECT refDiaPago FROM clientes WHERE cantidades.refCliente = idCliente LIMIT 1) AS diaPago, "
-
-	   "(SELECT valor "
-				"FROM listasPrecio WHERE "
-					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = refCliente LIMIT 1) * nroUnidades + (SELECT (acumuladoGlobal) AS acumGlobal FROM clientes WHERE refCliente = idCliente LIMIT 1) "
-	   "AS var_dummy, "
-
 	   "(SELECT (acumuladoGlobal - acumuladoParcial) AS deuda FROM clientes WHERE refCliente = idCliente LIMIT 1) AS deuda "
 
 	   "FROM cantidades WHERE cargaManual = 1 AND fecha = :fecha "
 	   "ORDER BY repartidor, reparto";
+
+
+//	   "(SELECT valor "
+//				"FROM listasPrecio WHERE "
+//					"(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = refCliente LIMIT 1) * nroUnidades + (SELECT (acumuladoGlobal) AS acumGlobal FROM clientes WHERE refCliente = idCliente LIMIT 1) "
+//	   "AS var_dummy, "
 
 
    QueryCantidad->SQL->Add(q);

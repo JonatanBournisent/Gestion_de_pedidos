@@ -113,7 +113,6 @@ __published:	// IDE-managed Components
 	TPanel *Panel14;
 	TPanel *Panel15;
 	TSQLQuery *QueryInfo;
-	TListBox *ListBox1;
 	TLabel *Label4;
 	TLabel *Label5;
 	TLabel *Label6;
@@ -121,7 +120,6 @@ __published:	// IDE-managed Components
 	TButton *Button15;
 	TLabel *Label8;
 	TLabel *Label9;
-	TLabel *Label10;
 	TButton *Button14;
 	TPanel *Panel16;
 	TListBox *ListBox2;
@@ -187,7 +185,6 @@ __published:	// IDE-managed Components
 	TByteField *CDSEtiquetascomentarioParaCocina;
 	TLabel *Label17;
 	TLargeintField *CDSEtiquetasrefRep;
-	TLargeintField *CDSEtiquetasCompsalidaRep;
 	TIntegerField *CDSEtiquetassalidaRep;
 	TTimer *Timer2;
 	TButton *Button21;
@@ -212,7 +209,6 @@ __published:	// IDE-managed Components
 	TButton *Button26;
 	TLabel *Label19;
 	TTimer *Timer3;
-	TListBox *ListBox3;
 	TSQLQuery *QueryRep;
 	TMenuItem *ransferiraotrocliente1;
 	TMenuItem *Informacinnutricional1;
@@ -275,6 +271,69 @@ __published:	// IDE-managed Components
 	TMenuItem *Menudeldaparaoficinas1;
 	TButton *Button41;
 	TRadioGroup *rgOficinas;
+	TLabel *Label25;
+	TEdit *Edit4;
+	TSpeedButton *Button43;
+	TSpeedButton *Button44;
+	TSpeedButton *Button45;
+	TSpeedButton *Button46;
+	TLabel *Label26;
+	TSpeedButton *SpeedButton1;
+	TPanel *panel_invisible;
+	TMemo *qry_etiquetas_viandas_normales;
+	TMemo *qry_etiquetas_viandas_oficinas;
+	TMemo *qry_pedidos;
+	TMemo *qry_etiquetas_complementos;
+	TIntegerField *CDSEtiquetasCompsalidaRep;
+	TWideStringField *ClientDataSet3calle;
+	TWideStringField *ClientDataSet3numero;
+	TFMTBCDField *ClientDataSet3acumuladoGlobal;
+	TFMTBCDField *ClientDataSet3deuda;
+	TIntegerField *ClientDataSet3pos;
+	TIntegerField *ClientDataSet3division;
+	TWideStringField *ClientDataSet3Repartidor;
+	TIntegerField *ClientDataSet3idCliente;
+	TWideStringField *ClientDataSet2Comentario;
+	TWideStringField *ClientDataSet2com1;
+	TWideStringField *ClientDataSet2com2;
+	TWideStringField *ClientDataSet2com3;
+	TWideStringField *ClientDataSet2com4;
+	TIntegerField *ClientDataSet2refProducto;
+	TIntegerField *ClientDataSet2idPedido;
+	TIntegerField *ClientDataSet2refCantidad;
+	TFMTBCDField *ClientDataSet2valor;
+	TTimeField *ClientDataSet2hora;
+	TMenuItem *Menusemanalparaoficinas1;
+	TDBGrid *DBGrid6;
+	TDataSetProvider *DataSetProvider5;
+	TClientDataSet *CDS5;
+	TDataSource *DataSource5;
+	TIntegerField *CDS5refRepartidor;
+	TLargeintField *CDS5cantDirecciones;
+	TWideStringField *CDS5nombreRep;
+	TIntegerField *CDS5reparto;
+	TFMTBCDField *CDS5cantViandas;
+	TWideStringField *CDS5repartidor;
+	TTimer *Timer4;
+	TSQLQuery *QueryComidasEsp;
+	TDataSetProvider *DataSetProvider6;
+	TClientDataSet *CDS6;
+	TDataSource *DataSource6;
+	TDBGrid *DBGrid7;
+	TIntegerField *CDS6idComida;
+	TWideStringField *CDS6nComida;
+	TLargeintField *CDS6cantidad;
+	TSQLQuery *qValorTotal;
+	TPanel *Panel22;
+	TfrxReport *frxReport3;
+	TSQLQuery *QueryEtiquetasBolsas;
+	TMemo *qry_etiquetas_bolsas;
+	TPopupMenu *PopupMenu11;
+	TMenuItem *Imprimiretiquetasdebolsas1;
+	TButton *Button42;
+	TMenuItem *Vercomplementos1;
+	TMenuItem *Imprimiretiquetasdeviandasdeestereparto1;
+	TMenuItem *Informaciondeviandasnormales1;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall DTPChange(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
@@ -316,7 +375,6 @@ __published:	// IDE-managed Components
 	void __fastcall RG4Click(TObject *Sender);
 	void __fastcall Button15Click(TObject *Sender);
 	void __fastcall Button14Click(TObject *Sender);
-	void __fastcall ListBox1DblClick(TObject *Sender);
 	void __fastcall Button16Click(TObject *Sender);
 	void __fastcall Configurarunaalarma1Click(TObject *Sender);
 	void __fastcall FormCanResize(TObject *Sender, int &NewWidth, int &NewHeight, bool &Resize);
@@ -339,8 +397,6 @@ __published:	// IDE-managed Components
 	void __fastcall Timer1Timer(TObject *Sender);
 	void __fastcall Mandaraimprimirestecomplemento1Click(TObject *Sender);
 	void __fastcall Verpedidosdehoy1Click(TObject *Sender);
-	void __fastcall Button20Click(TObject *Sender);
-	void __fastcall ListBox1DrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
           TColumn *Column, TGridDrawState State);
 	void __fastcall DBGrid2DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
@@ -416,6 +472,30 @@ __published:	// IDE-managed Components
 	void __fastcall Button41Click(TObject *Sender);
 	void __fastcall cbRefProductoChange(TObject *Sender);
 	void __fastcall rgOficinasClick(TObject *Sender);
+	void __fastcall Edit4Exit(TObject *Sender);
+	void __fastcall Edit4Enter(TObject *Sender);
+	void __fastcall Button43Click(TObject *Sender);
+	void __fastcall Button44Click(TObject *Sender);
+	void __fastcall Button45Click(TObject *Sender);
+	void __fastcall Button46Click(TObject *Sender);
+	void __fastcall SpeedButton1Click(TObject *Sender);
+	void __fastcall Menusemanalparaoficinas1Click(TObject *Sender);
+	void __fastcall DBGrid6DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
+          TColumn *Column, TGridDrawState State);
+	void __fastcall DBGrid6DblClick(TObject *Sender);
+	void __fastcall Timer4Timer(TObject *Sender);
+	void __fastcall DBGrid6CellClick(TColumn *Column);
+	void __fastcall DBGrid7DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
+          TColumn *Column, TGridDrawState State);
+	void __fastcall DBGrid7DblClick(TObject *Sender);
+	void __fastcall ListBox2DblClick(TObject *Sender);
+	void __fastcall Imprimiretiquetasdebolsas1Click(TObject *Sender);
+	void __fastcall Button42Click(TObject *Sender);
+	void __fastcall Vercomplementos1Click(TObject *Sender);
+	void __fastcall Imprimiretiquetasdeviandasdeestereparto1Click(TObject *Sender);
+	void __fastcall Informaciondeviandasnormales1Click(TObject *Sender);
+
+
 
 
 private:	// User declarations
@@ -425,12 +505,15 @@ public:		// User declarations
 	bool mostroMsg1;
 	bool mostroMsg2;
 
+	float val1, val2, val3;
+
 	int arrOpOficinaP1[10];
 	int arrOpOficinaP2[10];
 
 	int arrIdComida[9];
 	String opciones[9];
 	int idCliSel;
+	float descuentoCliente;
 	bool modificandoPedido;
 	int idMod;
 
@@ -441,24 +524,32 @@ public:		// User declarations
 	int idOpEsp1, idOpEsp2, idOpEsp3, idOpEsp4;
 	int idOpEsp1Old, idOpEsp2Old, idOpEsp3Old, idOpEsp4Old;
 
-	String generarCadComp(void);
+	String generarCadComp(String tipo);
+	int sectorRepartoGCC; // para generarCadComp
+	int refRepartidorGCC;	// para generarCadComp
+
+
 	String comaToDot(String str);
+
+	float getValorTotal(void);
 
 	void RestablecerFormulario(void);
 	void CargarOpciones(void);
 	String GetCodigo(int idComida);
 	void verClienteSeleccionado(int idCliente);
 
-	void imprimirEtiquetas(int llamador);
+	void imprimirEtiquetas(int llamador, int refRepartidor);
 	void imprimirEtiquetasOficinas(void);
 	void procesoImpresionEtiquetasPedidosOficinas(void);
 	void imprimirComplementos(void);
+	void imprimirEtiquetasBolsas(int refRep, int reparto);
 
 	int contLineasImpresas; //cuenta las que se enviaron a la impresora
 	int cantLineas; //contiene la cantidad de lineas a imprimir
 	int cantidadPedidos;
 
 	int llamadorAux;
+	int refRepartidorAux;
 	bool cargandoOpciones;
 	bool blockRGTexto;	//bloquea el evento onclick del RGTexto para que no se dispare cuando cambio el itemindex manualmente
 	bool cargandoPedido; //igual que el blockRGTexto pero mas general
@@ -471,6 +562,9 @@ public:		// User declarations
 	int vTimer1;
 	int vTimer2;
 	float valorVianda;
+	float valorViandaOficina;
+	float valorEnvio;
+	float valorViandaUnica;
 
 	TDate fechaPrevia;
 
@@ -490,9 +584,26 @@ public:		// User declarations
 										String comentario, bool izq,
 										bool blanca);
 
-	void procesoImpresionEtiquetasPedidos(int reparto);
+	void completarEtiquetaBolsa(String numero, String calle,
+										String repartidor,
+										String detalle,
+										String coment,
+										String menuImp, bool izq,
+										bool blanca);
+
+	float roundToHight10(float val);
+
+	void procesoImpresionEtiquetasPedidos(int reparto, int refRepartidor);
 	void procesoImpresionEtiquetasComplementos();
+	void deleteComidaEspecial(int refPedido, int refComida);
+	void insertComidaEspecial(TDateTime dt, int refComida, int refPedido, int refReparto);
+	String getCodigoComidaFromID(int id);
 	String getImpresoraEtiquetas(void);
+	void getPedidos(int refCliente, TDateTime dt);
+	int getRefCantidad(int refCliente, TDateTime dt);
+	bool menuImpreso;
+
+	TDateTime mStartPrinting;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfPedidos *fPedidos;

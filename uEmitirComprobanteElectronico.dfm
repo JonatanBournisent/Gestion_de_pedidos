@@ -11,6 +11,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
@@ -22,63 +23,19 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     Left = 8
     Top = 236
     Width = 514
-    Height = 235
+    Height = 266
     Brush.Style = bsClear
   end
   object Shape2: TShape
     Left = 8
-    Top = 470
+    Top = 508
     Width = 514
     Height = 109
     Brush.Style = bsClear
   end
-  object Label3: TLabel
-    Left = 18
-    Top = 308
-    Width = 71
-    Height = 14
-    Alignment = taCenter
-    AutoSize = False
-    Caption = 'Unidades'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label4: TLabel
-    Left = 357
-    Top = 308
-    Width = 67
-    Height = 14
-    Alignment = taCenter
-    AutoSize = False
-    Caption = 'P. Unit'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label5: TLabel
-    Left = 95
-    Top = 309
-    Width = 250
-    Height = 14
-    AutoSize = False
-    Caption = 'Descripci'#243'n'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
   object Label2: TLabel
     Left = 17
-    Top = 245
+    Top = 243
     Width = 107
     Height = 13
     Caption = 'Nombre / Razon Social'
@@ -100,7 +57,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
   end
   object lbSubtotal: TLabel
     Left = 365
-    Top = 477
+    Top = 515
     Width = 130
     Height = 19
     Alignment = taRightJustify
@@ -114,7 +71,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
   end
   object lbIVA21: TLabel
     Left = 360
-    Top = 512
+    Top = 550
     Width = 135
     Height = 19
     Alignment = taRightJustify
@@ -128,7 +85,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
   end
   object lbTotal: TLabel
     Left = 359
-    Top = 550
+    Top = 588
     Width = 136
     Height = 23
     Alignment = taRightJustify
@@ -140,291 +97,21 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object Label6: TLabel
-    Left = 433
-    Top = 308
-    Width = 79
-    Height = 14
-    Alignment = taCenter
-    AutoSize = False
-    Caption = 'Subtotal'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
   object Shape3: TShape
     Left = 8
-    Top = 591
+    Top = 626
     Width = 514
     Height = 72
     Brush.Style = bsClear
   end
-  object Edit3: TEdit
-    Left = 18
-    Top = 329
-    Width = 71
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 1
-    Text = '0'
-    OnChange = Edit3Change
-    OnExit = Edit3Exit
-    OnKeyPress = Edit3KeyPress
-  end
-  object Edit4: TEdit
-    Left = 98
-    Top = 329
-    Width = 250
-    Height = 24
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    MaxLength = 18
-    ParentFont = False
-    TabOrder = 2
-    Text = 'Viandas'
-  end
-  object Edit5: TEdit
-    Left = 357
-    Top = 329
-    Width = 67
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 3
-    Text = '0'
-    OnChange = Edit5Change
-    OnExit = Edit5Exit
-    OnKeyPress = Edit5KeyPress
-  end
-  object Edit6: TEdit
-    Left = 18
-    Top = 356
-    Width = 71
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 4
-    Text = '0'
-    OnChange = Edit6Change
-    OnExit = Edit6Exit
-    OnKeyPress = Edit6KeyPress
-  end
-  object Edit7: TEdit
-    Left = 98
-    Top = 356
-    Width = 250
-    Height = 24
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    MaxLength = 18
-    ParentFont = False
-    TabOrder = 5
-    Text = 'Viandas'
-  end
-  object Edit8: TEdit
-    Left = 357
-    Top = 356
-    Width = 67
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 6
-    Text = '0'
-    OnChange = Edit8Change
-    OnExit = Edit8Exit
-    OnKeyPress = Edit8KeyPress
-  end
-  object Edit9: TEdit
-    Left = 18
-    Top = 383
-    Width = 71
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 7
-    Text = '0'
-    OnChange = Edit9Change
-    OnExit = Edit9Exit
-    OnKeyPress = Edit9KeyPress
-  end
-  object Edit10: TEdit
-    Left = 98
-    Top = 383
-    Width = 250
-    Height = 24
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    MaxLength = 18
-    ParentFont = False
-    TabOrder = 8
-    Text = 'Viandas'
-  end
-  object Edit11: TEdit
-    Left = 357
-    Top = 383
-    Width = 67
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 9
-    Text = '0'
-    OnChange = Edit11Change
-    OnExit = Edit11Exit
-    OnKeyPress = Edit11KeyPress
-  end
-  object Edit12: TEdit
-    Left = 18
-    Top = 410
-    Width = 71
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 10
-    Text = '0'
-    OnChange = Edit12Change
-    OnExit = Edit12Exit
-    OnKeyPress = Edit12KeyPress
-  end
-  object Edit13: TEdit
-    Left = 98
-    Top = 410
-    Width = 250
-    Height = 24
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    MaxLength = 18
-    ParentFont = False
-    TabOrder = 11
-    Text = 'Viandas'
-  end
-  object Edit14: TEdit
-    Left = 357
-    Top = 410
-    Width = 67
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 12
-    Text = '0'
-    OnChange = Edit14Change
-    OnExit = Edit14Exit
-    OnKeyPress = Edit14KeyPress
-  end
-  object Edit15: TEdit
-    Left = 18
-    Top = 437
-    Width = 71
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 13
-    Text = '0'
-    OnChange = Edit15Change
-    OnExit = Edit15Exit
-    OnKeyPress = Edit15KeyPress
-  end
-  object Edit16: TEdit
-    Left = 98
-    Top = 437
-    Width = 250
-    Height = 24
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    MaxLength = 18
-    ParentFont = False
-    TabOrder = 14
-    Text = 'Viandas'
-  end
-  object Edit17: TEdit
-    Left = 357
-    Top = 437
-    Width = 67
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 15
-    Text = '0'
-    OnChange = Edit17Change
-    OnExit = Edit17Exit
-    OnKeyPress = Edit17KeyPress
-  end
   object Button10: TButton
     Left = 113
-    Top = 618
+    Top = 653
     Width = 289
     Height = 34
     Caption = 'Generar factura electr'#243'nica'
     Enabled = False
-    TabOrder = 16
+    TabOrder = 1
     OnClick = Button10Click
   end
   object MC: TMonthCalendar
@@ -432,22 +119,22 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     Top = 8
     Width = 291
     Height = 160
-    Date = 43862.877546944440000000
+    Date = 43862.406997152780000000
     MaxSelectRange = 500
-    TabOrder = 17
+    TabOrder = 2
   end
   object chbFactA4: TCheckBox
     Left = 113
-    Top = 595
+    Top = 630
     Width = 177
     Height = 17
     Caption = 'Imprimir en formato Factura A4'
-    TabOrder = 18
+    TabOrder = 3
     OnClick = chbFactA4Click
   end
   object Edit2: TEdit
     Left = 17
-    Top = 264
+    Top = 262
     Width = 495
     Height = 33
     Font.Charset = DEFAULT_CHARSET
@@ -458,7 +145,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     MaxLength = 20
     ParentFont = False
     ReadOnly = True
-    TabOrder = 19
+    TabOrder = 4
   end
   object Button1: TButton
     Left = 38
@@ -475,127 +162,82 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     TabOrder = 0
     OnClick = Button1Click
   end
-  object Edit1: TEdit
-    Left = 433
-    Top = 329
-    Width = 79
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 20
-    Text = '$ 0,00'
-    OnKeyPress = Edit5KeyPress
-  end
-  object Edit18: TEdit
-    Left = 433
-    Top = 356
-    Width = 79
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 21
-    Text = '$ 0,00'
-    OnKeyPress = Edit8KeyPress
-  end
-  object Edit19: TEdit
-    Left = 433
-    Top = 383
-    Width = 79
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 22
-    Text = '$ 0,00'
-    OnKeyPress = Edit11KeyPress
-  end
-  object Edit20: TEdit
-    Left = 433
-    Top = 410
-    Width = 79
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 23
-    Text = '$ 0,00'
-    OnKeyPress = Edit14KeyPress
-  end
-  object Edit21: TEdit
-    Left = 433
-    Top = 437
-    Width = 79
-    Height = 24
-    Alignment = taCenter
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    ReadOnly = True
-    TabOrder = 24
-    Text = '$ 0,00'
-    OnKeyPress = Edit17KeyPress
-  end
   object CheckBox1: TCheckBox
     Left = 311
-    Top = 595
+    Top = 630
     Width = 97
     Height = 17
     Caption = 'Imprimir en PDF'
-    TabOrder = 25
+    TabOrder = 5
     OnClick = CheckBox1Click
   end
-  object Button2: TButton
-    Left = 152
-    Top = 673
-    Width = 209
-    Height = 25
-    Caption = 'Salir'
-    TabOrder = 26
-    OnClick = Button2Click
-  end
-  object Button3: TButton
-    Left = 96
-    Top = 176
-    Width = 75
-    Height = 25
-    Caption = 'Button3'
-    TabOrder = 27
-    Visible = False
-    OnClick = Button3Click
-  end
-  object Edit22: TEdit
-    Left = 8
-    Top = 209
-    Width = 514
-    Height = 21
-    TabOrder = 28
-    Text = 'Edit22'
-    Visible = False
+  object DBGrid1: TDBGrid
+    Left = 17
+    Top = 299
+    Width = 495
+    Height = 195
+    DataSource = DataSource1
+    PopupMenu = PopupMenu1
+    TabOrder = 6
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnExit = DBGrid1Exit
+    OnKeyDown = DBGrid1KeyDown
+    Columns = <
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'nroUnidades'
+        Title.Alignment = taCenter
+        Title.Caption = 'Unidades'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'descripcion'
+        Title.Alignment = taCenter
+        Title.Caption = 'Descripcion'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 265
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'precioUnitario'
+        Title.Alignment = taCenter
+        Title.Caption = 'Precio / U'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'subtotal'
+        ReadOnly = True
+        Title.Alignment = taCenter
+        Title.Caption = 'Subtotal'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Visible = True
+      end>
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -646,6 +288,10 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     Top = 70
     Datasets = <
       item
+        DataSet = frxDBDataset1
+        DataSetName = 'frxDBDataset1'
+      end
+      item
         DataSet = frxDBDataset3
         DataSetName = 'frxDBDataset3'
       end>
@@ -657,25 +303,26 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     end
     object Page1: TfrxReportPage
       PaperWidth = 80.000000000000000000
-      PaperHeight = 215.000000000000000000
+      PaperHeight = 200.000000000000000000
       PaperSize = 256
       LeftMargin = 3.000000000000000000
       RightMargin = 2.000000000000000000
       TopMargin = 5.000000000000000000
       BottomMargin = 15.000000000000000000
       Frame.Typ = []
+      EndlessHeight = True
       MirrorMode = []
       object ReportTitle1: TfrxReportTitle
         FillType = ftBrush
         Frame.Typ = []
-        Height = 517.795610000000000000
+        Height = 419.527830000000000000
         Top = 18.897650000000000000
         Width = 283.464750000000000000
         object Memo13: TfrxMemoView
           AllowVectorExport = True
-          Left = 4.779530000000000000
-          Top = 381.228510000000000000
-          Width = 30.236240000000000000
+          Left = 0.779530000000000000
+          Top = 396.228510000000000000
+          Width = 26.456710000000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -690,9 +337,9 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo14: TfrxMemoView
           AllowVectorExport = True
-          Left = 38.118120000000000000
-          Top = 381.228510000000000000
-          Width = 117.165430000000000000
+          Left = 27.118120000000000000
+          Top = 396.228510000000000000
+          Width = 109.606370000000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -706,8 +353,8 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo15: TfrxMemoView
           AllowVectorExport = True
-          Left = 155.196970000000000000
-          Top = 381.228510000000000000
+          Left = 137.196970000000000000
+          Top = 396.228510000000000000
           Width = 60.472480000000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
@@ -716,16 +363,16 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
-          HAlign = haCenter
+          HAlign = haRight
           Memo.UTF8W = (
             'Precio')
           ParentFont = False
         end
         object Memo16: TfrxMemoView
           AllowVectorExport = True
-          Left = 217.094620000000000000
-          Top = 381.259959690000000000
-          Width = 60.472480000000000000
+          Left = 197.315090000000000000
+          Top = 396.259959690000000000
+          Width = 64.252010000000000000
           Height = 15.118110240000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -733,14 +380,15 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
-          HAlign = haCenter
+          HAlign = haRight
           Memo.UTF8W = (
-            'Subt.')
+            'Subtotal')
           ParentFont = False
         end
         object Line1: TfrxLineView
           AllowVectorExport = True
-          Top = 376.228510000000000000
+          Left = -4.000000000000000000
+          Top = 389.228510000000000000
           Width = 283.464750000000000000
           Color = clBlack
           Frame.Typ = []
@@ -748,7 +396,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Picture1: TfrxPictureView
           AllowVectorExport = True
-          Left = 44.795300000000000000
+          Left = 40.795300000000000000
           Top = 6.779530000000000000
           Width = 188.976500000000000000
           Height = 41.574830000000000000
@@ -1117,364 +765,9 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Transparent = False
           TransparentColor = clWhite
         end
-        object mUnidades1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 405.071120000000000000
-          Width = 30.236240000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 405.071120000000000000
-          Width = 117.165430000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Texto')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 405.071120000000000000
-          Width = 60.472480000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.212740000000000000
-          Top = 405.071120000000000000
-          Width = 60.472480000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 427.527830000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 427.527830000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 427.527830000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 427.527830000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 449.984540000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 449.984540000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 449.984540000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 449.984540000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 472.441250000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 472.441250000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 472.441250000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 472.441250000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 494.897960000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 494.897960000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 494.897960000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 494.897960000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
         object Memo7: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 131.724409450000000000
           Width = 75.590600000000000000
           Height = 18.897637800000000000
@@ -1490,7 +783,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo9: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 173.299212600000000000
           Width = 109.606370000000000000
           Height = 18.897650000000000000
@@ -1506,7 +799,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo10: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 194.086614170000000000
           Width = 264.567100000000000000
           Height = 18.897650000000000000
@@ -1522,7 +815,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo11: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 152.511811020000000000
           Width = 105.826840000000000000
           Height = 18.897650000000000000
@@ -1538,7 +831,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo12: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 214.874015750000000000
           Width = 158.740260000000000000
           Height = 18.897650000000000000
@@ -1554,7 +847,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo17: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 235.661417320000000000
           Width = 222.992270000000000000
           Height = 18.897650000000000000
@@ -1570,7 +863,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo35: TfrxMemoView
           AllowVectorExport = True
-          Left = 78.929190000000000000
+          Left = 74.929190000000000000
           Top = 131.724409450000000000
           Width = 181.417440000000000000
           Height = 18.897637800000000000
@@ -1586,7 +879,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo1: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 98.259842520000000000
           Width = 120.944960000000000000
           Height = 18.897650000000000000
@@ -1602,7 +895,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object fechaComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 124.504020000000000000
+          Left = 120.504020000000000000
           Top = 98.259842520000000000
           Width = 83.149660000000000000
           Height = 18.897650000000000000
@@ -1618,7 +911,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo32: TfrxMemoView
           AllowVectorExport = True
-          Left = 112.165430000000000000
+          Left = 108.165430000000000000
           Top = 173.299212600000000000
           Width = 147.401670000000000000
           Height = 18.897650000000000000
@@ -1634,7 +927,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo34: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 76.677245910000000000
           Width = 26.456710000000000000
           Height = 18.897630470000000000
@@ -1650,7 +943,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object nroComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 30.236240000000000000
+          Left = 26.236240000000000000
           Top = 77.590600000000000000
           Width = 177.637910000000000000
           Height = 18.897630470000000000
@@ -1666,7 +959,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo18: TfrxMemoView
           AllowVectorExport = True
-          Left = 106.637910000000000000
+          Left = 102.637910000000000000
           Top = 289.685049130000000000
           Width = 166.299320000000000000
           Height = 18.897637800000000000
@@ -1686,7 +979,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo19: TfrxMemoView
           AllowVectorExport = True
-          Left = 37.795300000000000000
+          Left = 33.795300000000000000
           Top = 310.472450710000000000
           Width = 124.724490000000000000
           Height = 18.897650000000000000
@@ -1705,7 +998,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo20: TfrxMemoView
           AllowVectorExport = True
-          Left = 128.283550000000000000
+          Left = 124.283550000000000000
           Top = 352.047253860000000000
           Width = 143.622140000000000000
           Height = 18.897650000000000000
@@ -1724,7 +1017,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo21: TfrxMemoView
           AllowVectorExport = True
-          Left = 60.133890000000000000
+          Left = 56.133890000000000000
           Top = 331.259852280000000000
           Width = 219.212666770000000000
           Height = 18.897650000000000000
@@ -1743,7 +1036,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo27: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 310.472450710000000000
           Width = 34.015770000000000000
           Height = 18.897650000000000000
@@ -1759,7 +1052,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo28: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 289.685049130000000000
           Width = 102.047310000000000000
           Height = 18.897637800000000000
@@ -1775,7 +1068,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo29: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 352.047253860000000000
           Width = 124.724490000000000000
           Height = 18.897650000000000000
@@ -1791,7 +1084,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo30: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 331.259852280000000000
           Width = 56.692950000000000000
           Height = 18.897650000000000000
@@ -1807,6 +1100,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line3: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 282.126160000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -1815,6 +1109,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line4: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 258.448980000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -1824,7 +1119,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo2: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779530000000000000
+          Left = -0.220470000000000000
           Top = 264.448980000000000000
           Width = 279.685220000000000000
           Height = 15.118120000000000000
@@ -1841,6 +1136,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line5: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 124.606370000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -1849,7 +1145,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object tipoComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779530000000000000
+          Left = -0.220470000000000000
           Top = 54.913420000000000000
           Width = 204.094620000000000000
           Height = 18.897650000000000000
@@ -1865,6 +1161,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line6: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 261.787570000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -1872,27 +1169,105 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Diagonal = True
         end
       end
-      object PageFooter1: TfrxPageFooter
+      object MasterData1: TfrxMasterData
         FillType = ftBrush
         Frame.Typ = []
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -16
-        Font.Name = 'Arial'
-        Font.Style = []
-        Height = 128.503971180000000000
-        ParentFont = False
-        Top = 597.165740000000000000
+        Height = 15.118120000000000000
+        Top = 498.897960000000000000
+        Width = 283.464750000000000000
+        DataSet = frxDBDataset1
+        DataSetName = 'frxDBDataset1'
+        RowCount = 0
+        object Memo22: TfrxMemoView
+          AllowVectorExport = True
+          Width = 26.456710000000000000
+          Height = 15.118120000000000000
+          DataField = 'nroUnidades'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[frxDBDataset1."nroUnidades"]')
+          ParentFont = False
+        end
+        object Memo23: TfrxMemoView
+          AllowVectorExport = True
+          Left = 26.795300000000000000
+          Width = 109.606370000000000000
+          Height = 15.118120000000000000
+          DataField = 'descripcion'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[frxDBDataset1."descripcion"]')
+          ParentFont = False
+        end
+        object Memo24: TfrxMemoView
+          AllowVectorExport = True
+          Left = 137.960730000000000000
+          Width = 60.472480000000000000
+          Height = 15.118120000000000000
+          DataField = 'precioUnitario'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."precioUnitario"]')
+          ParentFont = False
+        end
+        object Memo25: TfrxMemoView
+          AllowVectorExport = True
+          Left = 198.433210000000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          DataField = 'subtotal'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."subtotal"]')
+          ParentFont = False
+        end
+      end
+      object Footer1: TfrxFooter
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 147.401670000000000000
+        Top = 536.693260000000000000
         Width = 283.464750000000000000
         object mTotalIVA21: TfrxMemoView
           AllowVectorExport = True
-          Left = 117.826771650000000000
-          Top = 25.015770000000000000
-          Width = 158.740147720000000000
+          Left = 127.063011650000000000
+          Top = 49.354360000000000000
+          Width = 132.283437720000000000
           Height = 18.897650000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -16
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
@@ -1903,13 +1278,13 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object mTotal: TfrxMemoView
           AllowVectorExport = True
-          Left = 101.826771650000000000
-          Top = 52.370130000000000000
-          Width = 173.858267720000000000
+          Left = 127.181131650000000000
+          Top = 75.708720000000000000
+          Width = 132.283437720000000000
           Height = 18.897650000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -20
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
@@ -1919,24 +1294,15 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           ParentFont = False
           VAlign = vaCenter
         end
-        object Line2: TfrxLineView
-          AllowVectorExport = True
-          Left = 276.275820000000000000
-          Top = 124.063080000000000000
-          Width = 3.779530000000000000
-          Color = clBlack
-          Frame.Typ = []
-          Diagonal = True
-        end
         object mSubtotal: TfrxMemoView
           AllowVectorExport = True
-          Left = 125.826771650000000000
-          Top = 0.220470000000000000
-          Width = 151.181087720000000000
+          Left = 127.503951650000000000
+          Top = 24.559060000000000000
+          Width = 132.283437720000000000
           Height = 18.897650000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -16
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
@@ -1947,13 +1313,13 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object caeComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 117.944960000000000000
-          Top = 83.708720000000000000
-          Width = 158.740137950000000000
+          Left = 129.181200000000000000
+          Top = 113.047310000000000000
+          Width = 132.283427950000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
@@ -1964,13 +1330,13 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object vencComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 106.629921260000000000
-          Top = 100.606370000000000000
-          Width = 170.078727950000000000
+          Left = 129.204751260000000000
+          Top = 129.944960000000000000
+          Width = 132.283427950000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
@@ -1981,8 +1347,8 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Barcode2D1: TfrxBarcode2DView
           AllowVectorExport = True
-          Left = 2.779530000000000000
-          Top = 3.779530000000000000
+          Left = 3.559060000000000000
+          Top = 24.118120000000000000
           Width = 244.000000000000000000
           Height = 244.000000000000000000
           StretchMode = smActualHeight
@@ -2070,9 +1436,13 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
       '{'
       ''
       '}')
-    Left = 661
-    Top = 152
+    Left = 677
+    Top = 192
     Datasets = <
+      item
+        DataSet = frxDBDataset1
+        DataSetName = 'frxDBDataset1'
+      end
       item
         DataSet = frxDBDataset3
         DataSetName = 'frxDBDataset3'
@@ -2090,13 +1460,588 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
       LeftMargin = 4.500000000000000000
       RightMargin = 5.000000000000000000
       TopMargin = 8.000000000000000000
-      BottomMargin = 12.000000000000000000
+      BottomMargin = 5.000000000000000000
       Frame.Typ = []
       MirrorMode = []
-      object ReportTitle1: TfrxReportTitle
+      object PageFooter1: TfrxPageFooter
         FillType = ftBrush
         Frame.Typ = []
-        Height = 604.724409450000000000
+        Height = 139.842487950000000000
+        Top = 608.504330000000000000
+        Width = 757.795765000000000000
+        object caeComp: TfrxMemoView
+          AllowVectorExport = True
+          Left = 498.457020000000000000
+          Top = 25.929190000000000000
+          Width = 245.669450000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'CAE N'#176': 12345678912345678')
+          ParentFont = False
+        end
+        object vencComp: TfrxMemoView
+          AllowVectorExport = True
+          Left = 451.543600000000000000
+          Top = 52.385900000000000000
+          Width = 291.023810000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Fecha de Vto de CAE: 10/06/2020')
+          ParentFont = False
+        end
+        object Barcode2D1: TfrxBarcode2DView
+          AllowVectorExport = True
+          Left = 8.779530000000000000
+          Top = 12.590600000000000000
+          Width = 244.000000000000000000
+          Height = 244.000000000000000000
+          StretchMode = smActualHeight
+          BarType = bcCodeQR
+          BarProperties.Encoding = qrUTF8NoBOM
+          BarProperties.QuietZone = 0
+          BarProperties.ErrorLevels = ecL
+          BarProperties.PixelSize = 4
+          BarProperties.CodePage = 0
+          Frame.Typ = []
+          Rotation = 0
+          ShowText = False
+          HexData = 
+            '680074007400700073003A002F002F007700770077002E006100660069007000' +
+            '2E0067006F0062002E00610072002F00660065002F00710072002F003F007000' +
+            '3D00650079004A0032005A005800490069004F006A004500730049006D005A00' +
+            '6C00590032006800680049006A006F0069004D006A00410079004D0053003000' +
+            '77004D005300300078004E0069004900730049006D004E003100610058005100' +
+            '69004F006A0049007A004D007A0049007A004E007A00590079004E0054006700' +
+            '35004C0043004A007700640047003900570064004700450069004F006A004D00' +
+            '730049006E0052007000630047003900440062005800410069004F006A004500' +
+            '730049006D0035007900620030004E00740063004300490036004E0043007700' +
+            '69006100570031007700620033004A0030005A005300490036004D006A004D00' +
+            '33004D0054005900730049006D003100760062006D0056006B00590053004900' +
+            '360049006C0042004600550079004900730049006D004E003000650069004900' +
+            '36004D00530077006900640047006C0077006200300052007600590031004A00' +
+            '6C0059007900490036004F0044004100730049006D0035007900620030005200' +
+            '7600590031004A006C0059007900490036004D007A00410033004D0044006B00' +
+            '78004F005400590035004E0044004100730049006E0052007000630047003900' +
+            '4400620032005200420064005800510069004F0069004A004600490069007700' +
+            '69005900320039006B00510058005600300049006A006F0033004D0054004100' +
+            '7A004F005400510077004E007A006B0033004D004400630035004D0048003000' +
+            '3D00'
+          Zoom = 0.500000000000000000
+          FontScaled = True
+          QuietZone = 0
+          ColorBar = clBlack
+        end
+        object Picture2: TfrxPictureView
+          AllowVectorExport = True
+          Left = 153.858380000000000000
+          Top = 26.370130000000000000
+          Width = 128.504020000000000000
+          Height = 41.574830000000000000
+          Frame.Typ = []
+          Picture.Data = {
+            0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000017500
+            00006A0802000000CC685665000000017352474200AECE1CE90000000467414D
+            410000B18F0BFC61050000000970485973000012740000127401DE661F780000
+            2A804944415478DAED9D095C55551EC71F4DDA88A80838A040801BE0BEA1E212
+            6A6E239A8AA395A668A9E55689686C86810886CBE4026EE4985A143AEEA9B936
+            2A6E055268E6022A20A8A0086A6A25F39BF7CF7F77DEC67BF7AD3CEFF97C789F
+            C73DF7BC7BEEFFFCCFF7FCFF67B5A9A8A89049410A52908211828DC417294841
+            0A460A36BF3FF9CDC6C606DF0834C2EFFC2F5D117E17C60A132AC4AABC5343C2
+            870F1F161616DEBC79F3F7DF7F7F9A411B8AFBF35FE1F7A72915EEAC51A386BB
+            BBBB939393F25BA8CB80E857AE34E1938A8AE2E2E2A2C2C2FBF7EF57286555F1
+            45145E4ACB580D3F2B8CD22C496D845C59C2E76C6CEA3A3840F82882E7B493D5
+            C3478FF2AE5D2BB97DFB89CA4217212B5D123E5FAD5A83FAFF0BCF3FFFBCF685
+            FEEBAFBF969494DCB871E3FE8307FFBBAE41C8C6281DFD5ED920096BD9D57276
+            76767272FCCB5FFEA2A10AD8FCF6E4574BE00B0AECCC9933C78F1F2F94D743E6
+            8B7242957953B8B35AB56A8E8E8E2D5AB4E8DEBDBB8383C373CF3D5769CE8DC1
+            97DF7EFB2D3B3B3B2323232F2FAFACACECF1E3C74F9E3C11F744D1F911573AEA
+            845C69420490A5418306DDBA756BD5AA55F5EAD535E4EDD1A347595959274F9E
+            2C282840A193704C563AF41DD5A34E9D3ADEDEDE2FBFDCCBD9D9855E41C3CF42
+            51A94C91E7BB77EFE2DF0A7950272B63948EE9355939F685175EA85DBBB6A7A7
+            67972E5DF04974B650BEA090F6ECD973E8D0A12B57AEA0128A537D853BC11490
+            A54D9B36AFBEFAAA8B8B8BE94BE5C183077BF7EE4D4F4FBF76ED1ABE6BC8AA35
+            F185FE05DFA1738181812FBDF412BEABBC13B6EAAE5DBB8E1E3D0AF9A0D0CD58
+            67F02FAA0A5AA3D75F7F1D961788A3EE6701C16FBEF986CAF4975F7EE19F7A06
+            F942517676768D1A357AF9E5973B77EEFCD7BFFED512F9820025DBB061032C17
+            6EDEF5E70B5336202060ECD8B1B56AD53265A920EC9007F87ACA368BD5F385BE
+            BFF8E28B93264DF2F1F1418D55B8135F5051376DDA041743F63498B7CE80837E
+            7E7E13264C80E5AB322DACD1AD5BB7A221BC75EB964AFBFA59E30B7D4743EEE6
+            E63672E448480FE6AA4242F3F3A5B8B878C18205E7CF9F179699A1F8827F6BD6
+            AC3975EA547F7F7F9870262B959C9C9C850B17E6E7E71BCAE6179D1F73F14526
+            3721FBF4E9337EFC786ED9380AEDFFA2458B60AEA2D08DA7FABA26446B347AF4
+            E8FEFDFBE38B722CFCF7E4E464B482EC1069236463948E25C84A21E7CD9A3543
+            2D737575A5BE080BE2CBF6EDDB376EDC48D6A63EAAAFE111AD5AB58A8C8C0468
+            4C562A9F7EFA298C7F72CEE922DA70B4900A368EF64F14C682591CAB2C13E528
+            34BC7C05FF3E270FFCB32A132A4409F3A31C2BB44AC00B6166E099CE9D3BB75E
+            BD7AAC761495260F7091FE544479D0F2A5D41581AE099FC88350C870EBA2A3A3
+            C98411FE0E64387FFEFCD3A74F532BC85168B414B2AD537ED4E9B90621D36D5C
+            A694902D44E3C94A6506841EF1983163060C18C068B608BEDCBD7B372626E6F2
+            E5CB5C67D0D675EDDAD5DEDE9EE525D3912FD080ACACACAB57AFF26FE29DA3A2
+            A24019EEE8352A5F1E3F7E3C7DFAF4BCBC3C8608AAD94B2F7577757563E90BD1
+            A32B5F502D35D8E70A0991992D5BB640CE741D9F30E59A376FAECE9AD32C64CD
+            C58A5CEDDEBD5BE8E7D6A851233E3E1E95963A35E84E64293636363B3B9B6084
+            DB509FBB74E952A74E1DE542376A9B8C7C9E3B770EDAC2F2443EC117A88AC2B0
+            486E6E2EAEDFB973877F041E77C78E7E1E1E9E0A7DD83AE5475CDD81757CF8F0
+            61EAB4C2BF50AAA0A020E4C764F6CBA3478F209093274F421539AA65CB961F7C
+            F0016AAECC72F872F0E0C1952B57C278E147F4EDDB77F0E0C1B03544F3859466
+            C58A15E5E5E51C1510103065CA14C04B7FE1569AB0A0A0203434F4DEBD7BFC23
+            C1C1637AF6EC59A78E3DF71D12FB1444A710D4C5A23268EF763D78F0202222E2
+            FAF5EBCC17B433FDFAF583521A9C2F68D350092F5DBAC47CC153121212BCBCBC
+            847CB97DFB3614F1E6CD9B2401DCF6CA2BAF0C1C38900B5DF929C6B35FE0A32D
+            5EBCB8A4A484E503870EED3053836EFEFAEBAFD7AE5D0B45A584A0F3C891233B
+            77EEE4E0F0E700ADC9F872E2C489A4A4241A34B09177B242C8CA46A2F1F8020D
+            44216EDDBA95304751681EE6CD9BE7EEEE8E6C58045FEEDFBF0FE3192C207544
+            6CEDDAB561CE346CD850A8675AAABEF04E881E12FFF1C71FD98AC32F7FF4D147
+            50742A03A3F2E5C2850BB367CFA6E2472C3475DEBCB8A64DBD49EEE29E283A3F
+            C8C68C1933803CAE3F6FBDF516D9B106E7CBC58B17E3E2E2A0799C1F1826702B
+            14543F3F3F1FC82B2D2DE5970A0F0FEFD8B123C3D7947D0A68815158C8392B21
+            6C01B0034D91904DEBD6ADDBB16307DA6D4AFBE28B2FC2E386592A7C2F93F1E5
+            D8B1634B962C41F5A17F61B92C5AB4E86F7FFB9BC9F842FF9E3973263131915B
+            71480CD5B9499326045CF3F3051846D3211CBBEDD1A307AC0C18D522545F7827
+            3E0F1C38B07AF56A663CC2881123860F1F4E5DDC46D5E09F7FFEF9C30F3F64BE
+            D8DADA7EFCF1C7D048EBE60B3E6133EEDFBF9FEC768A7DE9A597264F9E0C0908
+            EF84790F33072E1BBF14D0DFBA756BD378AF0A09D102A156B08B842B30A660E2
+            29F065F9F2E5D02878B594160E545858180C874AAB80CC7AF972F9F265946359
+            5959C5D35E08B8BDDEDEDE16C117141584929E9ECEA63EB08232839E29CF08D4
+            952F08B078610AC1FAC5EF53142C37547B1403E1C6781AACC01798FDC417CEBC
+            55F205560930C1E3F108C00AFCC4B66DDB722728DD09BD9C33678EE5F005563D
+            9A623275D5F1E59FFFFCE77FFEF31FE64B9B366DE0E2B143F76CF2E5E8D1A3C0
+            2ECF4A47714392703E2CC23F82458A7603B6341761BB76ED5013A89B4A7FBEE0
+            4B6A6A6A5A5A1AEB04B085B6B467CF9E0AEA2EF1457FBE207CF5D5579B366D82
+            07C1B17079DE7DF75DB8E50A8F90F8A267DDB104BE405C9009EC031EA980B708
+            EF98DA6F33F3055F56AE5CB977EF5EE492A2AA55AB3675EA5498D334D2A63F5F
+            F02F8C17286E7171316B49CB962D66CE9C058D57769B25BEE8C3973B77EEC05A
+            CCCDCDE5313BF8A1707551A0C299E3125FAC862F2844C8EDD6AD5BD4BAE04AD7
+            AE5DA74D9B069F5198D03C7CB97AF52AD4913247513E3E3E2830070707725E0C
+            C21768C38A152BE036F3E8232A152A9B9F9F1F2F663386063F6B7C0153F6EFDF
+            BF66CD1A1E07C467E3C68DE1ED3A3B3B2B3F42E28B3E75C712F882125FBF7E3D
+            75785314EC033807010101D4BF694EBEE01399DBB66D1B0FE0432EEFBCF34EEF
+            DEBDB9AD33085FF0999D9D1D1F1F5F5656C67776EBD60D861253D6181AFCACF1
+            A5BCBC1C5554380E68F3BF21F9E0418306F15324BE58135F6EDCB83177EE5C58
+            09AC5450EFF0F0708B98BF0B8705D50F1ACFB324DCDDDDA3A3A3EBD5ABF7479E
+            0CC717B4A88989891919193C3A00E768F6ECD94D9B36D5673447E28B3096FAF9
+            4019FE1DE87A545494A7A7A74A214B7C115D776496C197DDBB77FFEB5FFF4206
+            3876D8B061C3870F874014129A9A2F08BB76ED42E6785A0E8432421E68A16DA5
+            C2D5892FF8F7F0E1C34949493CD110D7838282468D1AA579EB007D4AE599E20B
+            08BE60C182EFBFFF9EBBD2A88A42C2A46D125FAC8C2FD028F804F00CB8C4EBD6
+            AD0BE3A5499326E47FC8CCC817B472B1B1B1172E5CE08E40982D9191910A73EA
+            0CC897D2D25268330D5453AC9B9B1BCC25171717758FD0B3549E29BE64666642
+            B92164CE1E2CC48888089A072193F862757C397EFC381A6C5A7142B17DFAF4A1
+            2D0A94139A9A2F10CDD2A54BB9EEE113BA3E6EDC3885397506E40B425A5ADA97
+            5F7EC90369A0EC840913FAF6EDAB3CB46190527976F8823A999C9C7CE8D021C8
+            966FEED9B327C4AB72EE99C497AACE17F80110C5E9D3A7B9F3D4D6D6362C2CAC
+            458B16C2A59EE6E10B6C69D4B48C8C0CE18200182FBEBEBEECA8572A5C5DF982
+            CFA2A2C2C8C8A8E2E2629EFA8527A28DA5B558125F44F32537371795F3C68D1B
+            9C01B413B366CD42F553D8F345E28B75F0056E119E555252C29DA79D3A759A32
+            658AB02AC9CCC597EFBEFB0E992B2B2BE3843D7AF498346992D051AF54B822F8
+            82CF55AB56EDDDBB979A59997CA07AFAF4E99D3B7756DEFA48E28B967CC1E7E7
+            9F7FBE75EB56EADBA228602224248496BF4B7CB132BEFCFEFBEF6BD6ACD9BF7F
+            3FCFA2AC56AD1AD523E12E8532B3F00506153C2314126F2984228C88086FDDBA
+            8DB25C0CCB177C3F7FFE7C5C5C1C7513D01508E5BDF7DE5350118394CA33C217
+            982DA89957AF5E156E6E306DDA34957B624A7CB102BE5CBF7E1DB2A25DD3E8E6
+            468D1A858787D39C5D9979F9821A9E9090400BE1E9665A1000174927E18AE30B
+            88BB60C18253A74E5165A052898A8A52E8863448A93C0B7C4180E5929A9A2ADC
+            18CCCBCB0B2215CE3390497CB122BE50890B3B4F838383070E1CA8B0ED89CCF4
+            7CC197949494AFBFFE9A3B0251AB615975E9D28587A58DCA177C423F6839165D
+            41183C78F01B6FBCA17233447D4AE559E0CBEDDBB7E3E2E65EBE9C23DC4C6FDC
+            B871D036DE8455E28B35F105B67F7C7C3CAC04EE3C4543023DF7F0F0E07BCCC6
+            17E8776C6C2CEF7284A8860D1BCE9E3D5BDDE121C6E00B141A7A4CBB1FD11514
+            097255BF7E7D753F2BF1455DB11E3C7870D5AA55C2A6CCC5C579CE9C8F5C5D5D
+            B94E4A7CB126BEECDBB76FEDDAB5C2CED32143868C1C39D2D6D656434213F1E5
+            2B79A0D50A14455AAEB025AD36C215CD17847FFFFBDF1B376EE45D8210908DC0
+            C0406443E28BF67C511E07C44568DBA851A384D552E28BD5F005CF4289676565
+            F19C3A3C94E6C19BFF7CB59292129809B4593C45C164804AD1B144A6E44B6161
+            614C4C4C7E7E3E27F4F4F444DE6874CD50A562F57C3971E2C4B265CB08101455
+            BB766DBCB270D5854CE28B15F1E5FBEFBFC713696742BAD2BD7BF777DE79873A
+            4FCDCC975DBB76AD5BB78E368BA7EBAFBEFA2A2F0830255F0038DAE8909589BA
+            81BA75EBA6B039A33EA562E17C41E5E9D3A78FC2FEB25A0A19964B4E4ECED6AD
+            5BCF9D3BC7E3808882B64D9E3C59CB43A624BE685F776416C017482629294961
+            47F19090103F3F3FAAC2E6E4CBBD7BF7E2E2E27EFAE927EE087470708011E1E1
+            E1A152832B15AE3E7CC1BF172E5C803EDDB973A7421E701162420DE4A55956CF
+            97264D9AB8B9B989DB24108D445151D1B56BD784137681AA59B366B56FDF5EB8
+            EB854CE28BB5F0253737373E3E9E0E7EA2D8E6CD9B43A91C1D1D2B7DA2D1F992
+            9E9E0E5B5AB8997EDFBE7D274C98C0E56762BE3C7AF4086573FCF871E813C5DA
+            D9D9454545D11C6283948A85F385CF3F122164E1B1071CDBB66D5BD8800ABB76
+            C924BE58055FF0B971E3C66DDBB6D1E63E32F92CA7F1E3C7C304861553A9908D
+            CB1794079D4AC51D81B6B6B611111174149159F822932FD05ABA742990C7B103
+            070E24953248A958385FF411B2722C2CE469D3A6C1C154D8755426F1C5687C39
+            72E408DA6CD3F0A5B8B838363656388B129A8C2ADCA041031B799099912FD9D9
+            D9090909A5A5A57C67A74E9DDE7BEF3D61B790E9F952565606970D14E0B9764E
+            4E4ED1D1D18400892F3AF105DE5658581804A84EDB24BE189C2F870E1D4A4E4E
+            E6B3318CCA979D3B776ED8B001CFA2583CE2B5D75E0B0A0AA25963E6E40BBE2C
+            5EBC58B820006DDDCC9933556E4FA9BFEA6B5F7E24B575EBD6D17839550C486D
+            D8B061D5AB5797F8A23D5F602A0707070706062A9FFA22AB3A7CC1D3E9304959
+            15E1CB81030756AE5C6902BEDCBB571E1B3B975A628AC553222323BDBCBCFEC0
+            8719F99293938392A39E548A6DDEBC39DA3A3E06D45C7C91C9E7FBC1C613E6CD
+            CDCD2D2A2AAA7EFDFAC2F97E56C9175F5F5F0F0F0F9DFA77F12F4AF3E2C58BD4
+            54702C8C64681B44A77C6A9DACEAF00585F5D34F3F497C518E3A71E2F8B265CB
+            697B59FA917EFDFA8D1D3BCECEAEA6964236165F9E3C79B276ED5A98097C8222
+            6C9677DE79A757AF5E2A8F07D15EB806E14B7E7E7E7878381D2148B1289B37DF
+            7CF3EF7FFF3B4F6FB756BE8C1831A267CF9E3A8D4F57C8C7DD962E5D4A07A4F2
+            E3060F1E4C73EAD4FD8E4CE24B95E50B5E16FEC789132768ACB0423ECB09BA84
+            92E2C3CBCDC697C2C242E890704C8B965AD2E237F3F2059F9B376F4E4D4D65FF
+            882E366BE6FBC107617486813E1A6CE17C1137BFEEE4C9930B162C10F2C5DEDE
+            1EC68BB7B737DF23F145D7FC58325FA0C6F3E7CF2F2E2E66CDA1AD5EEAD6ADAB
+            BD261B852F15F2A59634139F2EE2CD478F1E8DE64EDDCA7DED85AB3F5FE46BF3
+            E2A0E5DCBF4B5150A9F7DE7BCFDFDF9FBB8724BE5014ED5377F0E041AA60140B
+            5374E2C4897676761A7E4726F1A56AF205D2F8F4D34FF7ECD9C3A7FDA252D040
+            219F40A28D908DC217A80E1428373797C7B460B6F0008D9EC2D5932F15F2A3A9
+            535252F85C4BE19D1D3B760C09095138234A570DB63EBEC00E0502E84728B646
+            8D1AA8606DDBB6D5DC8F2393F85235F9929797376FDE3C561B84264D9ACC9A35
+            4BE129E6E1CBFEFDFBF1FEC2A342870C19C23B21E8295C3DF9426BF3CE9C39C3
+            5DE2C23BA1311111112D5AB4109ED1ADAB065B1F5F6885072B34623B74E8005B
+            8FF6A993F862657CA9907720A4A5A5E1116C10BCF9E69BFDFBF75798536706BE
+            DCBB770FE4CBCECE266301571C1D1DA3A2A21A356AA4D25137315F323232162F
+            5ECCCAAD9CB057AF9E93264DA6FDC625BED8C8574BC39DFCF1C71FD99D84A90C
+            B874E9D245682A6B5304125FAA045F6EDFBE1D1F1F7FE9D2255E2D5DBF7E7DB4
+            BBEEEEEE34F35B7B211B9E2FE9E9E94B962C01655846B42040E18400D1C2D587
+            2F9017F246537228163504BE5B515111BB7275EBD6050D610DDAC883080DB632
+            BEC0D65BB060019D4741577C7D7D4343439D9C9C342C0890497CA9B27C3978F0
+            604A4A4A797939270C0A0A1A316284ADADADAE4236305F1E3E7C48635A3C5102
+            790A0F0F27ED313B5F2E5EBC08DB8A4FBC472C5C213F3FBF2FBEF88237A9463E
+            69D8954D415D35D89AF8827214AE9D95C9E7D4D13C039E8B28F1C59AF8027375
+            E1C28530F369811EA2E8900FDAEA4557211B982F282758563C6FAD42D582003D
+            852B9A2F4F9E3CE13D3AE90ACAE3DD77DF6DD9B225F4FBDAB56B7C33AC41E85C
+            83060D54EEAD57A9ACAC892F10CBDCB9736FDCB8C147BB787878C0BE73767666
+            FB4EE28B35F125333393B77AA184DDBA75E3AD5E7415B221F982125ABD7AF59E
+            3D7B784E1D5E1886B470C4577FE18AE6CBF5EBD7A1C7B447275DF1F4F48C8E8E
+            767070484D4DDDB469136F6F412B44E1D609E7DA692F5CABE10B3E2116DA7890
+            6351F75003352C3F91F85275F902692C5FBEFCC891235417A80381D6F4286C90
+            6406BEE4E6E6C6C5C5094FDBF2F1F1090B0BAB5BB76EA52BF7B517AE68BEA0AA
+            C00FE23975C8D21B6FBC01570812CCCBCB838A53CEE9E6264D9AA095A6A944BA
+            6AB0D5F0A5B4B414EEA4F0305F7B7B7B14B1BBBBFB1FDA23F1C5BAF872F1E245
+            E8EACD9B37595B5AB56A05FD411BCCA2300F5F10D6AD5BB77DFB7676D4110BEF
+            A3478F1EDAACDCD75EB8E2F872FFFE7DA811C4C7E7CE39393941CBA94B1C4AB6
+            66CD1A3A808D12D210096D3BA0AB065B0D5F8E1E3D9A9C9C5C5E5ECEB12FBFFC
+            324C656D1604C824BE5435BE40021B366CD8B16387705AEC9429535085D5AD26
+            311D5F8A8A8A626262A0C7ECA893F7E1E8E8A8D951370D5FE8DC6BDAE68AAEA0
+            8E8D1D3B166A4477A29546CB0CB793554AAE43B3ECECB4DAF35166757C415D5A
+            B870E1A953A778E302F9797811EA40A04D1592F862C97C292C2C4C48488017C2
+            F7787979858787D33ED966E6CBB66DDB003F76D4113566CCE8C18387282F08D0
+            53B822F8427B7C646666525591C9E7D1C1FD69D6AC198FE7CB8F975C72E4C851
+            1EA8A6EA04FB50DD14D52AC117186E212121BC104C7BBEA0CA21DBD4CF47B1ED
+            DBB7A77DEAB8D6497CB126BEECDCB973FDFAF55018767E5F7FFDF5A1438792B9
+            6A4EBE949595C5C6C692F741B1F03E3EFA08DE878A05017A0A57045F7EF8E107
+            5415649263E1F8C0F0A375007CE7F7DF7FB778F13F69353A5D813B3071E244A8
+            51D5E50BAAF1FBEFBF4FC766CAB4E60B2A1B3478DFBE7D4C644016BFD3B56B57
+            E5B35C24BE58015FE005A30D166EDB4E13C11A376EACE5B6A732E3F105A24F4A
+            4AE21A6523DF7132383858E582003D85AB2B5F20AF254B60981CE10D77912BEA
+            1257D8B5840E79018C58D5ECEDEDA17C10313FABCAF1E5CE9D3BE002FB7D5AF2
+            252F2F0FDE2E7C5EAE604D9A3481A94C5B3A4B7CB13EBE1C3B766CF9F23FB67A
+            A1A8DEBD7B8F1B374EE5F1CDDA0BD9007CF9E5975FE0B66565657109C12E888E
+            8ED669E5BEF6C2D5952F39393973E7CEA5069C62E1F284868602CF0A7756C897
+            3EAE5AB58AE6DA55088E0DD3B072CA2AF9929A9A9A9696C607D14171C78E1D8B
+            5434A74EE28B95F105EFB560C182D3A74FF3B11078B559B366B56CD952E5F1CD
+            DA0BD9007C41B6F07ADC758AD8808080C99327AB732BF414AE4E7C81D27CFEF9
+            E75BB66CE13D729E7FFEF9B7DF7E1B6C663B5F9890B76E20470F51B4F25BE588
+            ACB5F2A5B4B49496BFF341BA2E2E2E919191BCFC44E28B95F1E5ECD9B3898989
+            DCD786287F7F7F5461DE6A52B490F5E50B8A0795E7E4C9933C6C442BF751003A
+            ADDCD75EB83AF1A5B8B818BA7BF5EA55EE7D7073739B3D7B36ED7EAE9CB0E2E9
+            CE358F1F3FA6574680FD022B46798B59ABE40B3EF7EDDBB766CD1A3A8F822430
+            68D0200801255B69E9689337892F7A5601C3F20505BD6245F2D1A3C778660954
+            9DD6AFF2CC12D142D68B2F5497E07DF00901081D3A74983E7D3ADE594B45341E
+            5FF07DCF9E3D2929293C9E5F21DF1D1241D825AE90F0FAF5EBB1B1B1F8E4D6DB
+            C3C3034852B7F39E95F1A5BCBC1C16DCF9F3E779B534BCDDC8C8281F1F6F5E7E
+            22F1C53AF882EFF891AFBFFE7ADBB66D6565656C22D0FA55FCA0B89792198A2F
+            F882F7DCBB772FAFE3A6D370BA77EF0E5D343B5FA8AA9C3B778E2F3A38388014
+            5E5E5E54555426849E7DF6D9673B77EE04CE290A149F32650A9C3E953B075B13
+            5F10A06D3448C951DDBA7583A94C636D95968E367993F8A2671530085FF0E228
+            8863C78E1D3D7A54D83BC98B634843CCC91734F2D1D1D1C269F54D9B360D0B0B
+            E33975E6E5CB912347962F5F4E3B45D0C5FEFDFB8F1B370E76BEE6575658664D
+            FA3463C60C95271F5439BE4075DAB66DAB3CCC0C9E42CFE01C151414082701D1
+            D9AFC2CA2FF1C5A2F8027D8656AB3B3F53F8CAB050F0BEF82C2F2F2B2C2CBA7A
+            F5EAA54B97E8773861B366CDE01CD1411AE6E40B72F9D5575FA5A5A5F1B240DE
+            829FE7D499912F0F1F3E04D44F9D3AC5E3F96881C3C3C39B376F5EE91E3978A3
+            65CB96F1363154CDC017B87ECA27375539BE383939A1C5531E6686E6C1E2C3FD
+            C21F0189424242ECEDEDB9A6497C9159185F60713468D040DD2A1CE12B57C8A7
+            6BC8FB5C1EDCBD5B86D751C81B7E273838B863C78E7C70BDD9F882E61D5A9297
+            97C72B7A5C5D5D5154349B587B4534125FCE9ECDFEF8E344E109479D3B779E3A
+            752A8DE757FACA67CE9C993F7FBE7050AC4B972E70FD50332B959585F3457B21
+            4365E119F5ECD953C1D891F862517C3194ACE0610D1B362C202000EF6528218B
+            E40B39EA6BD7AEA57116D9D38323FFF18F7FF080B919F9025DE1F58AB2A78C0F
+            0D0DEDD4A913192095BE32CC1F402123234338A907AE5FCB962D795CCCEAF9D2
+            BC394CE5F7612A2BDC2CF1C5CAF80295F6F4F484E78146147AAEFF1183FAF285
+            8F70E60501CECECEB367CFF6F0F0E02231235FF2F3F36363638B8A8AD8B66ADC
+            B8B170BF056D5EF9E8D1A34B962CA1615A8AEDDBB7EFF8F1E36D6D6DAD9E2FF8
+            7477777FE38D517E7E7F9ACA3A15AB4CE24B55E00BC802B3A59D3C346FDE9CBA
+            260D2864317C41A54D4F4F5FBA742957217C0606068E1D3B5661935DB3F00581
+            3B86380A5C18306000192F5ACAA8BCBC1C901232D4C9C929323292372AAFA27C
+            4119D1D69FCA3F822F8802850197F6EDDB43E768CE8BF6A5A34DDE24BEE85905
+            94F9A2BC73A5BA57A6EB68231D1C1C6099422DBDBCBCA0D2BC9BB261852C862F
+            F01D68E53E590788AA53A74E7878382D47363B5F4A4A4A626262AE5EBDCA5C70
+            71718E898985348522D6E695B76FDFFED9679FA9F301AB285F7AF5EA85EAC147
+            7CCAFE9F2F783558C88E8E8EF5EAD55337BD4AE28B45F1054D425050104A8D4C
+            0F61B6959F82F2859CAB57AF5EAB562D3424A00C75F61B49C862F8929999491B
+            CAF3CDDDBA759B366D1A750B999D2FBB77EFFEF4D34F694E1D657BD8B0612347
+            8E14B147CE8D1B37E85C319E7A044CC00DD4B0FBACCCE2F902530E9EB6AEE7C3
+            4A7CB158BE802C8989897073B4E10B0F9E9A46C83AF305228667F4EDB7DFF2B8
+            2F88085977E8D04138694D7B45342C5FEEDDBB17171777F6EC59BA58215F030D
+            F58511A8F90003953F8BB07EFDFA6DDBB60977CF7FFBEDB7FBF4E9A36138D0C2
+            F922EEFC69892F16CB17239D3F6D90843AF3E5FCF9F3F1F1F1B4148A651D1A1A
+            CADB0E99972FB4D8B2BCBC9C13C21D98346912F5238890D1952B576263637947
+            525CF1F6F68E888800B6D415A7C417CD7993F8A26715B05ABEA83C2160C68C19
+            FEFEFE2AD7719B982FC8DEC2850B8F1D3BC6B6156A515858181D932C4E46F8A9
+            55AB567DF3CD373CD48D37A5D55FCA032BF445E28BE6BC497CD1B30A582D5FE8
+            341CDE6C11571A366C88E2E113024428A201F972F1E245D81AC23975D05AB2AD
+            B4547D95323A77EE1C4CB6D2D252BED2AE5D3B5055E5A14E32892F125F24BE88
+            E00B3ED3D2D2BEFCF24BE1F6E2C1C1C183060D424B2E5A110DC51704181ABB77
+            EF66DB8AD725EAB9470E2D353879F2249B45F0B62223235BB468A1BC07854CE2
+            8BC417892F22F8024D8D8989C9C9C9E1C114BC1214C5CDCDCD461EC429A2A1F8
+            5254540445C127FFAC704B473D85CBC70FF0CDFDFAF51B3F7EBCF2A1DA32892F
+            125F24BE88E0CBDEBD7B535252D098F39D5412C28D974428A241F882B079F3E6
+            D4D454B6AD60598C1D3B363030509D6DA59370CBCACA68F763BA0D9F70095149
+            BCBCBCF81E892F125F74CD8FC4973F12284F6675707040C1346CD8F08F1F322B
+            5F60594445455DB97285573C576A5BE92A5C5A6FC5D36AF0397CF8F0D75E7B8D
+            CF9095F822F145D7FC487CF92381F2629CFEFDFB4F983081D5D4BC7C397CF870
+            727232B227B4AD468F1E2D3C26594FE1161717C38421F7906E767171993B772E
+            CD6B92497C91F822F1451C5F1E3F7E8C1AF2DD77DF091713474646D25E2A66E7
+            0B5C36D47C3A57846221719833BEBEBE1A6C2B5D85CB2E9870B9406868A8BFBF
+            BF704DB64CE28BC417892F3AF1E5ECD9ECF8F80452088A55B7198A0845D49F2F
+            999999898989C26392BB77EF4EC7A7892E7895C2A553816EDEBCC9CBB2070D1A
+            141C1CACD00325F14573DE24BEE85905AC8A2FA84BCB972FC72B71D706AA5348
+            4808EFA5625EBEA0C83FF9E413B86FAC1FF22D1D67B66FDF4161A316FD858B67
+            252424646464F01078870E1D60C2D8DADACA24BE487C91F822822F57AE5C41A3
+            7DEBD62D9635DC22085761BF4F73F1E5D2A54B747C1AFF083475E6CC9934A7CE
+            B07C4158B16285702E6FB366CDE08809CF9995497C91F86264BEECDFBF7FD5AA
+            55D6C017182F6BD7AEDDB56B174B1636CBA449937AF5EA452704889691E8840A
+            B6D5FAF5EBB76EDDCAD98388E119D1968EFA14BC4AE1E273E9D2A5870F1F66BE
+            00B59191919AF902EB66FEFCF91E1E1E0A7D55A6E10BC83B7DFA74DA5597C2C4
+            8913FBF5EBA76E35B9CCF87C292828888888E08D7E1185F6001E37ADE13099EA
+            D3F7478F1EA104D14AF16623C3860D7BFDF5D715F8929C9C8C5ACD474AF8FAFA
+            2255EDDAB5CDC2974D9B36A5A6A6D229A3F8D7DEDE7EF1E2C5B4A9BE51652522
+            61257CB971E3064D5AE3C3801A366C88169B4F08102D23D10985DF6155F1F169
+            7427ED9FA0C0724309B7B0B01096486E6E2E9F0DE4EFEF0FEB800F1EA39BD13E
+            A3FE305F4064B4751D3B76AC74634D63F0E5C48913687BF9BC1188059519BEAD
+            E663EA8DCA17582E1008AD32A197E2731D4CA9FAF43D2B2B0BF2E1A30BC9BE0B
+            0C0C54E0EF860D1BB66CD9C207E642FFA1669E9E9ECA07DDE8941F1155202F2F
+            2F2929890D2EC4221B30E11560670C598948A8892FF8844C3FFFFC733ECC9017
+            04A8DBC5568422EAC3179A93C2270DE21396FFD0A143E998647D0A5E41B8C02B
+            208B16ECC8912350324E387AF4E821438608B79B92C95D9269D3A6B1FD8FCFF6
+            EDDBF7E8D18327FB9A8C2FF7EEDD439EA18B3CE51ACDF2BC79F3D048683E5DD3
+            A87C81F5171F1F9F999949E37D8842758557C22DB0C9F8525E5E969E7E3C3B3B
+            9BFB16C9596BD5AA95827C50EECB962D03A6D94CEEDAB5ABB7B737CDDE542701
+            657169885248280C7C276C169466464606CF234554EFDEBD69DBD62AC697D2D2
+            52C89ACE21A604F5EBD707B65D5D5DD5E981084514CD97F2F272541521C8F1E9
+            E3E3E3ECECACF204127D840B091417175FBC785138BF0E2D46747474E3C68DC9
+            56E29B919F3973E6FCF8E38F3C5E0E2DA413243448436604BE80BC3013D8F694
+            FDD977660F09998B2F086818D6AD5B47F39528CAC9C989CFA532195F6063C27F
+            E46565B2A7E63932A36C29C390CFCFCFE71F4199D6A953C7C4F60B5AFAB2B232
+            B2FB28B666CD9AF07FD18069733E893EB2323C5F0E1E3CB862C50A72F32801DA
+            EA51A346D1A435D132D233217FFFF6DB6F913D34290ABFA325FB74152E8F49F3
+            CDB09568CB61E58410DDEAD5AB396FFA17A7E8C21646C178993871222C29D245
+            33F2E5E6CD9B8B162DFAF9E79FF9E44FD3ABBE722C9001E708E60069B83016A5
+            BF71E3C66DDBB6091B18FDD54CCFBA83862D2020E0CD37DFA4D18CAAC417A03D
+            2121E1871F7EE07E2F7B7B7BA0BD69D3A60A35D92C7C41D3F7F1C71F9F397386
+            6D045D1FA1A77061284D9A34C9CBCB4B411A140BD32F3939F9F4E9D3D413ACFF
+            1345173647A1F2F4EAD56BE4C8912847D24533F2055FD03CC084E1813FD3ABBE
+            422C2C91EEDDBBC3E1A583C695D35EBF7E1D6D06540E4CB404BE002EF0E3D0DE
+            A34A0A2DE8AAC19793274F7EF2C927C203C6FAF4E93361C2043E9DC320321291
+            90BE676565252626C256145D7EFA28A2AFAF6F505050DBB66D9577C9E69BE1B8
+            6DD9B2855D65F3F2C5CEAE66972E5D5F79E515777777D64533F205FFC2B8DBBB
+            77EFEEDDBBE97C61D3ABBE30B656AD5A9D3B771E3468D08B2FBEC86EAC425A34
+            B4E7CE9D830903DD13AE44D147CD44D71D64B875EBD6FDFBF76FD6AC1977D557
+            19BEA04A2C5CB81088E17E417801305E5AB468A179175B118A28822FB059E019
+            1D387080E6B9F1EFA84B6828E1D26131F075FDFDFD811875FBD7514288EEF2E5
+            CBE9E9E999999985858564C8989E2F680F1A366CD8A64D6B3FBF8E0D1A34D0F2
+            186913F045265F950EFE9E3A750A8282C5C77681C9F882028535E7E1E1014300
+            AD05E4C35E86CA9F4599E6E4E4A040019AFCFC7CB4BE9467D3F0055FE0E122C3
+            80607379707373539E875105F872F6EC5938472872D9D3D0A953A7E9D3DFAF59
+            D34E4F19E99F10DFF3F2F262636385ED1E9A65EA6735125F64F2AD36EBD6AD0B
+            5DC483A8FF4F9B84B76FDFCECDCD2D2E2E16FAEDA6E40B1A3A3AE6867A4F7532
+            12F529562D850CEC16141480BFA8AB0AAEAECA5716968830884B0885B1B3B373
+            76764645E53E974A858CAC22CFB76EDD7AF8F021E759415BB4CF8F8684CA39AF
+            5EBD3A328C46CEC5C545B876B72AF105485EB972E5BE7DFBB8EF0D16E3CC99A1
+            9D3A75AE74175B118A28822F5F7CF1C5A64D9B845D1B63C68CF1F3F35337E66A
+            10BEA0A1A8290F9C3DED4B85975C9B9E2FC293B77412B2F2D3752A56CB577D03
+            FEACE9FD23B3CB4A3C5FAE5DBB16131343D60145F9F8F8848787F3E1AAE6E54B
+            4949C99C3973684E1D5D8459FBE1871F92716B54FFC8CA545FE28BC41753F385
+            AC83CD9B37D3893F36F2397574E28F36BBD88A9091AE0977ECD8B16EDD3A98A6
+            7FBC808DCD881123860F1FAE3CA6A84FC13F0BAA2FF145E28BA9F972F3E64D18
+            2F306138BDBBBB3BEC05E1F1B466E4CB83070F9019DA468FA21C1D1D61BC7878
+            78E8EABB5972A99846F525BE487C31355FB66EDDBA71E3469A53279377808D1A
+            352A282848DD51C4FACB48A784A74F9F5EB87021ADA6B1910718566FBDF5164F
+            FD94F822F1C5A2846C8CD2B1045989E1CBDDBB773FFAE8A39C9C1C855D6C61C2
+            68293E1132D23EE1AFBFFEBA68D1A2E3C78FF382809A356B7EF0C1072D5BB654
+            58CCAD7FC13F0BAA2FF145E28B49F972F8F0E1A4A424E1090183060D0C0E1E4B
+            7B85989D2F172E5C888B8BA3E3D328AA5DBB7621212174CE99C417892F162864
+            63948E25C84A67BE002BF1F1F167CE9CE1C1D43A75EA444545797B7BD3BC12F3
+            F205B94A4949D9BD7B370F4B57AB566DEAD4A9010101C22158892F125F2C4AC8
+            C6281D4B9095CE7CC9CACA9A3F7FBE70175B54DD2953A6D0E68F66E70BCFA9E3
+            29C53E3E3E708E9C9C9CC43DC2924BC534AA2FF145E28B89F882FF5352D6ECDC
+            B9EBFF77B19DD5BE7D7B1E9731235F90ABAFE481A790C3A41A3F7EFC80010378
+            0590C417892F16286463948E25C84A67BE44464664679FA55B2BE4BB3AF6E9D3
+            874E08D0FE492264A44D42F844C78E1D2B2828E0DB5C5D5D15E6D4497C91F862
+            81423646E95882AC74E30B9C8ED0D019972E5D66BEC06C79E18517747D920819
+            6969BFD0AE711485CFA14387F24E34125F24BE58AC908D513A96202B9DED9784
+            848413274EF06E2FE29E2442462254DFD1D1312C2C8C3A9E8D54F0CF82EA4B7C
+            91F86222BEC8E4DBC1252525F1AED4E29E244246BA2684CD32541EA8E3D94805
+            FF2CA8BEC417892FA6E34B7979F9C68D1B0E1FFE56795747ED9F244246DA27B4
+            916F041D1010101818A8BC5E41E28BC4170B14B2314AC71264A5335F70A9B0B0
+            F0D4A9533FFD74AEB8B8848F28D4E9492264A465423B3B3B5757D7A64D9BB669
+            D3C6C1C1C1461E840925BE487CB140211BA3742C4156DAF2E549C5EFF8A48BF8
+            7BF4F051C1F5EB77EFDEE5250216126C6BD470AA570FF6CB5F60B6FCF116364F
+            232B04FF563CBD68A314A53956218AAE584E42D13FAB41022AEF5419A57D424B
+            90954509D918A56309B2D22AE1FF1DC822052948410A060C125FA4200529182B
+            FC17451425E223D65C960000000049454E44AE426082}
+          HightQuality = False
+          Transparent = False
+          TransparentColor = clWhite
+        end
+        object Memo31: TfrxMemoView
+          AllowVectorExport = True
+          Left = 153.858380000000000000
+          Top = 80.283550000000000000
+          Width = 226.771800000000000000
+          Height = 26.456710000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -15
+          Font.Name = 'Arial'
+          Font.Style = [fsBold, fsItalic]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'Comprobante Autorizado')
+          ParentFont = False
+        end
+        object Memo36: TfrxMemoView
+          AllowVectorExport = True
+          Left = 154.519790000000000000
+          Top = 112.078850000000000000
+          Width = 559.370440000000000000
+          Height = 15.118120000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Arial'
+          Font.Style = [fsBold, fsItalic]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            
+              'Esta Administraci'#243'n Federal no se responsabiliza por los datos i' +
+              'ngresados en el detalle de la operaci'#243'n')
+          ParentFont = False
+        end
+        object SysMemo1: TfrxSysMemoView
+          AllowVectorExport = True
+          Left = 332.598640000000000000
+          Top = 1.118120000000000000
+          Width = 105.826840000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -16
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            'P'#225'gina [PAGE#] de [TOTALPAGES#]')
+          ParentFont = False
+        end
+      end
+      object MasterData1: TfrxMasterData
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 18.897637795275590000
+        Top = 415.748300000000000000
+        Width = 757.795765000000000000
+        DataSet = frxDBDataset1
+        DataSetName = 'frxDBDataset1'
+        RowCount = 0
+        object Memo38: TfrxMemoView
+          AllowVectorExport = True
+          Left = 3.779530000000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          DataField = 'nroUnidades'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[frxDBDataset1."nroUnidades"]')
+          ParentFont = False
+        end
+        object Memo39: TfrxMemoView
+          AllowVectorExport = True
+          Left = 75.590600000000000000
+          Width = 476.220780000000000000
+          Height = 15.118120000000000000
+          DataField = 'descripcion'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[frxDBDataset1."descripcion"]')
+          ParentFont = False
+        end
+        object Memo40: TfrxMemoView
+          AllowVectorExport = True
+          Left = 563.149970000000000000
+          Width = 90.708720000000000000
+          Height = 15.118120000000000000
+          DataField = 'precioUnitario'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."precioUnitario"]')
+          ParentFont = False
+        end
+        object Memo41: TfrxMemoView
+          AllowVectorExport = True
+          Left = 665.197280000000000000
+          Width = 86.929190000000000000
+          Height = 15.118120000000000000
+          DataField = 'subtotal'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."subtotal"]')
+          ParentFont = False
+        end
+      end
+      object PageHeader1: TfrxPageHeader
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 336.378170000000000000
         Top = 18.897650000000000000
         Width = 757.795765000000000000
         object Shape1: TfrxShapeView
@@ -2224,7 +2169,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         object Memo18: TfrxMemoView
           AllowVectorExport = True
           Left = 445.913730000000000000
-          Top = 229.417322834645700000
+          Top = 229.417322830000000000
           Width = 582.047620000000000000
           Height = 18.897637800000000000
           AutoWidth = True
@@ -2242,7 +2187,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         object Memo19: TfrxMemoView
           AllowVectorExport = True
           Left = 42.354360000000000000
-          Top = 229.417322834645700000
+          Top = 229.417322830000000000
           Width = 158.740260000000000000
           Height = 18.897650000000000000
           DataField = 'cuit'
@@ -2259,7 +2204,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         object Memo20: TfrxMemoView
           AllowVectorExport = True
           Left = 146.519790000000000000
-          Top = 257.763779527559100000
+          Top = 257.763779530000000000
           Width = 185.196970000000000000
           Height = 18.897637800000000000
           DataField = 'condFrenteIVA'
@@ -2849,7 +2794,6 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Memo.UTF8W = (
             'Unid.')
           ParentFont = False
-          VAlign = vaCenter
         end
         object Memo13: TfrxMemoView
           AllowVectorExport = True
@@ -2866,7 +2810,6 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Memo.UTF8W = (
             'Detalle')
           ParentFont = False
-          VAlign = vaCenter
         end
         object Memo6: TfrxMemoView
           AllowVectorExport = True
@@ -2884,7 +2827,6 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Memo.UTF8W = (
             'Precio Unit.')
           ParentFont = False
-          VAlign = vaCenter
         end
         object Memo22: TfrxMemoView
           AllowVectorExport = True
@@ -2902,7 +2844,6 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Memo.UTF8W = (
             'Subtotal')
           ParentFont = False
-          VAlign = vaCenter
         end
         object Line1: TfrxLineView
           AllowVectorExport = True
@@ -3067,381 +3008,27 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Frame.Typ = []
           Diagonal = True
         end
-        object mUnidades1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 346.275820000000000000
-          Width = 60.472480000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 79.370130000000000000
-          Top = 346.275820000000000000
-          Width = 476.220780000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 563.149970000000000000
-          Top = 346.275820000000000000
-          Width = 90.708720000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 661.417322830000000000
-          Top = 346.275820000000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779527560000000000
-          Top = 384.070866141732000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 79.370078740000000000
-          Top = 384.070866140000000000
-          Width = 476.220472440000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 563.149606300000000000
-          Top = 384.070866140000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 661.417322830000000000
-          Top = 384.070866140000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779527560000000000
-          Top = 421.866141732284000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 79.370078740000000000
-          Top = 421.866141732284000000
-          Width = 476.220472440000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 563.149606300000000000
-          Top = 421.866141730000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 661.417322830000000000
-          Top = 421.866141730000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779527560000000000
-          Top = 459.661417322835000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 79.370078740000000000
-          Top = 459.661417322835000000
-          Width = 476.220472440000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 563.149606300000000000
-          Top = 459.661417320000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 661.417322830000000000
-          Top = 459.661417320000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779527560000000000
-          Top = 497.456692913386000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 79.370078740000000000
-          Top = 497.456692913386000000
-          Width = 476.220472440000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 563.149606300000000000
-          Top = 497.456692910000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 661.417322830000000000
-          Top = 497.456692910000000000
-          Width = 90.708658980000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
       end
-      object PageFooter1: TfrxPageFooter
+      object Footer1: TfrxFooter
         FillType = ftBrush
         Frame.Typ = []
-        Height = 260.787570000000000000
-        Top = 684.094930000000000000
+        Height = 90.708720000000000000
+        Top = 457.323130000000000000
         Width = 757.795765000000000000
         object Shape2: TfrxShapeView
           AllowVectorExport = True
           Left = 1.559060000000000000
+          Top = 7.559060000000000000
           Width = 755.906000000000000000
-          Height = 105.826840000000000000
+          Height = 83.149660000000000000
           Frame.Typ = []
         end
         object mTotal: TfrxMemoView
           AllowVectorExport = True
           Left = 443.764070000000000000
-          Top = 75.063080000000000000
+          Top = 63.063080000000000000
           Width = 302.362204720000000000
-          Height = 26.456710000000000000
+          Height = 22.677180000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -3456,7 +3043,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         object mSubtotal: TfrxMemoView
           AllowVectorExport = True
           Left = 443.764070000000000000
-          Top = 9.897650000000000000
+          Top = 14.897650000000000000
           Width = 302.362204720000000000
           Height = 22.677165350000000000
           Font.Charset = DEFAULT_CHARSET
@@ -3473,9 +3060,9 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         object mTotalIVA21: TfrxMemoView
           AllowVectorExport = True
           Left = 443.764070000000000000
-          Top = 42.992166670000000000
+          Top = 38.992166670000000000
           Width = 302.362204720000000000
-          Height = 22.677165350000000000
+          Height = 18.897635350000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -16
@@ -3487,44 +3074,10 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
             'totalIVA21')
           ParentFont = False
         end
-        object caeComp: TfrxMemoView
-          AllowVectorExport = True
-          Left = 498.457020000000000000
-          Top = 145.756030000000000000
-          Width = 245.669450000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -16
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'CAE N'#176': 12345678912345678')
-          ParentFont = False
-        end
-        object vencComp: TfrxMemoView
-          AllowVectorExport = True
-          Left = 451.543600000000000000
-          Top = 172.212740000000000000
-          Width = 291.023810000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -16
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            'Fecha de Vto de CAE: 10/06/2020')
-          ParentFont = False
-        end
         object BarCode1: TfrxBarCodeView
           AllowVectorExport = True
-          Left = 30.236240000000000000
-          Top = 26.456710000000000000
+          Left = 56.692950000000000000
+          Top = 11.338590000000000000
           Width = 84.500000000000000000
           Height = 68.031540000000000000
           Visible = False
@@ -3542,454 +3095,6 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Font.Name = 'Arial'
           Font.Style = []
           ColorBar = clBlack
-        end
-        object Barcode2D1: TfrxBarcode2DView
-          AllowVectorExport = True
-          Left = 8.779530000000000000
-          Top = 132.417440000000000000
-          Width = 244.000000000000000000
-          Height = 244.000000000000000000
-          StretchMode = smActualHeight
-          BarType = bcCodeQR
-          BarProperties.Encoding = qrUTF8NoBOM
-          BarProperties.QuietZone = 0
-          BarProperties.ErrorLevels = ecL
-          BarProperties.PixelSize = 4
-          BarProperties.CodePage = 0
-          Frame.Typ = []
-          Rotation = 0
-          ShowText = False
-          HexData = 
-            '680074007400700073003A002F002F007700770077002E006100660069007000' +
-            '2E0067006F0062002E00610072002F00660065002F00710072002F003F007000' +
-            '3D00650079004A0032005A005800490069004F006A004500730049006D005A00' +
-            '6C00590032006800680049006A006F0069004D006A00410079004D0053003000' +
-            '77004D005300300078004E0069004900730049006D004E003100610058005100' +
-            '69004F006A0049007A004D007A0049007A004E007A00590079004E0054006700' +
-            '35004C0043004A007700640047003900570064004700450069004F006A004D00' +
-            '730049006E0052007000630047003900440062005800410069004F006A004500' +
-            '730049006D0035007900620030004E00740063004300490036004E0043007700' +
-            '69006100570031007700620033004A0030005A005300490036004D006A004D00' +
-            '33004D0054005900730049006D003100760062006D0056006B00590053004900' +
-            '360049006C0042004600550079004900730049006D004E003000650069004900' +
-            '36004D00530077006900640047006C0077006200300052007600590031004A00' +
-            '6C0059007900490036004F0044004100730049006D0035007900620030005200' +
-            '7600590031004A006C0059007900490036004D007A00410033004D0044006B00' +
-            '78004F005400590035004E0044004100730049006E0052007000630047003900' +
-            '4400620032005200420064005800510069004F0069004A004600490069007700' +
-            '69005900320039006B00510058005600300049006A006F0033004D0054004100' +
-            '7A004F005400510077004E007A006B0033004D004400630035004D0048003000' +
-            '3D00'
-          Zoom = 0.500000000000000000
-          FontScaled = True
-          QuietZone = 0
-          ColorBar = clBlack
-        end
-        object Picture2: TfrxPictureView
-          AllowVectorExport = True
-          Left = 153.858380000000000000
-          Top = 146.196970000000000000
-          Width = 128.504020000000000000
-          Height = 41.574830000000000000
-          Frame.Typ = []
-          Picture.Data = {
-            0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000017500
-            00006A0802000000CC685665000000017352474200AECE1CE90000000467414D
-            410000B18F0BFC61050000000970485973000012740000127401DE661F780000
-            2A804944415478DAED9D095C55551EC71F4DDA88A80838A040801BE0BEA1E212
-            6A6E239A8AA395A668A9E55689686C86810886CBE4026EE4985A143AEEA9B936
-            2A6E055268E6022A20A8A0086A6A25F39BF7CF7F77DEC67BF7AD3CEFF97C789F
-            C73DF7BC7BEEFFFCCFF7FCFF67B5A9A8A89049410A52908211828DC417294841
-            0A460A36BF3FF9CDC6C606DF0834C2EFFC2F5D117E17C60A132AC4AABC5343C2
-            870F1F161616DEBC79F3F7DF7F7F9A411B8AFBF35FE1F7A72915EEAC51A386BB
-            BBBB939393F25BA8CB80E857AE34E1938A8AE2E2E2A2C2C2FBF7EF57286555F1
-            45145E4ACB580D3F2B8CD22C496D845C59C2E76C6CEA3A3840F82882E7B493D5
-            C3478FF2AE5D2BB97DFB89CA4217212B5D123E5FAD5A83FAFF0BCF3FFFBCF685
-            FEEBAFBF969494DCB871E3FE8307FFBBAE41C8C6281DFD5ED920096BD9D57276
-            76767272FCCB5FFEA2A10AD8FCF6E4574BE00B0AECCC9933C78F1F2F94D743E6
-            8B7242957953B8B35AB56A8E8E8E2D5AB4E8DEBDBB8383C373CF3D5769CE8DC1
-            97DF7EFB2D3B3B3B2323232F2FAFACACECF1E3C74F9E3C11F744D1F911573AEA
-            845C69420490A5418306DDBA756BD5AA55F5EAD535E4EDD1A347595959274F9E
-            2C282840A193704C563AF41DD5A34E9D3ADEDEDE2FBFDCCBD9D9855E41C3CF42
-            51A94C91E7BB77EFE2DF0A7950272B63948EE9355939F685175EA85DBBB6A7A7
-            67972E5DF04974B650BEA090F6ECD973E8D0A12B57AEA0128A537D853BC11490
-            A54D9B36AFBEFAAA8B8B8BE94BE5C183077BF7EE4D4F4FBF76ED1ABE6BC8AA35
-            F185FE05DFA1738181812FBDF412BEABBC13B6EAAE5DBB8E1E3D0AF9A0D0CD58
-            67F02FAA0A5AA3D75F7F1D961788A3EE6701C16FBEF986CAF4975F7EE19F7A06
-            F942517676768D1A357AF9E5973B77EEFCD7BFFED512F9820025DBB061032C17
-            6EDEF5E70B5336202060ECD8B1B56AD53265A920EC9007F87ACA368BD5F385BE
-            BFF8E28B93264DF2F1F1418D55B8135F5051376DDA041743F63498B7CE80837E
-            7E7E13264C80E5AB322DACD1AD5BB7A221BC75EB964AFBFA59E30B7D4743EEE6
-            E63672E448480FE6AA4242F3F3A5B8B878C18205E7CF9F179699A1F8827F6BD6
-            AC3975EA547F7F7F9870262B959C9C9C850B17E6E7E71BCAE6179D1F73F14526
-            3721FBF4E9337EFC786ED9380AEDFFA2458B60AEA2D08DA7FABA26446B347AF4
-            E8FEFDFBE38B722CFCF7E4E464B482EC1069236463948E25C84A21E7CD9A3543
-            2D737575A5BE080BE2CBF6EDDB376EDC48D6A63EAAAFE111AD5AB58A8C8C0468
-            4C562A9F7EFA298C7F72CEE922DA70B4900A368EF64F14C682591CAB2C13E528
-            34BC7C05FF3E270FFCB32A132A4409F3A31C2BB44AC00B6166E099CE9D3BB75E
-            BD7AAC761495260F7091FE544479D0F2A5D41581AE099FC88350C870EBA2A3A3
-            C98411FE0E64387FFEFCD3A74F532BC85168B414B2AD537ED4E9B90621D36D5C
-            A694902D44E3C94A6506841EF1983163060C18C068B608BEDCBD7B372626E6F2
-            E5CB5C67D0D675EDDAD5DEDE9EE525D3912FD080ACACACAB57AFF26FE29DA3A2
-            A24019EEE8352A5F1E3F7E3C7DFAF4BCBC3C8608AAD94B2F7577757563E90BD1
-            A32B5F502D35D8E70A0991992D5BB640CE741D9F30E59A376FAECE9AD32C64CD
-            C58A5CEDDEBD5BE8E7D6A851233E3E1E95963A35E84E64293636363B3B9B6084
-            DB509FBB74E952A74E1DE542376A9B8C7C9E3B770EDAC2F2443EC117A88AC2B0
-            486E6E2EAEDFB973877F041E77C78E7E1E1E9E0A7DD83AE5475CDD81757CF8F0
-            61EAB4C2BF50AAA0A020E4C764F6CBA3478F209093274F421539AA65CB961F7C
-            F0016AAECC72F872F0E0C1952B57C278E147F4EDDB77F0E0C1B03544F3859466
-            C58A15E5E5E51C1510103065CA14C04B7FE1569AB0A0A0203434F4DEBD7BFC23
-            C1C1637AF6EC59A78E3DF71D12FB1444A710D4C5A23268EF763D78F0202222E2
-            FAF5EBCC17B433FDFAF583521A9C2F68D350092F5DBAC47CC153121212BCBCBC
-            847CB97DFB3614F1E6CD9B2401DCF6CA2BAF0C1C38900B5DF929C6B35FE0A32D
-            5EBCB8A4A484E503870EED3053836EFEFAEBAFD7AE5D0B45A584A0F3C891233B
-            77EEE4E0F0E700ADC9F872E2C489A4A4241A34B09177B242C8CA46A2F1F8020D
-            44216EDDBA95304751681EE6CD9BE7EEEE8E6C58045FEEDFBF0FE3192C207544
-            6CEDDAB561CE346CD850A8675AAABEF04E881E12FFF1C71FD98AC32F7FF4D147
-            50742A03A3F2E5C2850BB367CFA6E2472C3475DEBCB8A64DBD49EEE29E283A3F
-            C8C68C1933803CAE3F6FBDF516D9B106E7CBC58B17E3E2E2A0799C1F1826702B
-            14543F3F3F1FC82B2D2DE5970A0F0FEFD8B123C3D7947D0A68815158C8392B21
-            6C01B0034D91904DEBD6ADDBB16307DA6D4AFBE28B2FC2E386592A7C2F93F1E5
-            D8B1634B962C41F5A17F61B92C5AB4E86F7FFB9BC9F842FF9E3973263131915B
-            71480CD5B9499326045CF3F3051846D3211CBBEDD1A307AC0C18D522545F7827
-            3E0F1C38B07AF56A663CC2881123860F1F4E5DDC46D5E09F7FFEF9C30F3F64BE
-            D8DADA7EFCF1C7D048EBE60B3E6133EEDFBF9FEC768A7DE9A597264F9E0C0908
-            EF84790F33072E1BBF14D0DFBA756BD378AF0A09D102A156B08B842B30A660E2
-            29F065F9F2E5D02878B594160E545858180C874AAB80CC7AF972F9F265946359
-            5959C5D35E08B8BDDEDEDE16C117141584929E9ECEA63EB08232839E29CF08D4
-            952F08B078610AC1FAC5EF53142C37547B1403E1C6781AACC01798FDC417CEBC
-            55F205560930C1E3F108C00AFCC4B66DDB722728DD09BD9C33678EE5F005563D
-            9A623275D5F1E59FFFFCE77FFEF31FE64B9B366DE0E2B143F76CF2E5E8D1A3C0
-            2ECF4A47714392703E2CC23F82458A7603B6341761BB76ED5013A89B4A7FBEE0
-            4B6A6A6A5A5A1AEB04B085B6B467CF9E0AEA2EF1457FBE207CF5D5579B366D82
-            07C1B17079DE7DF75DB8E50A8F90F8A267DDB104BE405C9009EC031EA980B708
-            EF98DA6F33F3055F56AE5CB977EF5EE492A2AA55AB3675EA5498D334D2A63F5F
-            F02F8C17286E7171316B49CB962D66CE9C058D57769B25BEE8C3973B77EEC05A
-            CCCDCDE5313BF8A1707551A0C299E3125FAC862F2844C8EDD6AD5BD4BAE04AD7
-            AE5DA74D9B069F5198D03C7CB97AF52AD4913247513E3E3E2830070707725E0C
-            C21768C38A152BE036F3E8232A152A9B9F9F1F2F663386063F6B7C0153F6EFDF
-            BF66CD1A1E07C467E3C68DE1ED3A3B3B2B3F42E28B3E75C712F882125FBF7E3D
-            75785314EC033807010101D4BF694EBEE01399DBB66D1B0FE0432EEFBCF34EEF
-            DEBDB9AD33085FF0999D9D1D1F1F5F5656C67776EBD60D861253D6181AFCACF1
-            A5BCBC1C5554380E68F3BF21F9E0418306F15324BE58135F6EDCB83177EE5C58
-            09AC5450EFF0F0708B98BF0B8705D50F1ACFB324DCDDDDA3A3A3EBD5ABF7479E
-            0CC717B4A88989891919193C3A00E768F6ECD94D9B36D5673447E28B3096FAF9
-            4019FE1DE87A545494A7A7A74A214B7C115D776496C197DDBB77FFEB5FFF4206
-            3876D8B061C3870F874014129A9A2F08BB76ED42E6785A0E8432421E68A16DA5
-            C2D5892FF8F7F0E1C34949493CD110D7838282468D1AA579EB007D4AE599E20B
-            08BE60C182EFBFFF9EBBD2A88A42C2A46D125FAC8C2FD028F804F00CB8C4EBD6
-            AD0BE3A5499326E47FC8CCC817B472B1B1B1172E5CE08E40982D9191910A73EA
-            0CC897D2D25268330D5453AC9B9B1BCC25171717758FD0B3549E29BE64666642
-            B92164CE1E2CC48888089A072193F862757C397EFC381A6C5A7142B17DFAF4A1
-            2D0A94139A9A2F10CDD2A54BB9EEE113BA3E6EDC3885397506E40B425A5ADA97
-            5F7EC90369A0EC840913FAF6EDAB3CB46190527976F8823A999C9C7CE8D021C8
-            966FEED9B327C4AB72EE99C497AACE17F80110C5E9D3A7B9F3D4D6D6362C2CAC
-            458B16C2A59EE6E10B6C69D4B48C8C0CE18200182FBEBEBEECA8572A5C5DF982
-            CFA2A2C2C8C8A8E2E2629EFA8527A28DA5B558125F44F32537371795F3C68D1B
-            9C01B413B366CD42F553D8F345E28B75F0056E119E555252C29DA79D3A759A32
-            658AB02AC9CCC597EFBEFB0E992B2B2BE3843D7AF498346992D051AF54B822F8
-            82CF55AB56EDDDBB979A59997CA07AFAF4E99D3B7756DEFA48E28B967CC1E7E7
-            9F7FBE75EB56EADBA228602224248496BF4B7CB132BEFCFEFBEF6BD6ACD9BF7F
-            3FCFA2AC56AD1AD523E12E8532B3F00506153C2314126F2984228C88086FDDBA
-            8DB25C0CCB177C3F7FFE7C5C5C1C7513D01508E5BDF7DE5350118394CA33C217
-            982DA89957AF5E156E6E306DDA34957B624A7CB102BE5CBF7E1DB2A25DD3E8E6
-            468D1A858787D39C5D9979F9821A9E9090400BE1E9665A1000174927E18AE30B
-            88BB60C18253A74E5165A052898A8A52E8863448A93C0B7C4180E5929A9A2ADC
-            18CCCBCB0B2215CE3390497CB122BE50890B3B4F838383070E1CA8B0ED89CCF4
-            7CC197949494AFBFFE9A3B0251AB615975E9D28587A58DCA177C423F6839165D
-            41183C78F01B6FBCA17233447D4AE559E0CBEDDBB7E3E2E65EBE9C23DC4C6FDC
-            B871D036DE8455E28B35F105B67F7C7C3CAC04EE3C4543023DF7F0F0E07BCCC6
-            17E8776C6C2CEF7284A8860D1BCE9E3D5BDDE121C6E00B141A7A4CBB1FD11514
-            097255BF7E7D753F2BF1455DB11E3C7870D5AA55C2A6CCC5C579CE9C8F5C5D5D
-            B94E4A7CB126BEECDBB76FEDDAB5C2CED32143868C1C39D2D6D656434213F1E5
-            2B79A0D50A14455AAEB025AD36C215CD17847FFFFBDF1B376EE45D8210908DC0
-            C0406443E28BF67C511E07C44568DBA851A384D552E28BD5F005CF4289676565
-            F19C3A3C94E6C19BFF7CB59292129809B4593C45C164804AD1B144A6E44B6161
-            614C4C4C7E7E3E27F4F4F444DE6874CD50A562F57C3971E2C4B265CB08101455
-            BB766DBCB270D5854CE28B15F1E5FBEFBFC713696742BAD2BD7BF777DE79873A
-            4FCDCC975DBB76AD5BB78E368BA7EBAFBEFA2A2F0830255F0038DAE8909589BA
-            81BA75EBA6B039A33EA562E17C41E5E9D3A78FC2FEB25A0A19964B4E4ECED6AD
-            5BCF9D3BC7E3808882B64D9E3C59CB43A624BE685F776416C017482629294961
-            47F19090103F3F3FAAC2E6E4CBBD7BF7E2E2E27EFAE927EE087470708011E1E1
-            E1A152832B15AE3E7CC1BF172E5C803EDDB973A7421E701162420DE4A55956CF
-            97264D9AB8B9B989DB24108D445151D1B56BD784137681AA59B366B56FDF5EB8
-            EB854CE28BB5F0253737373E3E9E0E7EA2D8E6CD9B43A91C1D1D2B7DA2D1F992
-            9E9E0E5B5AB8997EDFBE7D274C98C0E56762BE3C7AF4086573FCF871E813C5DA
-            D9D9454545D11C6283948A85F385CF3F122164E1B1071CDBB66D5BD8800ABB76
-            C924BE58055FF0B971E3C66DDBB6D1E63E32F92CA7F1E3C7C304861553A9908D
-            CB1794079D4AC51D81B6B6B611111174149159F822932FD05ABA742990C7B103
-            070E24953248A958385FF411B2722C2CE469D3A6C1C154D8755426F1C5687C39
-            72E408DA6CD3F0A5B8B838363656388B129A8C2ADCA041031B799099912FD9D9
-            D9090909A5A5A57C67A74E9DDE7BEF3D61B790E9F952565606970D14E0B9764E
-            4E4ED1D1D18400892F3AF105DE5658581804A84EDB24BE189C2F870E1D4A4E4E
-            E6B3318CCA979D3B776ED8B001CFA2583CE2B5D75E0B0A0AA25963E6E40BBE2C
-            5EBC58B820006DDDCC9933556E4FA9BFEA6B5F7E24B575EBD6D17839550C486D
-            D8B061D5AB5797F8A23D5F602A0707070706062A9FFA22AB3A7CC1D3E9304959
-            15E1CB81030756AE5C6902BEDCBB571E1B3B975A628AC553222323BDBCBCFEC0
-            8719F99293938392A39E548A6DDEBC39DA3A3E06D45C7C91C9E7FBC1C613E6CD
-            CDCD2D2A2AAA7EFDFAC2F97E56C9175F5F5F0F0F0F9DFA77F12F4AF3E2C58BD4
-            54702C8C64681B44A77C6A9DACEAF00585F5D34F3F497C518E3A71E2F8B265CB
-            697B59FA917EFDFA8D1D3BCECEAEA6964236165F9E3C79B276ED5A98097C8222
-            6C9677DE79A757AF5E2A8F07D15EB806E14B7E7E7E7878381D2148B1289B37DF
-            7CF3EF7FFF3B4F6FB756BE8C1831A267CF9E3A8D4F57C8C7DD962E5D4A07A4F2
-            E3060F1E4C73EAD4FD8E4CE24B95E50B5E16FEC789132768ACB0423ECB09BA84
-            92E2C3CBCDC697C2C242E890704C8B965AD2E237F3F2059F9B376F4E4D4D65FF
-            882E366BE6FBC107617486813E1A6CE17C1137BFEEE4C9930B162C10F2C5DEDE
-            1EC68BB7B737DF23F145D7FC58325FA0C6F3E7CF2F2E2E66CDA1AD5EEAD6ADAB
-            BD261B852F15F2A59634139F2EE2CD478F1E8DE64EDDCA7DED85AB3F5FE46BF3
-            E2A0E5DCBF4B5150A9F7DE7BCFDFDF9FBB8724BE5014ED5377F0E041AA60140B
-            5374E2C4897676761A7E4726F1A56AF205D2F8F4D34FF7ECD9C3A7FDA252D040
-            219F40A28D908DC217A80E1428373797C7B460B6F0008D9EC2D5932F15F2A3A9
-            535252F85C4BE19D1D3B760C09095138234A570DB63EBEC00E0502E84728B646
-            8D1AA8606DDBB6D5DC8F2393F85235F9929797376FDE3C561B84264D9ACC9A35
-            4BE129E6E1CBFEFDFBF1FEC2A342870C19C23B21E8295C3DF9426BF3CE9C39C3
-            5DE2C23BA1311111112D5AB4109ED1ADAB065B1F5F6885072B34623B74E8005B
-            8FF6A993F862657CA9907720A4A5A5E1116C10BCF9E69BFDFBF75798536706BE
-            DCBB770FE4CBCECE266301571C1D1DA3A2A21A356AA4D25137315F323232162F
-            5ECCCAAD9CB057AF9E93264DA6FDC625BED8C8574BC39DFCF1C71FD99D84A90C
-            B874E9D245682A6B5304125FAA045F6EDFBE1D1F1F7FE9D2255E2D5DBF7E7DB4
-            BBEEEEEE34F35B7B211B9E2FE9E9E94B962C01655846B42040E18400D1C2D587
-            2F9017F246537228163504BE5B515111BB7275EBD6050D610DDAC883080DB632
-            BEC0D65BB060019D4741577C7D7D4343439D9C9C342C0890497CA9B27C3978F0
-            604A4A4A797939270C0A0A1A316284ADADADAE4236305F1E3E7C48635A3C5102
-            790A0F0F27ED313B5F2E5EBC08DB8A4FBC472C5C213F3FBF2FBEF88237A9463E
-            69D8954D415D35D89AF8827214AE9D95C9E7D4D13C039E8B28F1C59AF8027375
-            E1C28530F369811EA2E8900FDAEA4557211B982F282758563C6FAD42D582003D
-            852B9A2F4F9E3CE13D3AE90ACAE3DD77DF6DD9B225F4FBDAB56B7C33AC41E85C
-            83060D54EEAD57A9ACAC892F10CBDCB9736FDCB8C147BB787878C0BE73767666
-            FB4EE28B35F125333393B77AA184DDBA75E3AD5E7415B221F982125ABD7AF59E
-            3D7B784E1D5E1886B470C4577FE18AE6CBF5EBD7A1C7B447275DF1F4F48C8E8E
-            767070484D4DDDB469136F6F412B44E1D609E7DA692F5CABE10B3E2116DA7890
-            6351F75003352C3F91F85275F902692C5FBEFCC891235417A80381D6F4286C90
-            6406BEE4E6E6C6C5C5094FDBF2F1F1090B0BAB5BB76EA52BF7B517AE68BEA0AA
-            C00FE23975C8D21B6FBC01570812CCCBCB838A53CEE9E6264D9AA095A6A944BA
-            6AB0D5F0A5B4B414EEA4F0305F7B7B7B14B1BBBBFB1FDA23F1C5BAF872F1E245
-            E8EACD9B37595B5AB56A05FD411BCCA2300F5F10D6AD5BB77DFB7676D4110BEF
-            A3478F1EDAACDCD75EB8E2F872FFFE7DA811C4C7E7CE39393941CBA94B1C4AB6
-            66CD1A3A808D12D210096D3BA0AB065B0D5F8E1E3D9A9C9C5C5E5ECEB12FBFFC
-            324C656D1604C824BE5435BE40021B366CD8B16387705AEC9429535085D5AD26
-            311D5F8A8A8A626262A0C7ECA893F7E1E8E8A8D951370D5FE8DC6BDAE68AAEA0
-            8E8D1D3B166A4477A29546CB0CB793554AAE43B3ECECB4DAF35166757C415D5A
-            B870E1A953A778E302F9797811EA40A04D1592F862C97C292C2C4C48488017C2
-            F7787979858787D33ED966E6CBB66DDB003F76D4113566CCE8C18387282F08D0
-            53B822F8427B7C646666525591C9E7D1C1FD69D6AC198FE7CB8F975C72E4C851
-            1EA8A6EA04FB50DD14D52AC117186E212121BC104C7BBEA0CA21DBD4CF47B1ED
-            DBB7A77DEAB8D6497CB126BEECDCB973FDFAF55018767E5F7FFDF5A1438792B9
-            6A4EBE949595C5C6C692F741B1F03E3EFA08DE878A05017A0A57045F7EF8E107
-            5415649263E1F8C0F0A375007CE7F7DF7FB778F13F69353A5D813B3071E244A8
-            51D5E50BAAF1FBEFBF4FC766CAB4E60B2A1B3478DFBE7D4C644016BFD3B56B57
-            E5B35C24BE58015FE005A30D166EDB4E13C11A376EACE5B6A732E3F105A24F4A
-            4AE21A6523DF7132383858E582003D85AB2B5F20AF254B60981CE10D77912BEA
-            1257D8B5840E79018C58D5ECEDEDA17C10313FABCAF1E5CE9D3BE002FB7D5AF2
-            252F2F0FDE2E7C5EAE604D9A3481A94C5B3A4B7CB13EBE1C3B766CF9F23FB67A
-            A1A8DEBD7B8F1B374EE5F1CDDA0BD9007CF9E5975FE0B66565657109C12E888E
-            8ED669E5BEF6C2D5952F39393973E7CEA5069C62E1F284868602CF0A7756C897
-            3EAE5AB58AE6DA55088E0DD3B072CA2AF9929A9A9A9696C607D14171C78E1D8B
-            5434A74EE28B95F105EFB560C182D3A74FF3B11078B559B366B56CD952E5F1CD
-            DA0BD9007C41B6F07ADC758AD8808080C99327AB732BF414AE4E7C81D27CFEF9
-            E75BB66CE13D729E7FFEF9B7DF7E1B6C663B5F9890B76E20470F51B4F25BE588
-            ACB5F2A5B4B49496BFF341BA2E2E2E919191BCFC44E28B95F1E5ECD9B3898989
-            DCD786287F7F7F5461DE6A52B490F5E50B8A0795E7E4C9933C6C442BF751003A
-            ADDCD75EB83AF1A5B8B818BA7BF5EA55EE7D7073739B3D7B36ED7EAE9CB0E2E9
-            CE358F1F3FA6574680FD022B46798B59ABE40B3EF7EDDBB766CD1A3A8F822430
-            68D0200801255B69E9689337892F7A5601C3F20505BD6245F2D1A3C778660954
-            9DD6AFF2CC12D142D68B2F5497E07DF00901081D3A74983E7D3ADE594B45341E
-            5FF07DCF9E3D2929293C9E5F21DF1D1241D825AE90F0FAF5EBB1B1B1F8E4D6DB
-            C3C3034852B7F39E95F1A5BCBC1C16DCF9F3E779B534BCDDC8C8281F1F6F5E7E
-            22F1C53AF882EFF891AFBFFE7ADBB66D6565656C22D0FA55FCA0B89792198A2F
-            F882F7DCBB772FAFE3A6D370BA77EF0E5D343B5FA8AA9C3B778E2F3A38388014
-            5E5E5E54555426849E7DF6D9673B77EE04CE290A149F32650A9C3E953B075B13
-            5F10A06D3448C951DDBA7583A94C636D95968E367993F8A2671530085FF0E228
-            8863C78E1D3D7A54D83BC98B634843CCC91734F2D1D1D1C269F54D9B360D0B0B
-            E33975E6E5CB912347962F5F4E3B45D0C5FEFDFB8F1B370E76BEE6575658664D
-            FA3463C60C95271F5439BE4075DAB66DAB3CCC0C9E42CFE01C151414082701D1
-            D9AFC2CA2FF1C5A2F8027D8656AB3B3F53F8CAB050F0BEF82C2F2F2B2C2CBA7A
-            F5EAA54B97E8773861B366CDE01CD1411AE6E40B72F9D5575FA5A5A5F1B240DE
-            829FE7D499912F0F1F3E04D44F9D3AC5E3F96881C3C3C39B376F5EE91E3978A3
-            65CB96F1363154CDC017B87ECA27375539BE383939A1C5531E6686E6C1E2C3FD
-            C21F0189424242ECEDEDB9A6497C9159185F60713468D040DD2A1CE12B57C8A7
-            6BC8FB5C1EDCBD5B86D751C81B7E273838B863C78E7C70BDD9F882E61D5A9297
-            97C72B7A5C5D5D5154349B587B4534125FCE9ECDFEF8E344E109479D3B779E3A
-            752A8DE757FACA67CE9C993F7FBE7050AC4B972E70FD50332B959585F3457B21
-            4365E119F5ECD953C1D891F862517C3194ACE0610D1B362C202000EF6528218B
-            E40B39EA6BD7AEA57116D9D38323FFF18F7FF080B919F9025DE1F58AB2A78C0F
-            0D0DEDD4A913192095BE32CC1F402123234338A907AE5FCB962D795CCCEAF9D2
-            BC394CE5F7612A2BDC2CF1C5CAF80295F6F4F484E78146147AAEFF1183FAF285
-            8F70E60501CECECEB367CFF6F0F0E02231235FF2F3F36363638B8A8AD8B66ADC
-            B8B170BF056D5EF9E8D1A34B962CA1615A8AEDDBB7EFF8F1E36D6D6DAD9E2FF8
-            7477777FE38D517E7E7F9ACA3A15AB4CE24B55E00BC802B3A59D3C346FDE9CBA
-            260D2864317C41A54D4F4F5FBA742957217C0606068E1D3B5661935DB3F00581
-            3B86380A5C18306000192F5ACAA8BCBC1C901232D4C9C929323292372AAFA27C
-            4119D1D69FCA3F822F8802850197F6EDDB43E768CE8BF6A5A34DDE24BEE85905
-            94F9A2BC73A5BA57A6EB68231D1C1C6099422DBDBCBCA0D2BC9BB261852C862F
-            F01D68E53E590788AA53A74E7878382D47363B5F4A4A4A626262AE5EBDCA5C70
-            71718E898985348522D6E695B76FDFFED9679FA9F301AB285F7AF5EA85EAC147
-            7CCAFE9F2F783558C88E8E8EF5EAD55337BD4AE28B45F1054D425050104A8D4C
-            0F61B6959F82F2859CAB57AF5EAB562D3424A00C75F61B49C862F8929999491B
-            CAF3CDDDBA759B366D1A750B999D2FBB77EFFEF4D34F694E1D657BD8B0612347
-            8E14B147CE8D1B37E85C319E7A044CC00DD4B0FBACCCE2F902530E9EB6AEE7C3
-            4A7CB158BE802C8989897073B4E10B0F9E9A46C83AF305228667F4EDB7DFF2B8
-            2F88085977E8D04138694D7B45342C5FEEDDBB17171777F6EC59BA58215F030D
-            F58511A8F90003953F8BB07EFDFA6DDBB60977CF7FFBEDB7FBF4E9A36138D0C2
-            F922EEFC69892F16CB17239D3F6D90843AF3E5FCF9F3F1F1F1B4148A651D1A1A
-            CADB0E99972FB4D8B2BCBC9C13C21D98346912F5238890D1952B576263637947
-            525CF1F6F68E888800B6D415A7C417CD7993F8A26715B05ABEA83C2160C68C19
-            FEFEFE2AD7719B982FC8DEC2850B8F1D3BC6B6156A515858181D932C4E46F8A9
-            55AB567DF3CD373CD48D37A5D55FCA032BF445E28BE6BC497CD1B30A582D5FE8
-            341CDE6C11571A366C88E2E113024428A201F972F1E245D81AC23975D05AB2AD
-            B4547D95323A77EE1C4CB6D2D252BED2AE5D3B5055E5A14E32892F125F24BE88
-            E00B3ED3D2D2BEFCF24BE1F6E2C1C1C183060D424B2E5A110DC51704181ABB77
-            EF66DB8AD725EAB9470E2D353879F2249B45F0B62223235BB468A1BC07854CE2
-            8BC417892F22F8024D8D8989C9C9C9E1C114BC1214C5CDCDCD461EC429A2A1F8
-            5254540445C127FFAC704B473D85CBC70FF0CDFDFAF51B3F7EBCF2A1DA32892F
-            125F24BE88E0CBDEBD7B535252D098F39D5412C28D974428A241F882B079F3E6
-            D4D454B6AD60598C1D3B363030509D6DA59370CBCACA68F763BA0D9F70095149
-            BCBCBCF81E892F125F74CD8FC4973F12284F6675707040C1346CD8F08F1F322B
-            5F60594445455DB97285573C576A5BE92A5C5A6FC5D36AF0397CF8F0D75E7B8D
-            CF9095F822F145D7FC487CF92381F2629CFEFDFB4F983081D5D4BC7C397CF870
-            727232B227B4AD468F1E2D3C26594FE1161717C38421F7906E767171993B772E
-            CD6B92497C91F822F1451C5F1E3F7E8C1AF2DD77DF091713474646D25E2A66E7
-            0B5C36D47C3A57846221719833BEBEBE1A6C2B5D85CB2E9870B9406868A8BFBF
-            BF704DB64CE28BC417892F3AF1E5ECD9ECF8F80452088A55B7198A0845D49F2F
-            999999898989C26392BB77EF4EC7A7892E7895C2A553816EDEBCC9CBB2070D1A
-            141C1CACD00325F14573DE24BEE85905AC8A2FA84BCB972FC72B71D706AA5348
-            4808EFA5625EBEA0C83FF9E413B86FAC1FF22D1D67B66FDF4161A316FD858B67
-            252424646464F01078870E1D60C2D8DADACA24BE487C91F822822F57AE5C41A3
-            7DEBD62D9635DC22085761BF4F73F1E5D2A54B747C1AFF083475E6CC9934A7CE
-            B07C4158B16285702E6FB366CDE08809CF9995497C91F86264BEECDFBF7FD5AA
-            55D6C017182F6BD7AEDDB56B174B1636CBA449937AF5EA452704889691E8840A
-            B6D5FAF5EBB76EDDCAD98388E119D1968EFA14BC4AE1E273E9D2A5870F1F66BE
-            00B59191919AF902EB66FEFCF91E1E1E0A7D55A6E10BC83B7DFA74DA5597C2C4
-            8913FBF5EBA76E35B9CCF87C292828888888E08D7E1185F6001E37ADE13099EA
-            D3F7478F1EA104D14AF16623C3860D7BFDF5D715F8929C9C8C5ACD474AF8FAFA
-            2255EDDAB5CDC2974D9B36A5A6A6D229A3F8D7DEDE7EF1E2C5B4A9BE51652522
-            61257CB971E3064D5AE3C3801A366C88169B4F08102D23D10985DF6155F1F169
-            7427ED9FA0C0724309B7B0B01096486E6E2E9F0DE4EFEF0FEB800F1EA39BD13E
-            A3FE305F4064B4751D3B76AC74634D63F0E5C48913687BF9BC1188059519BEAD
-            E663EA8DCA17582E1008AD32A197E2731D4CA9FAF43D2B2B0BF2E1A30BC9BE0B
-            0C0C54E0EF860D1BB66CD9C207E642FFA1669E9E9ECA07DDE8941F1155202F2F
-            2F2929890D2EC4221B30E11560670C598948A8892FF8844C3FFFFC733ECC9017
-            04A8DBC5568422EAC3179A93C2270DE21396FFD0A143E998647D0A5E41B8C02B
-            208B16ECC8912350324E387AF4E821438608B79B92C95D9269D3A6B1FD8FCFF6
-            EDDBF7E8D18327FB9A8C2FF7EEDD439EA18B3CE51ACDF2BC79F3D048683E5DD3
-            A87C81F5171F1F9F999949E37D8842758557C22DB0C9F8525E5E969E7E3C3B3B
-            9BFB16C9596BD5AA95827C50EECB962D03A6D94CEEDAB5ABB7B737CDDE542701
-            657169885248280C7C276C169466464606CF234554EFDEBD69DBD62AC697D2D2
-            52C89ACE21A604F5EBD707B65D5D5DD5E981084514CD97F2F272541521C8F1E9
-            E3E3E3ECECACF204127D840B091417175FBC785138BF0E2D46747474E3C68DC9
-            56E29B919F3973E6FCF8E38F3C5E0E2DA413243448436604BE80BC3013D8F694
-            FDD977660F09998B2F086818D6AD5B47F39528CAC9C989CFA532195F6063C27F
-            E46565B2A7E63932A36C29C390CFCFCFE71F4199D6A953C7C4F60B5AFAB2B232
-            B2FB28B666CD9AF07FD18069733E893EB2323C5F0E1E3CB862C50A72F32801DA
-            EA51A346D1A435D132D233217FFFF6DB6F913D34290ABFA325FB74152E8F49F3
-            CDB09568CB61E58410DDEAD5AB396FFA17A7E8C21646C178993871222C29D245
-            33F2E5E6CD9B8B162DFAF9E79FF9E44FD3ABBE722C9001E708E60069B83016A5
-            BF71E3C66DDBB6091B18FDD54CCFBA83862D2020E0CD37DFA4D18CAAC417A03D
-            2121E1871F7EE07E2F7B7B7BA0BD69D3A60A35D92C7C41D3F7F1C71F9F397386
-            6D045D1FA1A77061284D9A34C9CBCB4B411A140BD32F3939F9F4E9D3D413ACFF
-            1345173647A1F2F4EAD56BE4C8912847D24533F2055FD03CC084E1813FD3ABBE
-            422C2C91EEDDBBC3E1A583C695D35EBF7E1D6D06540E4CB404BE002EF0E3D0DE
-            A34A0A2DE8AAC19793274F7EF2C927C203C6FAF4E93361C2043E9DC320321291
-            90BE676565252626C256145D7EFA28A2AFAF6F505050DBB66D9577C9E69BE1B8
-            6DD9B2855D65F3F2C5CEAE66972E5D5F79E515777777D64533F205FFC2B8DBBB
-            77EFEEDDBBE97C61D3ABBE30B656AD5A9D3B771E3468D08B2FBEC86EAC425A34
-            B4E7CE9D830903DD13AE44D147CD44D71D64B875EBD6FDFBF76FD6AC1977D557
-            19BEA04A2C5CB81088E17E417801305E5AB468A179175B118A28822FB059E019
-            1D387080E6B9F1EFA84B6828E1D26131F075FDFDFD811875FBD7514288EEF2E5
-            CBE9E9E999999985858564C8989E2F680F1A366CD8A64D6B3FBF8E0D1A34D0F2
-            186913F045265F950EFE9E3A750A8282C5C77681C9F882028535E7E1E1014300
-            AD05E4C35E86CA9F4599E6E4E4A040019AFCFC7CB4BE9467D3F0055FE0E122C3
-            80607379707373539E875105F872F6EC5938472872D9D3D0A953A7E9D3DFAF59
-            D34E4F19E99F10DFF3F2F262636385ED1E9A65EA6735125F64F2AD36EBD6AD0B
-            5DC483A8FF4F9B84B76FDFCECDCD2D2E2E16FAEDA6E40B1A3A3AE6867A4F7532
-            12F529562D850CEC16141480BFA8AB0AAEAECA5716968830884B0885B1B3B373
-            76764645E53E974A858CAC22CFB76EDD7AF8F021E759415BB4CF8F8684CA39AF
-            5EBD3A328C46CEC5C545B876B72AF105485EB972E5BE7DFBB8EF0D16E3CC99A1
-            9D3A75AE74175B118A28822F5F7CF1C5A64D9B845D1B63C68CF1F3F35337E66A
-            10BEA0A1A8290F9C3DED4B85975C9B9E2FC293B77412B2F2D3752A56CB577D03
-            FEACE9FD23B3CB4A3C5FAE5DBB16131343D60145F9F8F8848787F3E1AAE6E54B
-            4949C99C3973684E1D5D8459FBE1871F92716B54FFC8CA545FE28BC41753F385
-            AC83CD9B37D3893F36F2397574E28F36BBD88A9091AE0977ECD8B16EDD3A98A6
-            7FBC808DCD881123860F1FAE3CA6A84FC13F0BAA2FF145E28BA9F972F3E64D18
-            2F306138BDBBBB3BEC05E1F1B466E4CB83070F9019DA468FA21C1D1D61BC7878
-            78E8EABB5972A99846F525BE487C31355FB66EDDBA71E3469A53279377808D1A
-            352A282848DD51C4FACB48A784A74F9F5EB87021ADA6B1910718566FBDF5164F
-            FD94F822F1C5A2846C8CD2B1045989E1CBDDBB773FFAE8A39C9C1C855D6C61C2
-            68293E1132D23EE1AFBFFEBA68D1A2E3C78FF382809A356B7EF0C1072D5BB654
-            58CCAD7FC13F0BAA2FF145E28B49F972F8F0E1A4A424E1090183060D0C0E1E4B
-            7B85989D2F172E5C888B8BA3E3D328AA5DBB7621212174CE99C417892F162864
-            63948E25C84A67BE002BF1F1F167CE9CE1C1D43A75EA444545797B7BD3BC12F3
-            F205B94A4949D9BD7B370F4B57AB566DEAD4A9010101C22158892F125F2C4AC8
-            C6281D4B9095CE7CC9CACA9A3F7FBE70175B54DD2953A6D0E68F66E70BCFA9E3
-            29C53E3E3E708E9C9C9CC43DC2924BC534AA2FF145E28B89F882FF5352D6ECDC
-            B9EBFF77B19DD5BE7D7B1E9731235F90ABAFE481A790C3A41A3F7EFC80010378
-            0590C417892F16286463948E25C84A67BE44464664679FA55B2BE4BB3AF6E9D3
-            874E08D0FE492264A44D42F844C78E1D2B2828E0DB5C5D5D15E6D4497C91F862
-            81423646E95882AC74E30B9C8ED0D019972E5D66BEC06C79E18517747D920819
-            6969BFD0AE711485CFA14387F24E34125F24BE58AC908D513A96202B9DED9784
-            848413274EF06E2FE29E2442462254DFD1D1312C2C8C3A9E8D54F0CF82EA4B7C
-            91F86222BEC8E4DBC1252525F1AED4E29E244246BA2684CD32541EA8E3D94805
-            FF2CA8BEC417892FA6E34B7979F9C68D1B0E1FFE56795747ED9F244246DA27B4
-            916F041D1010101818A8BC5E41E28BC4170B14B2314AC71264A5335F70A9B0B0
-            F0D4A9533FFD74AEB8B8848F28D4E9492264A465423B3B3B5757D7A64D9BB669
-            D3C6C1C1C1461E840925BE487CB140211BA3742C4156DAF2E549C5EFF8A48BF8
-            7BF4F051C1F5EB77EFDEE5250216126C6BD470AA570FF6CB5F60B6FCF116364F
-            232B04FF563CBD68A314A53956218AAE584E42D13FAB41022AEF5419A57D424B
-            90954509D918A56309B2D22AE1FF1DC822052948410A060C125FA4200529182B
-            FC17451425E223D65C960000000049454E44AE426082}
-          HightQuality = False
-          Transparent = False
-          TransparentColor = clWhite
-        end
-        object Memo31: TfrxMemoView
-          AllowVectorExport = True
-          Left = 153.858380000000000000
-          Top = 200.110390000000000000
-          Width = 226.771800000000000000
-          Height = 26.456710000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -15
-          Font.Name = 'Arial'
-          Font.Style = [fsBold, fsItalic]
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Comprobante Autorizado')
-          ParentFont = False
-        end
-        object Memo36: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.519790000000000000
-          Top = 231.905690000000000000
-          Width = 559.370440000000000000
-          Height = 15.118120000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -9
-          Font.Name = 'Arial'
-          Font.Style = [fsBold, fsItalic]
-          Frame.Typ = []
-          Memo.UTF8W = (
-            
-              'Esta Administraci'#243'n Federal no se responsabiliza por los datos i' +
-              'ngresados en el detalle de la operaci'#243'n')
-          ParentFont = False
-        end
-        object Memo37: TfrxMemoView
-          AllowVectorExport = True
-          Left = 362.834880000000000000
-          Top = 115.417440000000000000
-          Width = 68.031540000000000000
-          Height = 22.677180000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -16
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'P'#225'g. 1/1')
-          ParentFont = False
         end
       end
     end
@@ -4012,8 +3117,8 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     MaxBlobSize = -1
     Params = <>
     SQLConnection = SQLConnection1
-    Left = 616
-    Top = 347
+    Left = 600
+    Top = 499
   end
   object DataSetProvider3: TDataSetProvider
     DataSet = Query3
@@ -4074,6 +3179,10 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
     Top = 78
     Datasets = <
       item
+        DataSet = frxDBDataset1
+        DataSetName = 'frxDBDataset1'
+      end
+      item
         DataSet = frxDBDataset3
         DataSetName = 'frxDBDataset3'
       end>
@@ -4092,18 +3201,19 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
       TopMargin = 5.000000000000000000
       BottomMargin = 15.000000000000000000
       Frame.Typ = []
+      EndlessHeight = True
       MirrorMode = []
       object ReportTitle1: TfrxReportTitle
         FillType = ftBrush
         Frame.Typ = []
-        Height = 461.559370000000000000
+        Height = 350.716760000000000000
         Top = 18.897650000000000000
         Width = 283.464750000000000000
         object Memo13: TfrxMemoView
           AllowVectorExport = True
-          Left = 4.779530000000000000
-          Top = 323.976500000000000000
-          Width = 30.236240000000000000
+          Left = 0.779530000000000000
+          Top = 330.976500000000000000
+          Width = 26.456710000000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -4118,9 +3228,9 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo14: TfrxMemoView
           AllowVectorExport = True
-          Left = 38.118120000000000000
-          Top = 323.976500000000000000
-          Width = 117.165430000000000000
+          Left = 27.118120000000000000
+          Top = 330.976500000000000000
+          Width = 109.606370000000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -4134,8 +3244,8 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo15: TfrxMemoView
           AllowVectorExport = True
-          Left = 155.196970000000000000
-          Top = 323.976500000000000000
+          Left = 137.417440000000000000
+          Top = 330.976500000000000000
           Width = 60.472480000000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
@@ -4144,16 +3254,16 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
-          HAlign = haCenter
+          HAlign = haRight
           Memo.UTF8W = (
             'Precio')
           ParentFont = False
         end
         object Memo16: TfrxMemoView
           AllowVectorExport = True
-          Left = 217.094620000000000000
-          Top = 324.007949690000000000
-          Width = 60.472480000000000000
+          Left = 199.315090000000000000
+          Top = 331.007949690000000000
+          Width = 64.252010000000000000
           Height = 15.118110240000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -4161,14 +3271,15 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
-          HAlign = haCenter
+          HAlign = haRight
           Memo.UTF8W = (
-            'Subt.')
+            'Subtotal')
           ParentFont = False
         end
         object Line1: TfrxLineView
           AllowVectorExport = True
-          Top = 318.976500000000000000
+          Left = -4.000000000000000000
+          Top = 323.976500000000000000
           Width = 283.464750000000000000
           Color = clBlack
           Frame.Typ = []
@@ -4176,7 +3287,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Picture1: TfrxPictureView
           AllowVectorExport = True
-          Left = 48.574830000000000000
+          Left = 44.574830000000000000
           Top = 7.559060000000000000
           Width = 188.976377950000000000
           Height = 41.574803150000000000
@@ -4545,364 +3656,9 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Transparent = False
           TransparentColor = clWhite
         end
-        object mUnidades1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 347.819110000000000000
-          Width = 30.236240000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 347.819110000000000000
-          Width = 117.165430000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 347.819110000000000000
-          Width = 60.472480000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal1: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.212740000000000000
-          Top = 347.819110000000000000
-          Width = 60.472480000000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 370.275820000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 370.275820000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 370.275820000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal2: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 370.275820000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 392.732530000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 392.732530000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 392.732530000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal3: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 392.732530000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 415.189240000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 415.189240000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 415.189240000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal4: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 415.189240000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mUnidades5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 437.645950000000000000
-          Width = 30.236220470000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            '888')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mDomicilio5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 37.795300000000000000
-          Top = 437.645950000000000000
-          Width = 117.165354330000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          Memo.UTF8W = (
-            'Domicilio')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mPrecio5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 154.960730000000000000
-          Top = 437.645950000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'Precio/Un.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object mSubtotal5: TfrxMemoView
-          AllowVectorExport = True
-          Left = 217.433210000000000000
-          Top = 437.645950000000000000
-          Width = 60.472440940000000000
-          Height = 18.897650000000000000
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = []
-          HAlign = haCenter
-          Memo.UTF8W = (
-            'subtotal')
-          ParentFont = False
-          VAlign = vaCenter
-        end
         object Memo7: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 138.724409450000000000
           Width = 75.590600000000000000
           Height = 18.897637800000000000
@@ -4918,7 +3674,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo9: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 180.299212600000000000
           Width = 109.606370000000000000
           Height = 18.897650000000000000
@@ -4934,7 +3690,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo10: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 201.086614170000000000
           Width = 264.567100000000000000
           Height = 18.897650000000000000
@@ -4950,7 +3706,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo11: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 159.511811020000000000
           Width = 105.826840000000000000
           Height = 18.897650000000000000
@@ -4966,7 +3722,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo12: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 221.874015750000000000
           Width = 158.740260000000000000
           Height = 18.897650000000000000
@@ -4982,7 +3738,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo17: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 242.661417320000000000
           Width = 222.992270000000000000
           Height = 18.897650000000000000
@@ -4998,7 +3754,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo35: TfrxMemoView
           AllowVectorExport = True
-          Left = 78.929190000000000000
+          Left = 74.929190000000000000
           Top = 138.724409450000000000
           Width = 181.417440000000000000
           Height = 18.897637800000000000
@@ -5014,7 +3770,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo1: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 105.259842520000000000
           Width = 120.944960000000000000
           Height = 18.897650000000000000
@@ -5030,7 +3786,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object fechaComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 124.504020000000000000
+          Left = 120.504020000000000000
           Top = 105.259842520000000000
           Width = 102.047310000000000000
           Height = 18.897650000000000000
@@ -5046,7 +3802,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo32: TfrxMemoView
           AllowVectorExport = True
-          Left = 112.165430000000000000
+          Left = 108.165430000000000000
           Top = 180.299212600000000000
           Width = 147.401670000000000000
           Height = 18.897650000000000000
@@ -5062,7 +3818,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo34: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779527560000000000
+          Left = -0.220472440000000000
           Top = 83.677245910000000000
           Width = 26.456710000000000000
           Height = 18.897630470000000000
@@ -5078,7 +3834,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object nroComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 30.236240000000000000
+          Left = 26.236240000000000000
           Top = 83.590600000000000000
           Width = 196.535560000000000000
           Height = 18.897630470000000000
@@ -5243,6 +3999,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line3: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 289.126160000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -5251,6 +4008,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line4: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 265.448980000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -5259,7 +4017,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo2: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779530000000000000
+          Left = -0.220470000000000000
           Top = 271.448980000000000000
           Width = 279.685220000000000000
           Height = 15.118120000000000000
@@ -5276,6 +4034,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line5: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 131.606370000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -5284,8 +4043,8 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Memo3: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779530000000000000
-          Top = 293.346630000000000000
+          Left = -0.220470000000000000
+          Top = 295.346630000000000000
           Width = 245.669450000000000000
           Height = 18.897650000000000000
           Font.Charset = DEFAULT_CHARSET
@@ -5300,7 +4059,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object tipoComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 3.779530000000000000
+          Left = -0.220470000000000000
           Top = 61.692950000000000000
           Width = 222.992270000000000000
           Height = 18.897650000000000000
@@ -5316,6 +4075,7 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Line6: TfrxLineView
           AllowVectorExport = True
+          Left = -4.000000000000000000
           Top = 269.346630000000000000
           Width = 283.464750000000000000
           Color = clBlack
@@ -5323,23 +4083,101 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           Diagonal = True
         end
       end
-      object PageFooter1: TfrxPageFooter
+      object MasterData1: TfrxMasterData
         FillType = ftBrush
         Frame.Typ = []
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -16
-        Font.Name = 'Arial'
-        Font.Style = []
-        Height = 124.724441180000000000
-        ParentFont = False
-        Top = 540.472790000000000000
+        Height = 15.118120000000000000
+        Top = 430.866420000000000000
+        Width = 283.464750000000000000
+        DataSet = frxDBDataset1
+        DataSetName = 'frxDBDataset1'
+        RowCount = 0
+        object Memo22: TfrxMemoView
+          AllowVectorExport = True
+          Width = 26.456710000000000000
+          Height = 15.118120000000000000
+          DataField = 'nroUnidades'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[frxDBDataset1."nroUnidades"]')
+          ParentFont = False
+        end
+        object Memo23: TfrxMemoView
+          AllowVectorExport = True
+          Left = 27.259842520000000000
+          Width = 113.385900000000000000
+          Height = 15.118120000000000000
+          DataField = 'descripcion'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            '[frxDBDataset1."descripcion"]')
+          ParentFont = False
+        end
+        object Memo24: TfrxMemoView
+          AllowVectorExport = True
+          Left = 139.267716540000000000
+          Width = 60.472480000000000000
+          Height = 15.118120000000000000
+          DataField = 'precioUnitario'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."precioUnitario"]')
+          ParentFont = False
+        end
+        object Memo31: TfrxMemoView
+          AllowVectorExport = True
+          Left = 200.251968500000000000
+          Width = 64.252010000000000000
+          Height = 15.118120000000000000
+          DataField = 'subtotal'
+          DataSet = frxDBDataset1
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."subtotal"]')
+          ParentFont = False
+        end
+      end
+      object Footer1: TfrxFooter
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 151.181200000000000000
+        Top = 468.661720000000000000
         Width = 283.464750000000000000
         object mTotalIVA21: TfrxMemoView
           AllowVectorExport = True
-          Left = 275.905685120000000000
-          Top = 25.015770000000000000
-          Width = 264.566929130000000000
+          Left = 280.685215120000000000
+          Top = 44.574830000000000000
+          Width = 151.181029130000000000
           Height = 18.897650000000000000
           Visible = False
           Font.Charset = DEFAULT_CHARSET
@@ -5355,13 +4193,13 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object mTotal: TfrxMemoView
           AllowVectorExport = True
-          Left = 118.385895120000000000
-          Top = 32.472480000000000000
-          Width = 158.740089130000000000
+          Left = 128.622135120000000000
+          Top = 67.149660000000000000
+          Width = 128.503849130000000000
           Height = 18.897650000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -20
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
@@ -5371,24 +4209,15 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
           ParentFont = False
           VAlign = vaCenter
         end
-        object Line2: TfrxLineView
-          AllowVectorExport = True
-          Left = 276.275820000000000000
-          Top = 112.826840000000000000
-          Width = 3.779530000000000000
-          Color = clBlack
-          Frame.Typ = []
-          Diagonal = True
-        end
         object mSubtotal: TfrxMemoView
           AllowVectorExport = True
-          Left = 114.606365120000000000
-          Top = 3.559060000000000000
-          Width = 162.519619130000000000
+          Left = 128.622135120000000000
+          Top = 24.897650000000000000
+          Width = 128.503849130000000000
           Height = 18.897650000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -16
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
@@ -5399,13 +4228,13 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object caeComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 122.724490000000000000
-          Top = 82.031540000000000000
-          Width = 151.181077950000000000
+          Left = 128.401670000000000000
+          Top = 111.370130000000000000
+          Width = 128.503897950000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
@@ -5416,13 +4245,13 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object vencComp: TfrxMemoView
           AllowVectorExport = True
-          Left = 123.283550000000000000
-          Top = 99.708720000000000000
-          Width = 151.181077950000000000
+          Left = 128.960730000000000000
+          Top = 129.047310000000000000
+          Width = 128.503897950000000000
           Height = 15.118120000000000000
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
-          Font.Height = -11
+          Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
@@ -5433,8 +4262,8 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
         end
         object Barcode2D1: TfrxBarcode2DView
           AllowVectorExport = True
-          Left = 3.000000000000000000
-          Top = 1.000000000000000000
+          Left = 4.000000000000000000
+          Top = 24.338590000000000000
           Width = 244.000000000000000000
           Height = 244.000000000000000000
           StretchMode = smActualHeight
@@ -5485,5 +4314,71 @@ object fEmitirComprobanteElectronico: TfEmitirComprobanteElectronico
   object frxBarCodeObject1: TfrxBarCodeObject
     Left = 568
     Top = 72
+  end
+  object FDMemTable1: TFDMemTable
+    BeforePost = FDMemTable1BeforePost
+    AfterPost = FDMemTable1AfterPost
+    AfterDelete = FDMemTable1AfterDelete
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvEInsert, uvCheckRequired]
+    UpdateOptions.CheckRequired = False
+    Left = 864
+    Top = 200
+    object FDMemTable1nroUnidades: TFMTBCDField
+      FieldName = 'nroUnidades'
+      OnValidate = FDMemTable1nroUnidadesValidate
+      Size = 5
+    end
+    object FDMemTable1descripcion: TWideStringField
+      FieldName = 'descripcion'
+      OnValidate = FDMemTable1descripcionValidate
+      Size = 50
+    end
+    object FDMemTable1precioUnitario: TFMTBCDField
+      FieldName = 'precioUnitario'
+      OnChange = FDMemTable1precioUnitarioChange
+      OnValidate = FDMemTable1precioUnitarioValidate
+      DisplayFormat = '$ 0.00'
+      EditFormat = '0.0'
+      Size = 10
+    end
+    object FDMemTable1subtotal: TFMTBCDField
+      FieldName = 'subtotal'
+      DisplayFormat = '$ 0.00'
+      EditFormat = '0.0'
+      Size = 10
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = FDMemTable1
+    Left = 944
+    Top = 184
+  end
+  object frxDBDataset1: TfrxDBDataset
+    UserName = 'frxDBDataset1'
+    CloseDataSource = False
+    DataSource = DataSource1
+    BCDToCurrency = False
+    Left = 864
+    Top = 264
+  end
+  object MainMenu1: TMainMenu
+    Left = 592
+    Top = 240
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 208
+    Top = 368
+    object Agregarunitem1: TMenuItem
+      Caption = 'Agregar un item'
+      OnClick = Agregarunitem1Click
+    end
+    object Eliminaresteitem1: TMenuItem
+      Caption = 'Eliminar este item'
+      OnClick = Eliminaresteitem1Click
+    end
   end
 end

@@ -65,13 +65,13 @@ bool TFrame1::guardar(void)
 	  ClientDataSet1->FieldByName("esVisible")->AsInteger = 0;
 	  ClientDataSet1->FieldByName("acumuladoGlobal")->AsFloat = 0.0;
 	  ClientDataSet1->FieldByName("acumuladoParcial")->AsFloat = 0.0;
-   }
-   ClientDataSet1->FieldByName("refCondicionFrenteIVA")->AsInteger = CBCondicionFrenteIVA->ItemIndex + 1;
+	}
+	ClientDataSet1->FieldByName("refCondicionFrenteIVA")->AsInteger = CBCondicionFrenteIVA->ItemIndex + 1;
    ClientDataSet1->ApplyUpdates(0);
 
 
-   if(modificando)
-   {
+	if(modificando)
+	{
 	  QueryUpdate->SQL->Clear();
 	  QueryUpdate->SQL->Add("CALL calcularSaldoCliente(:f1, :f2, :fref , :refCliente)");
 	  QueryUpdate->ParamByName("f1")->AsDateTime = IncDay(StartOfTheWeek(Now()),-1);

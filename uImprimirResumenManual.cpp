@@ -84,7 +84,7 @@ void __fastcall TfImprimirResumenManual::Edit5Change(TObject *Sender)
       Edit8->Enabled = true;
    }
    if(Edit5->Text.Length() > 0)
-	  Edit1->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
+	  Edit1->Text = FormatFloat("$ 0.00", /*StrToFloat(Edit3->Text) * */ StrToFloat(Edit5->Text));
 
    calcular();
 }
@@ -98,7 +98,7 @@ void __fastcall TfImprimirResumenManual::Edit8Change(TObject *Sender)
       Edit11->Enabled = true;
    }
    if(Edit8->Text.Length() > 0)
-	  Edit18->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
+	  Edit18->Text = FormatFloat("$ 0.00", /*StrToFloat(Edit6->Text) * */StrToFloat(Edit8->Text));
 
    calcular();
 }
@@ -112,7 +112,7 @@ void __fastcall TfImprimirResumenManual::Edit11Change(TObject *Sender)
       Edit14->Enabled = true;
    }
    if(Edit11->Text.Length() > 0)
-	  Edit19->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
+	  Edit19->Text = FormatFloat("$ 0.00", /*StrToFloat(Edit9->Text) * */StrToFloat(Edit11->Text));
 
    calcular();
 }
@@ -126,7 +126,7 @@ void __fastcall TfImprimirResumenManual::Edit14Change(TObject *Sender)
       Edit17->Enabled = true;
    }
    if(Edit14->Text.Length() > 0)
-	  Edit20->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
+	  Edit20->Text = FormatFloat("$ 0.00", /*StrToFloat(Edit12->Text) * */StrToFloat(Edit14->Text));
 
    calcular();
 }
@@ -486,19 +486,19 @@ void __fastcall TfImprimirResumenManual::FormShow(TObject *Sender)
       Edit17->Enabled = false;
       Edit2->Text = "";
       Edit3->Text = "0";
-      Edit4->Text = "Vianda(s)";
+	  Edit4->Text = "Pedido";
       Edit5->Text = "0";
       Edit6->Text = "0";
-      Edit7->Text = "Vianda(s)";
+	  Edit7->Text = "Pedido";
       Edit8->Text = "0";
       Edit9->Text = "0";
-      Edit10->Text = "Vianda(s)";
+	  Edit10->Text = "Pedido";
       Edit11->Text = "0";
       Edit12->Text = "0";
-      Edit13->Text = "Vianda(s)";
+	  Edit13->Text = "Pedido";
       Edit14->Text = "0";
       Edit15->Text = "0";
-      Edit16->Text = "Vianda(s)";
+      Edit16->Text = "Pedido";
 	  Edit17->Text = "0";
 
 	  Label1->Caption = "";
@@ -671,7 +671,7 @@ void __fastcall TfImprimirResumenManual::Edit15Change(TObject *Sender)
 void __fastcall TfImprimirResumenManual::Edit17Change(TObject *Sender)
 {
    if(Edit17->Text.Length() > 0)
-	  Edit21->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
+	  Edit21->Text = FormatFloat("$ 0.00", /*StrToFloat(Edit15->Text) * */StrToFloat(Edit17->Text));
 
    calcular();
 }

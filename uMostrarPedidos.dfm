@@ -4,7 +4,7 @@ object fMostrarPedidos: TfMostrarPedidos
   BorderStyle = bsDialog
   Caption = ' Mostrar todos los pedidos de la fecha seleccionada'
   ClientHeight = 688
-  ClientWidth = 886
+  ClientWidth = 890
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -35,9 +35,9 @@ object fMostrarPedidos: TfMostrarPedidos
   end
   object DBGrid1: TDBGrid
     Left = 8
-    Top = 35
+    Top = 62
     Width = 873
-    Height = 646
+    Height = 619
     DataSource = DataSource2
     PopupMenu = PopupMenu1
     TabOrder = 0
@@ -208,6 +208,21 @@ object fMostrarPedidos: TfMostrarPedidos
     ValueChecked = '1'
     ValueUnchecked = '0'
     Visible = False
+  end
+  object ComboBox1: TComboBox
+    Left = 8
+    Top = 35
+    Width = 186
+    Height = 22
+    Style = csOwnerDrawFixed
+    ItemIndex = 0
+    TabOrder = 4
+    Text = 'Todos'
+    OnChange = ComboBox1Change
+    Items.Strings = (
+      'Todos'
+      'Viandas normales'
+      'Viandas oficina')
   end
   object DataSource2: TDataSource
     DataSet = CDS2

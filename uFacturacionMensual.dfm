@@ -70,6 +70,7 @@ object fFacturacionMensual: TfFacturacionMensual
     TitleFont.Height = -12
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = [fsBold]
+    OnDblClick = DBGrid1DblClick
     Columns = <
       item
         Expanded = False
@@ -100,13 +101,14 @@ object fFacturacionMensual: TfFacturacionMensual
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.238183900470000000
+    Date = 43949.394816365740000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1
     ShowToday = False
     ShowTodayCircle = False
     TabOrder = 1
+    OnClick = MCClick
   end
   object Button1: TButton
     Left = 348
@@ -126,6 +128,17 @@ object fFacturacionMensual: TfFacturacionMensual
     TabOrder = 3
     Visible = False
     OnClick = Button2Click
+  end
+  object Memo1: TMemo
+    Left = 504
+    Top = 608
+    Width = 49
+    Height = 28
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 4
+    Visible = False
+    WordWrap = False
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'

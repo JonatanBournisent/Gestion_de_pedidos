@@ -6,7 +6,7 @@
         <AppType>Application</AppType>
         <MainSource>pElSembrador.cpp</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
     </PropertyGroup>
@@ -306,6 +306,12 @@
             <DependentOn>uGestionDeGastos.h</DependentOn>
             <BuildOrder>48</BuildOrder>
         </CppCompile>
+        <CppCompile Include="uGraficos2.cpp">
+            <Form>fGraficos2</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>uGraficos2.h</DependentOn>
+            <BuildOrder>61</BuildOrder>
+        </CppCompile>
         <CppCompile Include="uImportarPagosBancos.cpp">
             <Form>fImportarPagosBancos</Form>
             <FormType>dfm</FormType>
@@ -353,6 +359,12 @@
             <FormType>dfm</FormType>
             <DependentOn>uMain.h</DependentOn>
             <BuildOrder>2</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="uMensajes.cpp">
+            <Form>fMensajes</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>uMensajes.h</DependentOn>
+            <BuildOrder>60</BuildOrder>
         </CppCompile>
         <CppCompile Include="uMenuDelDia.cpp">
             <Form>fMenuDelDia</Form>
@@ -486,14 +498,14 @@
         <DelphiCompile Include="Win32\Release\FEAFIPLib_TLB.pas">
             <BuildOrder>38</BuildOrder>
         </DelphiCompile>
-        <FormResources Include="uModificarCliente.dfm"/>
         <FormResources Include="uMenuSemanal.dfm"/>
         <FormResources Include="uMenuOficina.dfm"/>
-        <FormResources Include="uModificarComida.dfm"/>
-        <FormResources Include="uPedidos.dfm"/>
+        <FormResources Include="uMenuDelDia.dfm"/>
+        <FormResources Include="uModificarCliente.dfm"/>
         <FormResources Include="uPausa.dfm"/>
         <FormResources Include="uMostrarPedidos.dfm"/>
-        <FormResources Include="uMenuDelDia.dfm"/>
+        <FormResources Include="uModificarComida.dfm"/>
+        <FormResources Include="uMensajes.dfm"/>
         <FormResources Include="uImprimirResumenManual.dfm"/>
         <FormResources Include="uImprimirPlanillas.dfm"/>
         <FormResources Include="uImprimirCuentas.dfm"/>
@@ -501,6 +513,7 @@
         <FormResources Include="uMain.dfm"/>
         <FormResources Include="uIngredientes.dfm"/>
         <FormResources Include="uInformacionNutricional.dfm"/>
+        <FormResources Include="uPedidos.dfm"/>
         <FormResources Include="uVerCargaManual.dfm"/>
         <FormResources Include="uValorNutricional.dfm"/>
         <FormResources Include="uSospechosos.dfm"/>
@@ -527,21 +540,22 @@
         <FormResources Include="uChartCobrosPorDia.dfm"/>
         <FormResources Include="uCargarPagos.dfm"/>
         <FormResources Include="uAlarma.dfm"/>
+        <FormResources Include="uCuentas.dfm"/>
+        <FormResources Include="uFrecuenciaComidas.dfm"/>
         <FormResources Include="uFrameMenuOficina.dfm"/>
         <FormResources Include="uFrame4.dfm"/>
-        <FormResources Include="uFrame3.dfm"/>
-        <FormResources Include="uFrecuenciaComidas.dfm"/>
-        <FormResources Include="uImportarPagosBancos.dfm"/>
-        <FormResources Include="uGestionDeGastos.dfm"/>
         <FormResources Include="uGestionarAlarmas.dfm"/>
-        <FormResources Include="uFrame2.dfm"/>
+        <FormResources Include="uImportarPagosBancos.dfm"/>
+        <FormResources Include="uGraficos2.dfm"/>
+        <FormResources Include="uGestionDeGastos.dfm"/>
+        <FormResources Include="uFrame3.dfm"/>
+        <FormResources Include="uEmitirComprobanteElectronico.dfm"/>
         <FormResources Include="uEmitirCompElectMonotributo.dfm"/>
         <FormResources Include="uDatos.dfm"/>
-        <FormResources Include="uCuentas.dfm"/>
-        <FormResources Include="uEmitirComprobanteElectronico.dfm"/>
+        <FormResources Include="uFacturacionMensual.dfm"/>
+        <FormResources Include="uFrame2.dfm"/>
         <FormResources Include="uFrame1.dfm"/>
         <FormResources Include="uFormulaComidas.dfm"/>
-        <FormResources Include="uFacturacionMensual.dfm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -581,12 +595,6 @@
                 </DeployFile>
                 <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64220mt.dll" Class="DependencyModule">
                     <Platform Name="Win64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\pElSembrador.tds" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win32">
-                        <RemoteName>pElSembrador.tds</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1012,9 +1020,9 @@
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>

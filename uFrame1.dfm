@@ -98,9 +98,9 @@ object Frame1: TFrame1
   object Label14: TLabel
     Left = 1
     Top = 300
-    Width = 69
+    Width = 86
     Height = 13
-    Caption = 'Nombre Banco'
+    Caption = 'Nombre Banco (*)'
   end
   object Label15: TLabel
     Left = 1
@@ -129,6 +129,13 @@ object Frame1: TFrame1
     Width = 121
     Height = 13
     Caption = 'Medio de pago preferido:'
+  end
+  object Label19: TLabel
+    Left = 3
+    Top = 416
+    Width = 173
+    Height = 13
+    Caption = '(*) Admite multiples separados por |'
   end
   object DBEdNombre: TDBEdit
     Left = 128
@@ -384,21 +391,19 @@ object Frame1: TFrame1
     Width = 33
     Height = 22
     Style = csOwnerDrawFixed
-    ItemIndex = 0
     TabOrder = 18
-    Text = 'O'
     OnChange = CBFacturarChange
     Items.Strings = (
       'O'
       'M'
-      'W')
+      'W'
+      'C')
   end
   object CBmp: TComboBox
     Left = 512
     Top = 413
     Width = 145
     Height = 21
-    ItemIndex = 0
     TabOrder = 19
     Text = 'A- Efectivo'
     OnChange = CBmpChange
@@ -407,6 +412,7 @@ object Frame1: TFrame1
       'B - Banco Oscar'
       'C - Banco Monica'
       'D - Banco Williams'
+      'E - Banco Carolina'
       'M - MercadoPago Oscar'
       'N - MercadoPago Monica')
   end
@@ -547,6 +553,7 @@ object Frame1: TFrame1
     end
     object ClientDataSet1nombreBanco1: TWideStringField
       FieldName = 'nombreBanco1'
+      Size = 250
     end
     object ClientDataSet1nombreBanco2: TWideStringField
       FieldName = 'nombreBanco2'

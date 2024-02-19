@@ -4,6 +4,7 @@
 #include <DateUtils.hpp>
 #include <IniFiles.hpp>
 #include <Clipbrd.hpp>
+#include <System.JSON.hpp>
 
 #pragma hdrstop
 
@@ -2133,4 +2134,307 @@ void __fastcall TfMenuSemanal::Button20Click(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
+
+void __fastcall TfMenuSemanal::Button21Click(TObject *Sender)
+{
+
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	QueryAux->SQL->Add("SELECT idMenuWeb FROM menuweb WHERE fecha >= :fi AND fecha <= :ff LIMIT 1");
+	QueryAux->ParamByName("fi")->AsDate = MC1->Date;
+	QueryAux->ParamByName("ff")->AsDate = IncDay(MC1->EndDate, -1);
+	QueryAux->Open();
+
+	if(!QueryAux->IsEmpty()) {
+		QueryAux->Close();
+		ShowMessage("Ya fue creado el menú para esta semana");
+		return;
+	}
+	QueryAux->Close();
+
+
+
+	String qMW;
+	qMW = "INSERT INTO menuweb (fecha, refComida1, refComida2, refComida3, refComida4, descripcion, posicion ) \
+			VALUES (:fecha, :refComida1, :refComida2, :refComida3, :refComida4, :descripcion, :posicion )";
+
+
+	TStringList * pPrincipal = new TStringList();
+	TStringList * pGuarnicion = new TStringList();
+	TStringList * pComplemento = new TStringList();
+	TStringList * pRefPrincipal = new TStringList();
+	TStringList * pRefGuarnicion = new TStringList();
+	TStringList * pRefComplemento = new TStringList();
+	TStringList * combinaciones = new TStringList();
+	TStringList * admiteDoble = new TStringList();
+
+
+	Memo2->Clear();
+	for(int w = DayOfWeek(MC1->Date) - 2; w < 5; w++)
+	{
+		if (w == 3) {
+			continue;
+		}
+		QueryComida->Close();
+		QueryComida->SQL->Clear();
+		String q;
+
+	q = "SELECT \
+			* \
+			,comidas1.nombre AS c1 \
+			,comidas1.refCategoriaComida AS cat1 \
+			,comidas1.admiteDoble AS d1 \
+			,comidas2.nombre AS c2 \
+			,comidas2.refCategoriaComida AS cat2 \
+			,comidas2.admiteDoble AS d2 \
+			,comidas3.nombre AS c3 \
+			,comidas3.refCategoriaComida AS cat3 \
+			,comidas3.admiteDoble AS d3 \
+			,comidas4.nombre AS c4 \
+			,comidas4.refCategoriaComida AS cat4 \
+			,comidas4.admiteDoble AS d4 \
+			,comidas5.nombre AS c5 \
+			,comidas5.refCategoriaComida AS cat5 \
+			,comidas5.admiteDoble AS d5 \
+			,comidas6.nombre AS c6 \
+			,comidas6.refCategoriaComida AS cat6 \
+			,comidas6.admiteDoble AS d6 \
+			,comidas7.nombre AS c7 \
+			,comidas7.refCategoriaComida AS cat7 \
+			,comidas8.nombre AS c8 \
+			,comidas8.refCategoriaComida AS cat8 \
+	FROM \
+			menudeldia \
+			LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+			LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+			LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+			LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+			LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+			LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+			LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+			LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+	WHERE \
+			menudeldia.fecha = :fecha";
+
+		QueryComida->SQL->Add(q);
+		QueryComida->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(MC1->Date), w);
+		QueryComida->Open();
+
+
+		if(QueryComida->IsEmpty() || QueryComida->FieldByName("refComida1")->AsInteger <= 1 || QueryComida->FieldByName("refComida7")->AsInteger <= 1)
+		{
+		  Memo2->Lines->Add(L" *Menú del día " + FormatDateTime("dddd dd/mm/yyyy", QueryComida->FieldByName("fecha")->AsDateTime) + "*");
+		  Memo2->Lines->Add("");
+		  Memo2->Lines->Add("	CERRADO");
+		}
+		else
+		{
+			int cat1 = QueryComida->FieldByName("cat1")->AsInteger;
+			int cat2 = QueryComida->FieldByName("cat2")->AsInteger;
+			int cat3 = QueryComida->FieldByName("cat3")->AsInteger;
+			int cat4 = QueryComida->FieldByName("cat4")->AsInteger;
+			int cat5 = QueryComida->FieldByName("cat5")->AsInteger;
+			int cat6 = QueryComida->FieldByName("cat6")->AsInteger;
+			int cat7 = QueryComida->FieldByName("cat7")->AsInteger;
+			int cat8 = QueryComida->FieldByName("cat8")->AsInteger;
+
+			String c1 = QueryComida->FieldByName("c1")->AsString;
+			String c2 = QueryComida->FieldByName("c2")->AsString;
+			String c3 = QueryComida->FieldByName("c3")->AsString;
+			String c4 = QueryComida->FieldByName("c4")->AsString;
+			String c5 = QueryComida->FieldByName("c5")->AsString;
+			String c6 = QueryComida->FieldByName("c6")->AsString;
+			String c7 = QueryComida->FieldByName("c7")->AsString;
+			String c8 = QueryComida->FieldByName("c8")->AsString;
+
+			int rc1 = QueryComida->FieldByName("refComida1")->AsInteger;
+			int rc2 = QueryComida->FieldByName("refComida2")->AsInteger;
+			int rc3 = QueryComida->FieldByName("refComida3")->AsInteger;
+			int rc4 = QueryComida->FieldByName("refComida4")->AsInteger;
+			int rc5 = QueryComida->FieldByName("refComida5")->AsInteger;
+			int rc6 = QueryComida->FieldByName("refComida6")->AsInteger;
+			int rc7 = QueryComida->FieldByName("refComida7")->AsInteger;
+			int rc8 = QueryComida->FieldByName("refComida8")->AsInteger;
+
+			int d1 = QueryComida->FieldByName("d1")->AsInteger;
+			int d2 = QueryComida->FieldByName("d2")->AsInteger;
+			int d3 = QueryComida->FieldByName("d3")->AsInteger;
+
+			pPrincipal->Clear();
+			pGuarnicion->Clear();
+			pComplemento->Clear();
+			pRefPrincipal->Clear();
+			pRefGuarnicion->Clear();
+			pRefComplemento->Clear();
+			combinaciones->Clear();
+			admiteDoble->Clear();
+
+
+
+			pComplemento->Add(c7);
+			pComplemento->Add(c8);
+			pRefComplemento->Add(IntToStr(rc7));
+			pRefComplemento->Add(IntToStr(rc8));
+
+
+			switch(cat1) {
+				case 1: pPrincipal->Add(c1); pRefPrincipal->Add(IntToStr(rc1)); admiteDoble->Add(IntToStr(d1)); break;
+				default: pGuarnicion->Add(c1); pRefGuarnicion->Add(IntToStr(rc1)); break;
+			}
+			switch(cat2) {
+				case 1: pPrincipal->Add(c2); pRefPrincipal->Add(IntToStr(rc2)); admiteDoble->Add(IntToStr(d2)); break;
+				default: pGuarnicion->Add(c2); pRefGuarnicion->Add(IntToStr(rc2)); break;
+			}
+			switch(cat3) {
+				case 1: pPrincipal->Add(c3); pRefPrincipal->Add(IntToStr(rc3)); admiteDoble->Add(IntToStr(d3)); break;
+				default: pGuarnicion->Add(c3); pRefGuarnicion->Add(IntToStr(rc3)); break;
+			}
+			switch(cat4) {
+				case 1: pPrincipal->Add(c4); pRefPrincipal->Add(IntToStr(rc4)); break;
+				default: pGuarnicion->Add(c4); pRefGuarnicion->Add(IntToStr(rc4)); break;
+			}
+
+			if (rc5 > 1) {
+				switch(cat5) {
+					case 1: pPrincipal->Add(c5); pRefPrincipal->Add(IntToStr(rc5)); break;
+					default: pGuarnicion->Add(c5); pRefGuarnicion->Add(IntToStr(rc5)); break;
+				}
+			}
+			if (rc6 > 1) {
+				switch(cat6) {
+					case 1: pPrincipal->Add(c6); pRefPrincipal->Add(IntToStr(rc6)); break;
+					default: pGuarnicion->Add(c6); pRefGuarnicion->Add(IntToStr(rc6)); break;
+				}
+			}
+
+			queryMenuWeb->Close();
+			queryMenuWeb->SQL->Clear();
+			queryMenuWeb->SQL->Add(qMW);
+
+			int idx = 1;
+
+//         ListBox3->Clear();
+			for (int i = 0; i < pPrincipal->Count; i++) {
+				if (admiteDoble->Strings[i] == "1") {
+					String comb = pPrincipal->Strings[i];
+					comb = comb + " + " + pPrincipal->Strings[i];
+					comb = comb + " + " + pComplemento->Strings[0];
+
+
+					queryMenuWeb->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(MC1->Date), w);
+					queryMenuWeb->ParamByName("refComida1")->AsInteger = StrToInt(pRefPrincipal->Strings[i]);
+					queryMenuWeb->ParamByName("refComida2")->AsInteger = StrToInt(pRefPrincipal->Strings[i]);
+					queryMenuWeb->ParamByName("refComida3")->AsInteger = 1;
+					queryMenuWeb->ParamByName("refComida4")->AsInteger = StrToInt(pRefComplemento->Strings[0]);
+					queryMenuWeb->ParamByName("descripcion")->AsString = comb;
+					queryMenuWeb->ParamByName("posicion")->AsInteger = idx;
+					queryMenuWeb->ExecSQL();
+					idx++;
+
+					queryMenuWeb->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(MC1->Date), w);
+					queryMenuWeb->ParamByName("refComida1")->AsInteger = StrToInt(pRefPrincipal->Strings[i]);
+					queryMenuWeb->ParamByName("refComida2")->AsInteger = StrToInt(pRefPrincipal->Strings[i]);
+					queryMenuWeb->ParamByName("refComida3")->AsInteger = 1;
+					queryMenuWeb->ParamByName("refComida4")->AsInteger = StrToInt(pRefComplemento->Strings[1]);
+					queryMenuWeb->ParamByName("descripcion")->AsString = comb;
+					queryMenuWeb->ParamByName("posicion")->AsInteger = idx;
+					queryMenuWeb->ExecSQL();
+					idx++;
+
+					combinaciones->Add(comb);
+					comb = pPrincipal->Strings[i];
+					comb = comb + " + " + pPrincipal->Strings[i];
+					comb = comb + " + " + pComplemento->Strings[1];
+					combinaciones->Add(comb);
+				}
+				for (int j = 0; j < pGuarnicion->Count; j++) {
+					for (int k = 0; k < pComplemento->Count; k++) {
+						String comb = pPrincipal->Strings[i];
+						comb = comb + " + " + pGuarnicion->Strings[j];
+						comb = comb + " + " + pComplemento->Strings[k];
+						combinaciones->Add(comb);
+
+						queryMenuWeb->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(MC1->Date), w);
+						queryMenuWeb->ParamByName("refComida1")->AsInteger = StrToInt(pRefPrincipal->Strings[i]);
+						queryMenuWeb->ParamByName("refComida2")->AsInteger = StrToInt(pRefGuarnicion->Strings[j]);
+						queryMenuWeb->ParamByName("refComida3")->AsInteger = 1;
+						queryMenuWeb->ParamByName("refComida4")->AsInteger = StrToInt(pRefComplemento->Strings[k]);
+						queryMenuWeb->ParamByName("descripcion")->AsString = comb;
+						queryMenuWeb->ParamByName("posicion")->AsInteger = idx;
+						queryMenuWeb->ExecSQL();
+						idx++;
+					}
+				}
+			}
+
+
+
+
+
+
+
+		}
+//		break;
+	}
+
+
+	QueryComida->Close();
+
+
+//	for (int i = 0; i < combinaciones->Count; i++) {
+//		ListBox3->Items->Add(combinaciones->Strings[i]);
+//	}
+
+	delete pPrincipal;
+	delete pGuarnicion;
+	delete pComplemento;
+	delete pRefPrincipal;
+	delete pRefGuarnicion;
+	delete pRefComplemento;
+	delete combinaciones;
+	delete admiteDoble;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfMenuSemanal::Button22Click(TObject *Sender)
+{
+	queryMenuWeb->Close();
+	queryMenuWeb->SQL->Clear();
+	queryMenuWeb->SQL->Add("SELECT idMenuWeb, fecha, descripcion FROM menuweb WHERE fecha >= :fi AND fecha <= :ff ORDER BY fecha, posicion");
+	queryMenuWeb->ParamByName("fi")->AsDate = MC1->Date;
+	queryMenuWeb->ParamByName("ff")->AsDate = IncDay(MC1->EndDate, -1);
+	queryMenuWeb->Open();
+
+//	TJSONArray *array = new TJSONArray();
+	String jsonArr = "[";
+	while (!queryMenuWeb->Eof) {
+		TJSONObject *json = new TJSONObject();
+		json->AddPair("id", queryMenuWeb->FieldByName("idMenuWeb")->AsInteger);
+		json->AddPair("fecha", FormatDateTime("dd/mm/yyyy", queryMenuWeb->FieldByName("fecha")->AsDateTime));
+		json->AddPair("opcion", queryMenuWeb->FieldByName("descripcion")->AsString);
+
+//		array->Add(json);
+//		ShowMessage(json->ToString());
+//      ShowMessage(array->ToString());
+		jsonArr = jsonArr + json->ToString() + ",";
+		delete json;
+		queryMenuWeb->Next();
+
+	}
+	queryMenuWeb->Close();
+	jsonArr = jsonArr.Delete(jsonArr.Length(), 1);
+
+	jsonArr = jsonArr + "]";
+
+
+//	array->ToString();
+
+
+//	ShowMessage(array->Count);
+
+	Memo1->Text = jsonArr;
+
+//	delete array;
+}
+//---------------------------------------------------------------------------
 

@@ -113,6 +113,9 @@ public:		// User declarations
 	int maximaPosicion(int refRepartidor, int esSabado);
 	int getIdRepartidor(String nombre);
 	void transferir(String planilla);
+	String ultimoNumeroAgregado;
+	int idClienteABuscar;
+	String planillaSeleccionada;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfRepartos *fRepartos;

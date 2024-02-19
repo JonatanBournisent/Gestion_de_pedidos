@@ -33,46 +33,55 @@ void __fastcall TfFacturacionMensual::FormCreate(TObject *Sender)
    SQLConnection1->Params->Values["User_Name"] = userName;
    SQLConnection1->Params->Values["Password"] = pass;
 }
+
+//---------------------------------------------------------------------------
+void TfFacturacionMensual::buscarDatos(String orden)
+{
+	CDS1->Active = false;
+	Query1->Close();
+	Query1->SQL->Clear();
+	String q;
+	q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo "
+		" FROM clientes "
+		" WHERE clientes.generarFactura = 1 AND "
+		" clientes.idCliente IN "
+			" (SELECT refCliente FROM cantidades WHERE fecha >= :fi AND fecha <= :ff GROUP BY refCliente) "
+		" ORDER BY " + orden;
+	Query1->SQL->Add(q);
+	Query1->ParamByName("fi")->AsDate = MC->Date;
+	Query1->ParamByName("ff")->AsDate = MC->EndDate;
+	Query1->Open();
+	CDS1->Active = true;
+
+	ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+}
+
 //---------------------------------------------------------------------------
 void __fastcall TfFacturacionMensual::FormShow(TObject *Sender)
 {
-   _directorioGuararFacturas = "";
-   Label3->Caption = "";
+	_directorioGuararFacturas = "";
+	Label3->Caption = "";
 
-   MC->MultiSelect = false;
-   MC->Date = Now();
-   MC->MultiSelect = true;
+	MC->MultiSelect = false;
+	MC->Date = Now();
+	MC->MultiSelect = true;
 
-   if(DayOfTheMonth(Now()) <= 5)	//si es menos del 5 de este mes, asume que se trabaja sobre el mes anterior
-   {
-	  MC->Date = StartOfTheMonth(IncDay(Now(), -10));      //mes pasado
-	  MC->EndDate = EndOfTheMonth(IncDay(Now(), -10));     //mes pasado
-   }
-   else
-   {
-	  MC->Date = StartOfTheMonth(Now());
-	  MC->EndDate = EndOfTheMonth(Now());
-   }
+	if(DayOfTheMonth(Now()) <= 5)	//si es menos del 5 de este mes, asume que se trabaja sobre el mes anterior
+	{
+		MC->Date = StartOfTheMonth(IncDay(Now(), -10));      //mes pasado
+		MC->EndDate = EndOfTheMonth(IncDay(Now(), -10));     //mes pasado
+	}
+	else
+	{
+		MC->Date = StartOfTheMonth(Now());
+		MC->EndDate = EndOfTheMonth(Now());
+	}
 
-   CDS1->Active = false;
-   Query1->Close();
-   Query1->SQL->Clear();
-   String q;
-   q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo "
-	   " FROM clientes "
-	   " WHERE clientes.generarFactura = 1 AND "
-	   " clientes.idCliente IN "
-			" (SELECT refCliente FROM cantidades WHERE fecha >= :fi AND fecha <= :ff GROUP BY refCliente) "
-	   " ORDER BY cliente";
-   Query1->SQL->Add(q);
-   Query1->ParamByName("fi")->AsDate = MC->Date;
-   Query1->ParamByName("ff")->AsDate = MC->EndDate;
-   Query1->Open();
-   CDS1->Active = true;
+	buscarDatos("cliente");
 
-   EmitirCompMonotributo1->Visible = false;
-   DBGrid1->Columns->Items[1]->Visible = false;
-   DBGrid1->Columns->Items[0]->Width = 255;
+	EmitirCompMonotributo1->Visible = false;
+	DBGrid1->Columns->Items[1]->Visible = false;
+	DBGrid1->Columns->Items[0]->Width = 255;
 
 }
 //---------------------------------------------------------------------------
@@ -132,72 +141,50 @@ void __fastcall TfFacturacionMensual::Verdetalledecuenta1Click(TObject *Sender)
 void __fastcall TfFacturacionMensual::Iraemitircomprobante1Click(TObject *Sender)
 
 {
+	fEmitirComprobanteElectronico->Show();
+	fEmitirComprobanteElectronico->FDMemTable1->Cancel();
+	fEmitirComprobanteElectronico->FDMemTable1->Active = false;
+	fEmitirComprobanteElectronico->facturacionMensual = true;
+	fEmitirComprobanteElectronico->nombreArchivoFactura = CDS1->FieldByName("cliente")->AsString;
+	Memo1->Text = CDS1->FieldByName("cliente")->AsString;
+	Memo1->SelectAll();
+	Memo1->CopyToClipboard();
+
+
+	fEmitirComprobanteElectronico->MC->Date = fFacturacionMensual->MC->EndDate;
+   fEmitirComprobanteElectronico->mostrarCliente(CDS1idCliente->AsInteger);
+   fEmitirComprobanteElectronico->CheckBox1->Checked = true;
+   fEmitirComprobanteElectronico->chbFactA4->Checked = true;
+   fEmitirComprobanteElectronico->FDMemTable1descripcion->Size = 40;
+
+   fEmitirComprobanteElectronico->directorioGuararFacturas = fFacturacionMensual->_directorioGuararFacturas;
+
 
    QueryAux->Close();
    QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("SELECT SUM(unidades) AS cantidad, valorUnidad FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND refCliente = :refCliente GROUP BY valorUnidad ORDER BY valorUnidad");
+   QueryAux->SQL->Add("SELECT 1.0 AS nroUnidades, CONCAT('Pedido ', DATE_FORMAT(fecha, '%d/%m/%Y')) AS descripcion, valorUnidad AS precioUnitario, valorUnidad AS subtotal FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND valorUnidad > 0.0 AND refCliente = :refCliente ORDER BY fecha DESC ");
    QueryAux->ParamByName("refCliente")->AsInteger = CDS1idCliente->AsInteger;
    QueryAux->ParamByName("fi")->AsDate = MC->Date;
    QueryAux->ParamByName("ff")->AsDate = MC->EndDate;
    QueryAux->Open();
 
    QueryAux->First();
-   fEmitirComprobanteElectronico->Show();
-   fEmitirComprobanteElectronico->MC->Date = fFacturacionMensual->MC->EndDate;
-   fEmitirComprobanteElectronico->mostrarCliente(CDS1idCliente->AsInteger);
-   fEmitirComprobanteElectronico->CheckBox1->Checked = true;
-   fEmitirComprobanteElectronico->chbFactA4->Checked = true;
-   fEmitirComprobanteElectronico->Edit4->MaxLength = 40;
-   fEmitirComprobanteElectronico->Edit7->MaxLength = 40;
-   fEmitirComprobanteElectronico->Edit10->MaxLength = 40;
-   fEmitirComprobanteElectronico->Edit13->MaxLength = 40;
-   fEmitirComprobanteElectronico->Edit16->MaxLength = 40;
+   fEmitirComprobanteElectronico->blockCalcular2 = true;
+   fEmitirComprobanteElectronico->FDMemTable1->Active = false;
+   fEmitirComprobanteElectronico->FDMemTable1->Active = true;
+   while (!QueryAux->Eof){
 
-   fEmitirComprobanteElectronico->directorioGuararFacturas = fFacturacionMensual->_directorioGuararFacturas;
-
-
-   int i = 0;
-   bool error = false;
-   while(!QueryAux->Eof)
-   {
-	  //Memo1->Lines->Add(QueryAux->FieldByName("cantidad")->AsString + ", " + QueryAux->FieldByName("valorUnidad")->AsString);
-	  if(i == 0)
-	  {
-		 fEmitirComprobanteElectronico->Edit3->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit5->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 1)
-	  {
-		 fEmitirComprobanteElectronico->Edit6->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit8->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 2)
-	  {
-		 fEmitirComprobanteElectronico->Edit9->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit11->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 3)
-	  {
-		 fEmitirComprobanteElectronico->Edit12->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit14->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 4)
-	  {
-		 fEmitirComprobanteElectronico->Edit15->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit17->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else
-	  {
-		 error = true;
-		 break;
-	  }
-	  QueryAux->Next();
-	  i++;
+		fEmitirComprobanteElectronico->FDMemTable1->Insert();
+		fEmitirComprobanteElectronico->FDMemTable1->FieldByName("nroUnidades")->AsFloat = QueryAux->FieldByName("nroUnidades")->AsFloat;
+		fEmitirComprobanteElectronico->FDMemTable1->FieldByName("Descripcion")->AsString = QueryAux->FieldByName("descripcion")->AsString;
+		fEmitirComprobanteElectronico->FDMemTable1->FieldByName("precioUnitario")->AsFloat = QueryAux->FieldByName("precioUnitario")->AsFloat;
+		fEmitirComprobanteElectronico->FDMemTable1->Post();
+		QueryAux->Next();
    }
-   QueryAux->Close();
 
-   if(error)
-	  ShowMessage("ERROR: Hay mas datos para incluir en la factura pero no hay mas renglones disponibles. Deberá solucionar el inconveniente realizando la misma de forma manual");
+   QueryAux->Close();
+   fEmitirComprobanteElectronico->blockCalcular2 = false;
+   fEmitirComprobanteElectronico->calcular2();
 }
 //---------------------------------------------------------------------------
 void __fastcall TfFacturacionMensual::Button1Click(TObject *Sender)
@@ -226,24 +213,26 @@ void __fastcall TfFacturacionMensual::FormKeyDown(TObject *Sender, WORD &Key, TS
 		 MC->EndDate = EndOfTheMonth(Now());
 	  }
 
-	  CDS1->Active = false;
-	  Query1->Close();
-	  Query1->SQL->Clear();
-	  String q;
-//	  q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo FROM clientes WHERE clientes.generarFactura = 1 ORDER BY tipo DESC, cliente";
-	  q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo "
-	   " FROM clientes "
-	   " WHERE clientes.generarFactura = 1 AND "
-	   " clientes.idCliente IN "
-			" (SELECT refCliente FROM cantidades WHERE fecha >= :fi AND fecha <= :ff GROUP BY refCliente) "
-	   " ORDER BY tipo DESC, cliente";
+	  buscarDatos("tipo");
 
-
-	  Query1->SQL->Add(q);
-	  Query1->ParamByName("fi")->AsDate = MC->Date;
-	  Query1->ParamByName("ff")->AsDate = MC->EndDate;
-	  Query1->Open();
-	  CDS1->Active = true;
+//	  CDS1->Active = false;
+//	  Query1->Close();
+//	  Query1->SQL->Clear();
+//	  String q;
+////	  q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo FROM clientes WHERE clientes.generarFactura = 1 ORDER BY tipo DESC, cliente";
+//	  q = "SELECT idCliente, CONCAT(calle, ' ', numero) AS cliente, tipo "
+//	   " FROM clientes "
+//	   " WHERE clientes.generarFactura = 1 AND "
+//	   " clientes.idCliente IN "
+//			" (SELECT refCliente FROM cantidades WHERE fecha >= :fi AND fecha <= :ff GROUP BY refCliente) "
+//	   " ORDER BY tipo DESC, cliente";
+//
+//
+//	  Query1->SQL->Add(q);
+//	  Query1->ParamByName("fi")->AsDate = MC->Date;
+//	  Query1->ParamByName("ff")->AsDate = MC->EndDate;
+//	  Query1->Open();
+//	  CDS1->Active = true;
    }
 }
 //---------------------------------------------------------------------------
@@ -254,7 +243,7 @@ void __fastcall TfFacturacionMensual::EmitirCompMonotributo1Click(TObject *Sende
 {
    QueryAux->Close();
    QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("SELECT SUM(unidades) AS cantidad, valorUnidad FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND refCliente = :refCliente GROUP BY valorUnidad ORDER BY valorUnidad");
+   QueryAux->SQL->Add("SELECT SUM(valorUnidad) AS valorTotal FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND refCliente = :refCliente");
    QueryAux->ParamByName("refCliente")->AsInteger = CDS1idCliente->AsInteger;
    QueryAux->ParamByName("fi")->AsDate = MC->Date;
    QueryAux->ParamByName("ff")->AsDate = MC->EndDate;
@@ -268,53 +257,56 @@ void __fastcall TfFacturacionMensual::EmitirCompMonotributo1Click(TObject *Sende
    fEmitirCompElectMonotributo->MC2->MultiSelect = true;
    fEmitirCompElectMonotributo->mostrarCliente(CDS1idCliente->AsInteger);
 
-   int i = 0;
-   bool error = false;
-   while(!QueryAux->Eof)
-   {
-	  //Memo1->Lines->Add(QueryAux->FieldByName("cantidad")->AsString + ", " + QueryAux->FieldByName("valorUnidad")->AsString);
-	  if(i == 0)
-	  {
-		 fEmitirCompElectMonotributo->Edit3->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirCompElectMonotributo->Edit5->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 1)
-	  {
-		 fEmitirCompElectMonotributo->Edit6->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirCompElectMonotributo->Edit8->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 2)
-	  {
-		 fEmitirCompElectMonotributo->Edit9->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirCompElectMonotributo->Edit11->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 3)
-	  {
-		 fEmitirCompElectMonotributo->Edit12->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirCompElectMonotributo->Edit14->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 4)
-	  {
-		 fEmitirCompElectMonotributo->Edit15->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirCompElectMonotributo->Edit17->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else
-	  {
-		 error = true;
-		 break;
-	  }
-	  QueryAux->Next();
-	  i++;
-   }
-   QueryAux->Close();
 
-   if(error)
-	  ShowMessage("ERROR: Hay mas datos para incluir en la factura pero no hay mas renglones disponibles. Deberá solucionar el inconveniente completando la misma de forma manual");
+//   float valor = QueryAux->FieldByName("valorTotal")->AsFloat;
+
+//   int i = 0;
+//   bool error = false;
+//   while(!QueryAux->Eof)
+//   {
+//	  //Memo1->Lines->Add(QueryAux->FieldByName("cantidad")->AsString + ", " + QueryAux->FieldByName("valorUnidad")->AsString);
+//	  if(i == 0)
+//	  {
+//		 fEmitirCompElectMonotributo->Edit3->Text = QueryAux->FieldByName("cantidad")->AsString;
+//		 fEmitirCompElectMonotributo->Edit5->Text = QueryAux->FieldByName("valorUnidad")->AsString;
+//	  }
+//	  else if(i == 1)
+//	  {
+//		 fEmitirCompElectMonotributo->Edit6->Text = QueryAux->FieldByName("cantidad")->AsString;
+//		 fEmitirCompElectMonotributo->Edit8->Text = QueryAux->FieldByName("valorUnidad")->AsString;
+//	  }
+//	  else if(i == 2)
+//	  {
+//		 fEmitirCompElectMonotributo->Edit9->Text = QueryAux->FieldByName("cantidad")->AsString;
+//		 fEmitirCompElectMonotributo->Edit11->Text = QueryAux->FieldByName("valorUnidad")->AsString;
+//	  }
+//	  else if(i == 3)
+//	  {
+//		 fEmitirCompElectMonotributo->Edit12->Text = QueryAux->FieldByName("cantidad")->AsString;
+//		 fEmitirCompElectMonotributo->Edit14->Text = QueryAux->FieldByName("valorUnidad")->AsString;
+//	  }
+//	  else if(i == 4)
+//	  {
+//		 fEmitirCompElectMonotributo->Edit15->Text = QueryAux->FieldByName("cantidad")->AsString;
+//		 fEmitirCompElectMonotributo->Edit17->Text = QueryAux->FieldByName("valorUnidad")->AsString;
+//	  }
+//	  else
+//	  {
+//		 error = true;
+//		 break;
+//	  }
+//	  QueryAux->Next();
+//	  i++;
+//   }
+//   QueryAux->Close();
+//
+//   if(error)
+//	  ShowMessage("ERROR: Hay mas datos para incluir en la factura pero no hay mas renglones disponibles. Deberá solucionar el inconveniente completando la misma de forma manual");
 
    //************ADAPTACION PARA NO CAMBIAR TODO***************
    //esto es un parche para que no aparezcan disctrimnados los datos en la factura. Por las dudas.
 
-   float valorTotal = StrToFloat(fEmitirCompElectMonotributo->lbTotal->Caption.Delete(1,9));
+   float valorTotal = QueryAux->FieldByName("valorTotal")->AsFloat; //StrToFloat(fEmitirCompElectMonotributo->lbTotal->Caption.Delete(1,9));
    fEmitirCompElectMonotributo->Edit3->Text = "1";
    fEmitirCompElectMonotributo->Edit5->Text = FormatFloat("0.00", valorTotal);
    fEmitirCompElectMonotributo->Edit6->Text = "0";
@@ -357,6 +349,23 @@ void __fastcall TfFacturacionMensual::Button2Click(TObject *Sender)
    {
 	  Label3->Caption = _directorioGuararFacturas;
    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfFacturacionMensual::MCClick(TObject *Sender)
+{
+	if(DBGrid1->Columns->Items[1]->Visible)
+		buscarDatos("tipo");
+	else
+		buscarDatos("cliente");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfFacturacionMensual::DBGrid1DblClick(TObject *Sender)
+{
+	if (CDS1->FieldByName("tipo")->AsString == "O") {
+      Iraemitircomprobante1Click(Sender);
+	}
 }
 //---------------------------------------------------------------------------
 

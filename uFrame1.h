@@ -111,6 +111,7 @@ __published:	// IDE-managed Components
 	TWideStringField *ClientDataSet1pagoAdelantado;
 	TDBCheckBox *DBCheckBox5;
 	TWideStringField *ClientDataSet1menuImpreso;
+	TLabel *Label19;
 	void __fastcall DBEdNombreChange(TObject *Sender);
 	void __fastcall DBEdApellidoChange(TObject *Sender);
 	void __fastcall DBEdCalleChange(TObject *Sender);

@@ -39,6 +39,7 @@
 #include "uGestionDeGastos.h"
 #include "uFormulaComidas.h"
 #include "uMenuOficina.h"
+#include "uMensajes.h"
 
 
 //---------------------------------------------------------------------------
@@ -355,7 +356,7 @@ void __fastcall TfMain::FormCreate(TObject *Sender)
 	  }
 
 
-	  if(MonthOf(fechaUltimoCalculoMensual) != MonthOf(Now()))   //fechaUltimoCalculoMensual se actualiza dentro del procedimiento almacenado
+	  if(MonthOf(fechaUltimoCalculoMensual) != MonthOf(Now()))
 	  {
 		 Query1->Close();
 		 Query1->SQL->Clear();
@@ -630,4 +631,11 @@ void __fastcall TfMain::Gestionarmenparaoficinas1Click(TObject *Sender)
    fMenuOficina->ShowModal();
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TfMain::Gestiondeproductos1Click(TObject *Sender)
+{
+	fProductos->ShowModal();
+}
+//---------------------------------------------------------------------------
+
 

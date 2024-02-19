@@ -504,6 +504,10 @@ object fMain: TfMain
         Caption = 'Gesti'#243'n de precios'
         OnClick = Gestindeprecioes1Click
       end
+      object Gestiondeproductos1: TMenuItem
+        Caption = 'Gestion de productos'
+        OnClick = Gestiondeproductos1Click
+      end
       object GestiondeGastos1: TMenuItem
         Caption = 'Gestion de Gastos'
         OnClick = GestiondeGastos1Click

@@ -417,6 +417,25 @@ void __fastcall TfCuentas::Mostrarestasemana1Click(TObject *Sender)
 
 void __fastcall TfCuentas::Button4Click(TObject *Sender)
 {
+//	QueryAux->Close();
+//	QueryAux->SQL->Clear();
+//	QueryAux->SQL->Add("SELECT DISTINCT refCliente AS idCliente FROM cantidades WHERE fecha >= '2023-03-06' AND refCliente > 2 ");
+//	QueryAux->Open();
+//    QueryAux->First();
+//	while (!QueryAux->Eof) {
+//    	QueryUpdate->SQL->Clear();
+//		QueryUpdate->SQL->Add("CALL calcularSaldoCliente(:f1, :f2, :fref , :refCliente)");
+//		QueryUpdate->ParamByName("f1")->AsDate = DateOf(IncDay(StartOfTheWeek(Now()),-1));
+//		QueryUpdate->ParamByName("f2")->AsDate = DateOf(IncDay(StartOfTheMonth(Now()),-1));
+//		QueryUpdate->ParamByName("fref")->AsDate = DateOf(IncYear(Now(), -10));
+//		QueryUpdate->ParamByName("refCliente")->AsInteger = QueryAux->FieldByName("idCliente")->AsInteger;
+//		QueryUpdate->ExecSQL();
+//		QueryAux->Next();
+//	}
+//	QueryAux->Close();
+//	ShowMessage("FIN");
+
+
    QueryUpdate->SQL->Clear();
    QueryUpdate->SQL->Add("CALL calcularSaldoCliente(:f1, :f2, :fref , :refCliente)");
    QueryUpdate->ParamByName("f1")->AsDate = DateOf(IncDay(StartOfTheWeek(Now()),-1));
@@ -514,60 +533,39 @@ void __fastcall TfCuentas::Button7Click(TObject *Sender)
 
 void __fastcall TfCuentas::Button8Click(TObject *Sender)
 {
-
    QueryAux->Close();
    QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("SELECT SUM(unidades) AS cantidad, valorUnidad FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND refCliente = :refCliente GROUP BY valorUnidad ORDER BY valorUnidad");
+   QueryAux->SQL->Add("SELECT 1.0 AS nroUnidades, CONCAT('Pedido ', DATE_FORMAT(fecha, '%d/%m/%Y')) AS descripcion, valorUnidad AS precioUnitario, valorUnidad AS subtotal FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND valorUnidad > 0.0 AND refCliente = :refCliente ORDER BY fecha DESC ");
    QueryAux->ParamByName("refCliente")->AsInteger = idCliente;
    QueryAux->ParamByName("fi")->AsDate = MC->Date;
    QueryAux->ParamByName("ff")->AsDate = MC->EndDate;
    QueryAux->Open();
 
-   QueryAux->First();
    fEmitirComprobanteElectronico->Show();
+   fEmitirComprobanteElectronico->FDMemTable1->Active = false;
+   fEmitirComprobanteElectronico->FDMemTable1->Active = true;
    fEmitirComprobanteElectronico->mostrarCliente(idCliente);
 
-   int i = 0;
-   bool error = false;
-   while(!QueryAux->Eof)
-   {
-	  if(i == 0)
-	  {
-		 fEmitirComprobanteElectronico->Edit3->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit5->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 1)
-	  {
-		 fEmitirComprobanteElectronico->Edit6->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit8->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 2)
-	  {
-		 fEmitirComprobanteElectronico->Edit9->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit11->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 3)
-	  {
-		 fEmitirComprobanteElectronico->Edit12->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit14->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else if(i == 4)
-	  {
-		 fEmitirComprobanteElectronico->Edit15->Text = QueryAux->FieldByName("cantidad")->AsString;
-		 fEmitirComprobanteElectronico->Edit17->Text = QueryAux->FieldByName("valorUnidad")->AsString;
-	  }
-	  else
-	  {
-		 error = true;
-		 break;
-	  }
-	  QueryAux->Next();
-	  i++;
-   }
-   QueryAux->Close();
+   QueryAux->First();
+   fEmitirComprobanteElectronico->blockCalcular2 = true;
+   fEmitirComprobanteElectronico->FDMemTable1->Active = false;
+   fEmitirComprobanteElectronico->FDMemTable1->Active = true;
+   while (!QueryAux->Eof){
 
-   if(error)
-	  ShowMessage("ERROR: Hay mas datos para incluir en la factura pero no hay mas renglones disponibles. Deberá solucionar el inconveniente realizando la misma de forma manual");
+		if (QueryAux->FieldByName("precioUnitario")->AsFloat > 0.0) {
+        	fEmitirComprobanteElectronico->FDMemTable1->Insert();
+			fEmitirComprobanteElectronico->FDMemTable1->FieldByName("nroUnidades")->AsFloat = QueryAux->FieldByName("nroUnidades")->AsFloat;
+			fEmitirComprobanteElectronico->FDMemTable1->FieldByName("Descripcion")->AsString = QueryAux->FieldByName("descripcion")->AsString;
+			fEmitirComprobanteElectronico->FDMemTable1->FieldByName("precioUnitario")->AsFloat = QueryAux->FieldByName("precioUnitario")->AsFloat;
+			fEmitirComprobanteElectronico->FDMemTable1->Post();
+		}
+		QueryAux->Next();
+   }
+
+   QueryAux->Close();
+   fEmitirComprobanteElectronico->blockCalcular2 = false;
+   fEmitirComprobanteElectronico->calcular2();
+
 }
 //---------------------------------------------------------------------------
 
@@ -594,26 +592,28 @@ void __fastcall TfCuentas::Button10Click(TObject *Sender)
    String q;
 
    q = "SELECT (SELECT SUM(saldoParcial) FROM cuentas WHERE refCliente = :rc AND fecha < :fi) AS deudaAnterior, "
-	   "(SELECT SUM(saldoParcial) FROM cuentas WHERE refCliente = :rc AND fecha <= :ff) AS deudaParcial";
+		"(SELECT SUM(saldoParcial) FROM cuentas WHERE refCliente = :rc AND fecha <= :ff) AS deudaParcial, "
+		"(SELECT CONCAT(calle, ' ', numero) AS cliente FROM clientes WHERE idCliente = :rc) AS cliente ";
 
-   QueryAux->Close();
-   QueryAux->SQL->Clear();
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
    QueryAux->SQL->Add(q);
    QueryAux->ParamByName("rc")->AsInteger = idCliente;
    QueryAux->ParamByName("fi")->AsDate = MC->Date;
    QueryAux->ParamByName("ff")->AsDate = MC->EndDate;
 
    QueryAux->Open();
-   float deudaAnterior = QueryAux->FieldByName("deudaAnterior")->AsFloat;
-   float deudaParcial = QueryAux->FieldByName("deudaParcial")->AsFloat;
-   QueryAux->Close();
+	float deudaAnterior = QueryAux->FieldByName("deudaAnterior")->AsFloat;
+	float deudaParcial = QueryAux->FieldByName("deudaParcial")->AsFloat;
+	String cliente = QueryAux->FieldByName("cliente")->AsString;
+	QueryAux->Close();
 
 
 
    TStringList * Lista;
-   Lista = new TStringList();
-   Lista->Clear();
-   String cliente = Label4->Caption.SubString(23, Label4->Caption.Pos("(") - 24);
+	Lista = new TStringList();
+	Lista->Clear();
+//	String cliente = Label4->Caption.SubString(23, Label4->Caption.Pos("(") - 24);
 
    Lista->Add("*RESUMEN DE CUENTA*");
    Lista->Add("");
@@ -637,7 +637,14 @@ void __fastcall TfCuentas::Button10Click(TObject *Sender)
 	   CDS->First();
 	   while(!CDS->Eof)
 	   {
-		  Lista->Add("*" + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* - " + FormatFloat("0.00", CDS->FieldByName("unidades")->AsFloat) + "v = " + FormatFloat("$0.00", CDS->FieldByName("unidades")->AsFloat * CDS->FieldByName("valorUnidad")->AsFloat));
+//		  Lista->Add("*" + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* - " + FormatFloat("0.00", CDS->FieldByName("unidades")->AsFloat) + "v = " + FormatFloat("$0.00", CDS->FieldByName("unidades")->AsFloat * CDS->FieldByName("valorUnidad")->AsFloat));
+//		  if(CDS->FieldByName("pagoRealizado")->AsFloat > 0.0)
+//		  {
+//			 Lista->Add("   *Pago " + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* " + FormatFloat("$0.00", CDS->FieldByName("pagoRealizado")->AsFloat));
+//			 Lista->Add("");
+//		  }
+
+		  Lista->Add("*" + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* - Pedido = " + FormatFloat("$0.00", CDS->FieldByName("valorUnidad")->AsFloat));
 		  if(CDS->FieldByName("pagoRealizado")->AsFloat > 0.0)
 		  {
 			 Lista->Add("   *Pago " + FormatDateTime("dd/mm", CDS->FieldByName("fecha")->AsDateTime) + "* " + FormatFloat("$0.00", CDS->FieldByName("pagoRealizado")->AsFloat));
@@ -653,12 +660,12 @@ void __fastcall TfCuentas::Button10Click(TObject *Sender)
 
    if(CompareDate(MC->EndDate, DateOf(Now())) == EqualsValue || CompareDate(MC->EndDate, DateOf(Now())) == GreaterThanValue)
    {
-	   q = "SELECT valor, "
-		   "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = :rc AND cantidades.fecha = :d) LIMIT 1) AS unidades, "
-		   "(SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = :rc LIMIT 1) AS bonificacion "
-		   "FROM listasPrecio WHERE (SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = :rc LIMIT 1) = idListaPrecio LIMIT 1";
+//	   q = "SELECT valor, "
+//		   "(SELECT nroUnidades FROM cantidades WHERE (cantidades.refCliente = :rc AND cantidades.fecha = :d) LIMIT 1) AS unidades, "
+//		   "(SELECT ((100.0 - bonificacion) / 100.0) FROM clientes WHERE clientes.idCliente = :rc LIMIT 1) AS bonificacion "
+//		   "FROM listasPrecio WHERE (SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = :rc LIMIT 1) = idListaPrecio LIMIT 1";
 
-
+	   q = "SELECT IFNULL(valorTotal, 0.0) AS valor FROM cantidades WHERE cantidades.refCliente = :rc AND cantidades.fecha = :d";
 
 	   QueryAux->Close();
 	   QueryAux->SQL->Clear();
@@ -668,12 +675,16 @@ void __fastcall TfCuentas::Button10Click(TObject *Sender)
 
 	   QueryAux->Open();
 	   valorUnit = QueryAux->FieldByName("valor")->AsFloat;
-	   unidades = QueryAux->FieldByName("unidades")->AsFloat;
-	   bonificacion = QueryAux->FieldByName("bonificacion")->AsFloat;
-
-	   if(QueryAux->FieldByName("unidades")->AsFloat > 0.0)
-		  Lista->Add("*" + FormatDateTime("dd/mm", DateOf(Now())) + "* - " + FormatFloat("0.00", unidades) + "v = " + FormatFloat("$0.00", unidades * valorUnit * bonificacion));
+//	   unidades = QueryAux->FieldByName("unidades")->AsFloat;
+//	   bonificacion = QueryAux->FieldByName("bonificacion")->AsFloat;
+//
+//	   if(QueryAux->FieldByName("unidades")->AsFloat > 0.0)
+//		  Lista->Add("*" + FormatDateTime("dd/mm", DateOf(Now())) + "* - " + FormatFloat("0.00", unidades) + "v = " + FormatFloat("$0.00", unidades * valorUnit * bonificacion));
 	   QueryAux->Close();
+
+	   if(valorUnit > 0.0)
+		  Lista->Add("*" + FormatDateTime("dd/mm", DateOf(Now())) + "* - Pedido = " + FormatFloat("$0.00", valorUnit));
+
    }
 
 
@@ -682,10 +693,14 @@ void __fastcall TfCuentas::Button10Click(TObject *Sender)
 
 
    if(CompareDateTime(MC->EndDate, Now()) == GreaterThanValue)
-	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", Now()) + ":* " + FormatFloat("$0.00", deudaParcial + (unidades * valorUnit * bonificacion)));
+	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", Now()) + ":* " + FormatFloat("$0.00", deudaParcial + valorUnit));
    else
-	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", MC->EndDate) + ":* " + FormatFloat("$0.00", deudaParcial + (unidades * valorUnit * bonificacion)));
+	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", MC->EndDate) + ":* " + FormatFloat("$0.00", deudaParcial + valorUnit));
 
+//   if(CompareDateTime(MC->EndDate, Now()) == GreaterThanValue)
+//	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", Now()) + ":* " + FormatFloat("$0.00", deudaParcial + (unidades * valorUnit * bonificacion)));
+//   else
+//	  Lista->Add("*Saldo al " + FormatDateTime("dd/mm/yyyy", MC->EndDate) + ":* " + FormatFloat("$0.00", deudaParcial + (unidades * valorUnit * bonificacion)));
 
 
    TClipboard *cb;
@@ -782,153 +797,154 @@ void __fastcall TfCuentas::DBGrid2DblClick(TObject *Sender)
 
 void __fastcall TfCuentas::Button11Click(TObject *Sender)
 {
-   TStringList *infoBanco = new TStringList();
-   TStringList *cliente = new TStringList();
-   TStringList *direccionCliente = new TStringList();
-   TStringList *pago = new TStringList();
-   TStringList *fecha = new TStringList();
-
-   if(OD1->Execute())
-	  infoBanco->LoadFromFile(OD1->FileName);
-   else
-   {
-	  delete infoBanco;
-	  ShowMessage("Error");
-	  return;
-   }
-
-   QueryAux->Close();
-   QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("SELECT idCliente, RPAD(CONCAT(calle, ' ',numero), 30, ' ') AS nombre, nombreBanco1, nombreBanco2, nombreBanco3 FROM clientes");
-   QueryAux->Open();
-
-   TStringList *nombresBancos1 = new TStringList();
-   TStringList *nombresBancos2 = new TStringList();
-   TStringList *nombresBancos3 = new TStringList();
-   TStringList *idClientes = new TStringList();
-   TStringList *nombreCliente = new TStringList();
-
-   while(!QueryAux->Eof)
-   {
-	  idClientes->Add(QueryAux->FieldByName("idCliente")->AsString);
-	  nombreCliente->Add(QueryAux->FieldByName("nombre")->AsString);
-	  nombresBancos1->Add(QueryAux->FieldByName("nombreBanco1")->AsString);
-	  nombresBancos2->Add(QueryAux->FieldByName("nombreBanco2")->AsString);
-	  nombresBancos3->Add(QueryAux->FieldByName("nombreBanco3")->AsString);
-	  QueryAux->Next();
-   }
-   QueryAux->Close();
-
-   //fechaPago = TDate();
-   //int idCliente = 0;
-   //valorPago = 0.0
-
-   String strFecha, strPago, strCliente, strNombreCliente, s, infoCliente;
-
-
-   fImportarPagosBancos->FDMemTable1->Close();
-   fImportarPagosBancos->FDMemTable1->Open();
-
-   bool flag;
-   for (int i = 0; i < infoBanco->Count; i++)
-   {
-		flag = false;
-		s = infoBanco->Strings[i];
-		strFecha = s.SubString(1, s.Pos(";")-1);
-		s = s.Delete(1,s.Pos(";"));
-		s = s.Delete(1,s.Pos(";"));
-		infoCliente = s.SubString(1, s.Pos(";")-1);
-		s = s.Delete(1,s.Pos(";"));
-		strPago = s.SubString(1, s.Pos(";")-1);
-
-		while(strPago.Pos("$") > 0)
-		strPago = strPago.Delete(strPago.Pos("$"), 1);
-
-		while(strPago.Pos(" ") > 0)
-		strPago = strPago.Delete(strPago.Pos(" "), 1);
-
-		while(strPago.Pos(".") > 0)
-		strPago = strPago.Delete(strPago.Pos("."), 1);
-
-	  if((StrToFloat(strPago) < 0.1))
-		 continue;
-
-
-	  for (int j = 0; j < nombresBancos1->Count; j++)
-	  {
-		 bool isOK1 = nombresBancos1->Strings[j] != "";
-		 bool isOK2 = nombresBancos2->Strings[j] != "";
-		 bool isOK3 = nombresBancos3->Strings[j] != "";
-
-
-
-
-		 s = infoBanco->Strings[i];
-		 if ((infoCliente.Pos(nombresBancos1->Strings[j]) > 0 && isOK1) ||
-			 (infoCliente.Pos(nombresBancos2->Strings[j]) > 0 && isOK2) ||
-			 (infoCliente.Pos(nombresBancos3->Strings[j]) > 0 && isOK3))
-		 {
-			 strCliente = idClientes->Strings[j];
-			 strNombreCliente = nombreCliente->Strings[j];
-			 strFecha = s.SubString(1, s.Pos(";")-1);
-			 s = s.Delete(1,s.Pos(";"));
-			 s = s.Delete(1,s.Pos(";"));
-			 s = s.Delete(1,s.Pos(";"));
-			 strPago = s.SubString(1, s.Pos(";")-1);
-
-			 while(strPago.Pos("$") > 0)
-				strPago = strPago.Delete(strPago.Pos("$"), 1);
-
-			 while(strPago.Pos(" ") > 0)
-				strPago = strPago.Delete(strPago.Pos(" "), 1);
-
-			 while(strPago.Pos(".") > 0)
-				strPago = strPago.Delete(strPago.Pos("."), 1);
-
-			 cliente->Add(strCliente);
-			 direccionCliente->Add(strNombreCliente);
-			 pago->Add(strPago);
-			 fecha->Add(strFecha);
-
-			 flag = true;
-			 break;
-		 }
-	  }
-
-	  if (!flag && (StrToFloat(strPago) > 0.1))
-	  {
-		 cliente->Add("0");
-		 direccionCliente->Add(infoCliente);
-		 pago->Add(strPago);
-		 fecha->Add(strFecha);
-	  }
-   }
-
-
-
-   for(int i = 0; i<cliente->Count; i++)
-   {
-      fImportarPagosBancos->FDMemTable1->Append();
-	  fImportarPagosBancos->FDMemTable1->FieldByName("fecha")->AsDateTime = StrToDate(fecha->Strings[i]);
-	  fImportarPagosBancos->FDMemTable1->FieldByName("cliente")->AsString = direccionCliente->Strings[i];
-	  fImportarPagosBancos->FDMemTable1->FieldByName("valor")->AsString = pago->Strings[i];
-	  fImportarPagosBancos->FDMemTable1->FieldByName("idCliente")->AsString = cliente->Strings[i];
-	  fImportarPagosBancos->FDMemTable1->Post();
-   }
-
-
+//   TStringList *infoBanco = new TStringList();
+//   TStringList *cliente = new TStringList();
+//   TStringList *direccionCliente = new TStringList();
+//   TStringList *pago = new TStringList();
+//   TStringList *fecha = new TStringList();
+//
+//   if(OD1->Execute())
+//	  infoBanco->LoadFromFile(OD1->FileName);
+//   else
+//   {
+//	  delete infoBanco;
+//	  ShowMessage("Error");
+//	  return;
+//   }
+//
+//   QueryAux->Close();
+//   QueryAux->SQL->Clear();
+//   QueryAux->SQL->Add("SELECT idCliente, RPAD(CONCAT(calle, ' ',numero), 30, ' ') AS nombre, nombreBanco1, nombreBanco2, nombreBanco3 FROM clientes");
+//   QueryAux->Open();
+//
+//   TStringList *nombresBancos1 = new TStringList();
+//   TStringList *nombresBancos2 = new TStringList();
+//   TStringList *nombresBancos3 = new TStringList();
+//   TStringList *idClientes = new TStringList();
+//   TStringList *nombreCliente = new TStringList();
+//
+//   while(!QueryAux->Eof)
+//   {
+//	  idClientes->Add(QueryAux->FieldByName("idCliente")->AsString);
+//	  nombreCliente->Add(QueryAux->FieldByName("nombre")->AsString);
+//	  nombresBancos1->Add(QueryAux->FieldByName("nombreBanco1")->AsString);
+//	  nombresBancos2->Add(QueryAux->FieldByName("nombreBanco2")->AsString);
+//	  nombresBancos3->Add(QueryAux->FieldByName("nombreBanco3")->AsString);
+//	  QueryAux->Next();
+//   }
+//   QueryAux->Close();
+//
+//   //fechaPago = TDate();
+//   //int idCliente = 0;
+//   //valorPago = 0.0
+//
+//   String strFecha, strPago, strCliente, strNombreCliente, s, infoCliente;
+//
+//
+//   fImportarPagosBancos->FDMemTable1->Close();
+//   fImportarPagosBancos->FDMemTable1->Open();
+//
+//   bool flag;
+//   for (int i = 0; i < infoBanco->Count; i++)
+//   {
+//		flag = false;
+//		s = infoBanco->Strings[i];
+//		strFecha = s.SubString(1, s.Pos(";")-1);
+//		s = s.Delete(1,s.Pos(";"));
+//		s = s.Delete(1,s.Pos(";"));
+//		infoCliente = s.SubString(1, s.Pos(";")-1);
+//		s = s.Delete(1,s.Pos(";"));
+//		strPago = s.SubString(1, s.Pos(";")-1);
+//
+//		while(strPago.Pos("$") > 0)
+//		strPago = strPago.Delete(strPago.Pos("$"), 1);
+//
+//		while(strPago.Pos(" ") > 0)
+//		strPago = strPago.Delete(strPago.Pos(" "), 1);
+//
+//		while(strPago.Pos(".") > 0)
+//		strPago = strPago.Delete(strPago.Pos("."), 1);
+//
+//	  if((StrToFloat(strPago) < 0.1))
+//		 continue;
+//
+//
+//	  for (int j = 0; j < nombresBancos1->Count; j++)
+//	  {
+//		 bool isOK1 = nombresBancos1->Strings[j] != "";
+//		 bool isOK2 = nombresBancos2->Strings[j] != "";
+//		 bool isOK3 = nombresBancos3->Strings[j] != "";
+//
+//
+//
+//
+//		 s = infoBanco->Strings[i];
+//		 if ((infoCliente.Pos(nombresBancos1->Strings[j]) > 0 && isOK1) ||
+//			 (infoCliente.Pos(nombresBancos2->Strings[j]) > 0 && isOK2) ||
+//			 (infoCliente.Pos(nombresBancos3->Strings[j]) > 0 && isOK3))
+//		 {
+//			 strCliente = idClientes->Strings[j];
+//			 strNombreCliente = nombreCliente->Strings[j];
+//			 strFecha = s.SubString(1, s.Pos(";")-1);
+//			 s = s.Delete(1,s.Pos(";"));
+//			 s = s.Delete(1,s.Pos(";"));
+//			 s = s.Delete(1,s.Pos(";"));
+//			 strPago = s.SubString(1, s.Pos(";")-1);
+//
+//			 while(strPago.Pos("$") > 0)
+//				strPago = strPago.Delete(strPago.Pos("$"), 1);
+//
+//			 while(strPago.Pos(" ") > 0)
+//				strPago = strPago.Delete(strPago.Pos(" "), 1);
+//
+//			 while(strPago.Pos(".") > 0)
+//				strPago = strPago.Delete(strPago.Pos("."), 1);
+//
+//			 cliente->Add(strCliente);
+//			 direccionCliente->Add(strNombreCliente);
+//			 pago->Add(strPago);
+//			 fecha->Add(strFecha);
+//
+//			 flag = true;
+//			 break;
+//		 }
+//	  }
+//
+//	  if (!flag && (StrToFloat(strPago) > 0.1))
+//	  {
+//		 cliente->Add("0");
+//		 direccionCliente->Add(infoCliente);
+//		 pago->Add(strPago);
+//		 fecha->Add(strFecha);
+//	  }
+//   }
+//
+//
+//
+//   for(int i = 0; i<cliente->Count; i++)
+//   {
+//      fImportarPagosBancos->FDMemTable1->Append();
+//	  fImportarPagosBancos->FDMemTable1->FieldByName("fecha")->AsDateTime = StrToDate(fecha->Strings[i]);
+//	  fImportarPagosBancos->FDMemTable1->FieldByName("cliente")->AsString = direccionCliente->Strings[i];
+//	  fImportarPagosBancos->FDMemTable1->FieldByName("valor")->AsString = pago->Strings[i];
+//	  fImportarPagosBancos->FDMemTable1->FieldByName("idCliente")->AsString = cliente->Strings[i];
+//	  fImportarPagosBancos->FDMemTable1->Post();
+//   }
+//
+//
    fImportarPagosBancos->Show();
-
-   delete infoBanco;
-   delete nombresBancos1;
-   delete nombresBancos2;
-   delete nombresBancos3;
-   delete idClientes;
-   delete cliente;
-   delete direccionCliente;
-   delete nombreCliente;
-   delete pago;
-   delete fecha;
+//   ShowScrollBar(fImportarPagosBancos->DBGrid1->Handle, SB_VERT, true);
+//
+//   delete infoBanco;
+//   delete nombresBancos1;
+//   delete nombresBancos2;
+//   delete nombresBancos3;
+//   delete idClientes;
+//   delete cliente;
+//   delete direccionCliente;
+//   delete nombreCliente;
+//   delete pago;
+//   delete fecha;
 }
 //---------------------------------------------------------------------------
 
@@ -954,6 +970,8 @@ void __fastcall TfCuentas::CDSmedioDePagoGetText(TField *Sender, UnicodeString &
 	  Text = "Banco Monica";
    else if(Sender->AsString.UpperCase() == "D")
 	  Text = "Banco Williams";
+   else if(Sender->AsString.UpperCase() == "E")
+	  Text = "Banco Carolina";
    else if(Sender->AsString.UpperCase() == "M")
 	  Text = "MercadoPago Oscar";
    else if(Sender->AsString.UpperCase() == "N")
@@ -1061,6 +1079,26 @@ void __fastcall TfCuentas::Asignarpagoseleccionado1Click(TObject *Sender)
    CDS->Refresh();
 
 
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfCuentas::Quitarinformaciondepago1Click(TObject *Sender)
+{
+	if(!CDS->Active)
+	  return;
+
+	if(Application->MessageBox(L"Se va a eliminar la iformación de pago de esta línea. Desea continuar?" ,L"ATENCIÓN!",MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) != IDYES)
+	  return;
+
+	String q;
+	q = "UPDATE cuentas SET pagoRealizado = 0.0, fechaIngresoPago = '1990-01-01', medioDePago = 'A' WHERE idCuenta = :idc";
+
+	QueryUpdate->Close();
+	QueryUpdate->SQL->Clear() ;
+	QueryUpdate->SQL->Add(q);
+	QueryUpdate->ParamByName("idc")->AsInteger = CDS->FieldByName("idCuenta")->AsInteger;
+	QueryUpdate->ExecSQL();
+    CDS->Refresh();
 }
 //---------------------------------------------------------------------------
 

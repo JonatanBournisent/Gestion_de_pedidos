@@ -116,7 +116,7 @@ void TfRepartos::transferir(String planilla)
 
 	  int maximo = maximaPosicion(idRepDestino, esSab);
 
-	  if(maximo < 60)
+	  if(maximo < 100)
 	  {
          QueryAux->Close();
 		 QueryAux->SQL->Clear();
@@ -136,7 +136,12 @@ void TfRepartos::transferir(String planilla)
 		 QueryAux->ParamByName("pos")->AsInteger = pos;
 		 QueryAux->ExecSQL();
 
-		 ClientDataSet1->Refresh();
+
+
+		 ComboBox1->ItemIndex = ComboBox1->Items->IndexOf(planilla);
+		 ComboBox1Change(Button4);
+		 DBGrid1->SetFocus();
+		 ClientDataSet1->Last();
 	  }
 	  else
 		 Application->MessageBox(L"Ya no hay espacio en la planilla destino.",L"No se realizaron cambios",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
@@ -151,6 +156,7 @@ void __fastcall TfRepartos::FormClose(TObject *Sender, TCloseAction &Action)
    QueryAux->Close();
 
    SQLConnection1->Close();
+   idClienteABuscar = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TfRepartos::ComboBox1Change(TObject *Sender)
@@ -169,6 +175,19 @@ void __fastcall TfRepartos::FormShow(TObject *Sender)
 	  RG1->ItemIndex = 0;
 
    RG1Click(Sender);
+
+   if (idClienteABuscar > 0) {
+	   ComboBox1->ItemIndex = ComboBox1->Items->IndexOf(planillaSeleccionada);
+	   ComboBox1Change(Sender);
+	   DBGrid1->SetFocus();
+	   ClientDataSet1->First();
+	   while (!ClientDataSet1->Eof) {
+		  if (ClientDataSet1->FieldByName("refCliente")->AsInteger == idClienteABuscar) {
+			  break;
+		  }
+		  ClientDataSet1->Next();
+	   }
+   }
 }
 //---------------------------------------------------------------------------
 void __fastcall TfRepartos::RG1Click(TObject *Sender)
@@ -238,7 +257,7 @@ void __fastcall TfRepartos::Button1Click(TObject *Sender)
 
 	  int maximo = maximaPosicion(refRep, esSab);
 
-	  if(maximo < 60)
+	  if(maximo < 100)
 	  {
 		 QueryAux->SQL->Clear();
 		 QueryAux->SQL->Add("INSERT INTO repartos VALUES (NULL, :idCli, :idRep, :pos, :esSab)");
@@ -258,6 +277,8 @@ void __fastcall TfRepartos::Button1Click(TObject *Sender)
 		 ClientDataSet1->Refresh();
 		 ClientDataSet1->RecNo = ClientDataSet1->RecordCount;
 		 DBGrid1->SetFocus();
+
+         ultimoNumeroAgregado = ClientDataSet1->FieldByName("numero")->AsString;
 	  }
 	  else
 		 Application->MessageBox(L"Ya no hay espacio en esta planilla.",L"No se realizaron cambios",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
@@ -295,7 +316,7 @@ void __fastcall TfRepartos::Button4Click(TObject *Sender)
 
 	  int maximo = maximaPosicion(idRepDestino, esSab);
 
-	  if(maximo < 60)
+	  if(maximo < 100)
 	  {
          QueryAux->Close();
 		 QueryAux->SQL->Clear();
@@ -491,7 +512,7 @@ void __fastcall TfRepartos::Button6Click(TObject *Sender)
 
 	  int maximo = maximaPosicion(refRep, esSab);
 
-	  if(maximo < 60)
+	  if(maximo < 100)
 	  {
 		 QueryAux->SQL->Clear();
 		 QueryAux->SQL->Add("INSERT INTO repartos VALUES (NULL, 2, :idRep, :pos, :esSab)");
@@ -533,6 +554,7 @@ void __fastcall TfRepartos::FormCreate(TObject *Sender)
    SQLConnection1->Params->Values["Database"] = dbName;
    SQLConnection1->Params->Values["User_Name"] = userName;
    SQLConnection1->Params->Values["Password"] = pass;
+   idClienteABuscar = 0;
 }
 //---------------------------------------------------------------------------
 

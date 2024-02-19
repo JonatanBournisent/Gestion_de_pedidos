@@ -60,6 +60,11 @@ __published:	// IDE-managed Components
 	TfrxPNGExport *frxPNGExport1;
 	TfrxReport *frx_contenido_lunes;
 	TfrxRichObject *frxRichObject1;
+	TButton *Button21;
+	TSQLQuery *QueryComida;
+	TSQLQuery *queryMenuWeb;
+	TButton *Button22;
+	TMemo *Memo1;
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
@@ -90,6 +95,8 @@ __published:	// IDE-managed Components
 	void __fastcall Timer1Timer(TObject *Sender);
 	void __fastcall Button19Click(TObject *Sender);
 	void __fastcall Button20Click(TObject *Sender);
+	void __fastcall Button21Click(TObject *Sender);
+	void __fastcall Button22Click(TObject *Sender);
 
 
 

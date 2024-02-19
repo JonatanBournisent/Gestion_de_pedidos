@@ -148,7 +148,7 @@ object fCuentas: TfCuentas
         Expanded = False
         FieldName = 'valorUnidad'
         Title.Alignment = taCenter
-        Title.Caption = 'Valor Unid.'
+        Title.Caption = 'Valor Ped.'
         Title.Font.Charset = DEFAULT_CHARSET
         Title.Font.Color = clWindowText
         Title.Font.Height = -12
@@ -194,6 +194,7 @@ object fCuentas: TfCuentas
           'B - Banco Oscar'
           'C - Banco Monica'
           'D - Banco Williams'
+          'E - Banco Carolina'
           'M - MercadoPago Oscar'
           'N - MercadoPago Monica')
         Title.Alignment = taCenter
@@ -226,7 +227,7 @@ object fCuentas: TfCuentas
     Width = 260
     Height = 160
     MultiSelect = True
-    Date = 43949.282404490740000000
+    Date = 43949.370955486110000000
     EndDate = 43949.000000000000000000
     MaxSelectRange = 500
     PopupMenu = PopupMenu1
@@ -272,8 +273,8 @@ object fCuentas: TfCuentas
     OnClick = CheckBox1Click
   end
   object Button4: TButton
-    Left = 784
-    Top = 174
+    Left = 783
+    Top = 173
     Width = 140
     Height = 20
     Caption = 'Forzar recalculo de saldo'
@@ -406,7 +407,7 @@ object fCuentas: TfCuentas
     Top = 174
     Width = 75
     Height = 20
-    Caption = 'Importar CSV'
+    Caption = 'Conciliar'
     TabOrder = 13
     OnClick = Button11Click
   end
@@ -533,6 +534,10 @@ object fCuentas: TfCuentas
     object Asignarpagoseleccionado1: TMenuItem
       Caption = 'Asignar pago seleccionado'
       OnClick = Asignarpagoseleccionado1Click
+    end
+    object Quitarinformaciondepago1: TMenuItem
+      Caption = 'Quitar informacion de pago'
+      OnClick = Quitarinformaciondepago1Click
     end
   end
   object Timer1: TTimer

@@ -76,6 +76,7 @@ __published:	// IDE-managed Components
 	TDateField *CDSfechaIngresoPago;
 	TWideStringField *CDSmedioDePago;
 	TMenuItem *Asignarpagoseleccionado1;
+	TMenuItem *Quitarinformaciondepago1;
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall Button3Click(TObject *Sender);
 	void __fastcall MCClick(TObject *Sender);
@@ -112,6 +113,7 @@ __published:	// IDE-managed Components
 	void __fastcall CDSmedioDePagoChange(TField *Sender);
 	void __fastcall CDSfechaIngresoPagoChange(TField *Sender);
 	void __fastcall Asignarpagoseleccionado1Click(TObject *Sender);
+	void __fastcall Quitarinformaciondepago1Click(TObject *Sender);
 
 private:	// User declarations
 public:		// User declarations

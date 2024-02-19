@@ -4,7 +4,7 @@ object fPedidos: TfPedidos
   BorderIcons = [biSystemMenu]
   Caption = 'Gestion de pedidos y planillas  "El Sembrador"'
   ClientHeight = 678
-  ClientWidth = 1336
+  ClientWidth = 1333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -45,10 +45,16 @@ object fPedidos: TfPedidos
   end
   object Label12: TLabel
     Left = 721
-    Top = 300
-    Width = 37
-    Height = 13
+    Top = 303
+    Width = 48
+    Height = 14
     Caption = 'Label12'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object Bevel1: TBevel
     Left = 720
@@ -326,21 +332,6 @@ object fPedidos: TfPedidos
     Font.Style = []
     ParentFont = False
   end
-  object Label10: TLabel
-    Left = 959
-    Top = 7
-    Width = 370
-    Height = 21
-    Alignment = taCenter
-    AutoSize = False
-    Caption = 'Lista de comidas especiales'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
   object Label13: TLabel
     Left = 8
     Top = 335
@@ -431,14 +422,14 @@ object fPedidos: TfPedidos
   end
   object Label20: TLabel
     Left = 721
-    Top = 59
+    Top = 58
     Width = 37
     Height = 13
     Caption = 'Label20'
   end
   object Label21: TLabel
     Left = 721
-    Top = 77
+    Top = 71
     Width = 37
     Height = 13
     Caption = 'Label21'
@@ -450,13 +441,198 @@ object fPedidos: TfPedidos
     Height = 13
     Caption = 'Medio de pago'
   end
+  object Label25: TLabel
+    Left = 835
+    Top = 371
+    Width = 24
+    Height = 13
+    Caption = 'Valor'
+  end
+  object Button43: TSpeedButton
+    Left = 903
+    Top = 347
+    Width = 50
+    Height = 19
+    OnClick = Button43Click
+  end
+  object Button44: TSpeedButton
+    Left = 903
+    Top = 365
+    Width = 50
+    Height = 19
+    OnClick = Button44Click
+  end
+  object Button45: TSpeedButton
+    Left = 903
+    Top = 383
+    Width = 50
+    Height = 19
+    OnClick = Button45Click
+  end
+  object Button46: TSpeedButton
+    Left = 903
+    Top = 401
+    Width = 50
+    Height = 19
+    OnClick = Button46Click
+  end
+  object Label26: TLabel
+    Left = 721
+    Top = 85
+    Width = 37
+    Height = 13
+    Caption = 'Label26'
+  end
+  object SpeedButton1: TSpeedButton
+    Left = 903
+    Top = 424
+    Width = 50
+    Height = 19
+    Caption = 'Envio'
+    OnClick = SpeedButton1Click
+  end
+  object Button42: TButton
+    Left = 435
+    Top = 75
+    Width = 86
+    Height = 70
+    Caption = 'Transferir'
+    TabOrder = 83
+    OnClick = Button42Click
+  end
+  object DBGrid7: TDBGrid
+    Left = 956
+    Top = 8
+    Width = 369
+    Height = 666
+    DataSource = DataSource6
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    TabOrder = 81
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnDrawColumnCell = DBGrid7DrawColumnCell
+    OnDblClick = DBGrid7DblClick
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'nComida'
+        Title.Alignment = taCenter
+        Title.Caption = 'Lista de comidas especiales'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 294
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'cantidad'
+        Title.Alignment = taCenter
+        Title.Caption = 'Cant'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 39
+        Visible = True
+      end>
+  end
+  object DBGrid6: TDBGrid
+    Left = 535
+    Top = 152
+    Width = 174
+    Height = 197
+    DataSource = DataSource5
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    PopupMenu = PopupMenu11
+    TabOrder = 80
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnCellClick = DBGrid6CellClick
+    OnDrawColumnCell = DBGrid6DrawColumnCell
+    OnDblClick = DBGrid6DblClick
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'nombreRep'
+        Title.Alignment = taCenter
+        Title.Caption = 'Rep'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 52
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'cantViandas'
+        Title.Alignment = taCenter
+        Title.Caption = 'V'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 35
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'cantDirecciones'
+        Title.Alignment = taCenter
+        Title.Caption = 'D'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 27
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'reparto'
+        Title.Alignment = taCenter
+        Title.Caption = 'P'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -11
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 23
+        Visible = True
+      end>
+  end
+  object Edit4: TEdit
+    Left = 834
+    Top = 388
+    Width = 63
+    Height = 21
+    Alignment = taCenter
+    TabOrder = 78
+    Text = '$ 0,00'
+    OnEnter = Edit4Enter
+    OnExit = Edit4Exit
+  end
   object Button41: TButton
     Left = 729
     Top = 227
     Width = 109
     Height = 25
     Caption = 'Imprimir Ofi.'
-    TabOrder = 78
+    TabOrder = 76
     OnClick = Button41Click
   end
   object Button40: TButton
@@ -466,7 +642,7 @@ object fPedidos: TfPedidos
     Height = 19
     Caption = 'Actualizar'
     PopupMenu = PopupMenu5
-    TabOrder = 77
+    TabOrder = 75
     OnClick = Button40Click
   end
   object CBmp: TComboBox
@@ -475,12 +651,13 @@ object fPedidos: TfPedidos
     Width = 174
     Height = 22
     Style = csOwnerDrawFixed
-    TabOrder = 76
+    TabOrder = 74
     Items.Strings = (
       'A- Efectivo'
       'B - Banco Oscar'
       'C - Banco Monica'
       'D - Banco Williams'
+      'E - Banco Carolina'
       'M - MercadoPago Oscar'
       'N - MercadoPago Monica')
   end
@@ -490,22 +667,8 @@ object fPedidos: TfPedidos
     Width = 230
     Height = 21
     Caption = 'Agregar pedido igual al '#250'ltimo'
-    TabOrder = 64
+    TabOrder = 62
     OnClick = Button27Click
-  end
-  object ListBox3: TListBox
-    Left = 535
-    Top = 152
-    Width = 175
-    Height = 197
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Lucida Console'
-    Font.Style = []
-    ItemHeight = 12
-    ParentFont = False
-    TabOrder = 63
   end
   object Button22: TButton
     Left = 915
@@ -513,27 +676,26 @@ object fPedidos: TfPedidos
     Width = 102
     Height = 25
     Caption = 'Copiar lista de complementos especiales'
-    TabOrder = 57
+    TabOrder = 56
     Visible = False
     OnClick = Mem
   end
   object Button20: TButton
     Left = 865
-    Top = 300
+    Top = 316
     Width = 75
     Height = 25
     Caption = 'Button20'
-    TabOrder = 53
+    TabOrder = 52
     Visible = False
-    OnClick = Button20Click
   end
   object CBParaCocina: TCheckBox
     Left = 780
     Top = 427
-    Width = 168
+    Width = 117
     Height = 17
     Caption = 'Dirigido a la cocina'
-    TabOrder = 52
+    TabOrder = 51
   end
   object Button14: TButton
     Left = 718
@@ -541,16 +703,16 @@ object fPedidos: TfPedidos
     Width = 230
     Height = 25
     Caption = 'Ver clientes para anotar manualmente'
-    TabOrder = 47
+    TabOrder = 46
     OnClick = Button14Click
   end
   object Button17: TButton
     Left = 728
-    Top = 260
+    Top = 258
     Width = 214
     Height = 25
     Caption = 'Imprimir complementos especiales'
-    TabOrder = 49
+    TabOrder = 48
     OnClick = Button17Click
   end
   object Button15: TButton
@@ -559,28 +721,8 @@ object fPedidos: TfPedidos
     Width = 230
     Height = 20
     Caption = 'Cancelar cambios'
-    TabOrder = 46
-    OnClick = Button15Click
-  end
-  object ListBox1: TListBox
-    Left = 959
-    Top = 34
-    Width = 370
-    Height = 608
-    Style = lbOwnerDrawFixed
-    Columns = 1
-    Ctl3D = False
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Calibri'
-    Font.Style = []
-    ItemHeight = 22
-    ParentCtl3D = False
-    ParentFont = False
     TabOrder = 45
-    OnDblClick = ListBox1DblClick
-    OnDrawItem = ListBox1DrawItem
+    OnClick = Button15Click
   end
   object RGTexto: TRadioGroup
     Left = 365
@@ -768,7 +910,7 @@ object fPedidos: TfPedidos
   object cbRefProducto: TComboBox
     Left = 719
     Top = 388
-    Width = 229
+    Width = 106
     Height = 22
     Style = csOwnerDrawFixed
     TabOrder = 6
@@ -777,7 +919,7 @@ object fPedidos: TfPedidos
   object cbRefMedioContacto: TComboBox
     Left = 719
     Top = 343
-    Width = 229
+    Width = 178
     Height = 22
     Style = csOwnerDrawFixed
     TabOrder = 7
@@ -801,7 +943,7 @@ object fPedidos: TfPedidos
   end
   object DBGrid1: TDBGrid
     Left = 8
-    Top = 152
+    Top = 151
     Width = 521
     Height = 178
     DataSource = DataSource2
@@ -827,7 +969,7 @@ object fPedidos: TfPedidos
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 70
+        Width = 68
         Visible = True
       end
       item
@@ -841,7 +983,7 @@ object fPedidos: TfPedidos
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 80
+        Width = 68
         Visible = True
       end
       item
@@ -855,7 +997,7 @@ object fPedidos: TfPedidos
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 80
+        Width = 68
         Visible = True
       end
       item
@@ -869,7 +1011,7 @@ object fPedidos: TfPedidos
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 80
+        Width = 68
         Visible = True
       end
       item
@@ -883,21 +1025,34 @@ object fPedidos: TfPedidos
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 80
+        Width = 68
         Visible = True
       end
       item
         Alignment = taCenter
         Expanded = False
-        FieldName = 'comentario'
+        FieldName = 'Comentario'
         Title.Alignment = taCenter
-        Title.Caption = 'Comentario'
         Title.Font.Charset = DEFAULT_CHARSET
         Title.Font.Color = clWindowText
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 90
+        Width = 88
+        Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'valor'
+        Title.Alignment = taCenter
+        Title.Caption = 'Valor'
+        Title.Font.Charset = DEFAULT_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -12
+        Title.Font.Name = 'Tahoma'
+        Title.Font.Style = [fsBold]
+        Width = 52
         Visible = True
       end>
   end
@@ -937,7 +1092,7 @@ object fPedidos: TfPedidos
   end
   object Button2: TButton
     Left = 720
-    Top = 96
+    Top = 102
     Width = 230
     Height = 23
     Caption = 'Actualizar cantidades'
@@ -946,7 +1101,7 @@ object fPedidos: TfPedidos
   end
   object Button7: TButton
     Left = 720
-    Top = 123
+    Top = 126
     Width = 230
     Height = 23
     Caption = 'Eliminar todo el pedido'
@@ -1105,7 +1260,7 @@ object fPedidos: TfPedidos
       item
         Alignment = taRightJustify
         Expanded = False
-        FieldName = 'Numero'
+        FieldName = 'numero'
         Title.Alignment = taCenter
         Title.Caption = 'N'#250'mero'
         Title.Font.Charset = DEFAULT_CHARSET
@@ -1129,7 +1284,7 @@ object fPedidos: TfPedidos
   object rgUbicacion: TRadioGroup
     Left = 315
     Top = 70
-    Width = 206
+    Width = 114
     Height = 76
     Caption = 'Ubicacion'
     Items.Strings = (
@@ -1140,9 +1295,9 @@ object fPedidos: TfPedidos
   object Button9: TButton
     Left = 145
     Top = 6
-    Width = 163
+    Width = 164
     Height = 35
-    Caption = 'Seleccionar otro cliente'
+    Caption = 'Selecionar otro cliente'
     TabOrder = 32
     OnClick = Button9Click
   end
@@ -1166,8 +1321,8 @@ object fPedidos: TfPedidos
     OnClick = Button3Click
   end
   object Edit2: TEdit
-    Left = 853
-    Top = 209
+    Left = 851
+    Top = 212
     Width = 89
     Height = 21
     Alignment = taCenter
@@ -1182,8 +1337,8 @@ object fPedidos: TfPedidos
     Text = '10000'
   end
   object CheckBox1: TCheckBox
-    Left = 853
-    Top = 180
+    Left = 851
+    Top = 183
     Width = 89
     Height = 17
     Caption = 'L'#237'mite de l'#237'neas'
@@ -1206,63 +1361,14 @@ object fPedidos: TfPedidos
     WordWrap = True
     OnClick = Button11Click
   end
-  object Panel16: TPanel
-    Left = 1011
-    Top = 59
-    Width = 269
-    Height = 231
-    Caption = 'Panel16'
-    Color = 11448063
-    ParentBackground = False
-    ShowCaption = False
-    TabOrder = 48
-    Visible = False
-    object Label11: TLabel
-      Left = 12
-      Top = 4
-      Width = 245
-      Height = 18
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Clientes que pidieron esta comida'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object ListBox2: TListBox
-      Left = 12
-      Top = 26
-      Width = 245
-      Height = 170
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ItemHeight = 15
-      ParentFont = False
-      TabOrder = 0
-    end
-    object Button16: TButton
-      Left = 58
-      Top = 201
-      Width = 153
-      Height = 25
-      Caption = 'Ocultar'
-      TabOrder = 1
-      OnClick = Button16Click
-    end
-  end
   object Memo2: TMemo
     Left = 375
     Top = 358
     Width = 14
     Height = 13
-    TabOrder = 51
+    TabOrder = 50
     Visible = False
+    WordWrap = False
   end
   object Button21: TButton
     Left = 441
@@ -1270,19 +1376,19 @@ object fPedidos: TfPedidos
     Width = 90
     Height = 35
     Caption = 'Imprimir detalle'
-    TabOrder = 54
+    TabOrder = 53
     WordWrap = True
     OnClick = Button21Click
   end
   object Panel18: TPanel
     Left = 721
-    Top = 96
+    Top = 102
     Width = 229
     Height = 23
     Caption = 'Actualizar cantidades'
     Color = 14671839
     ParentBackground = False
-    TabOrder = 55
+    TabOrder = 54
     OnClick = Panel18Click
   end
   object Panel19: TPanel
@@ -1293,7 +1399,7 @@ object fPedidos: TfPedidos
     Caption = 'Actualizar ubicaci'#243'n'
     Color = 14671839
     ParentBackground = False
-    TabOrder = 56
+    TabOrder = 55
     OnClick = Panel19Click
   end
   object Memo3: TMemo
@@ -1305,7 +1411,7 @@ object fPedidos: TfPedidos
       'Me'
       'mo'
       '3')
-    TabOrder = 58
+    TabOrder = 57
     Visible = False
   end
   object Panel10: TPanel
@@ -1458,7 +1564,7 @@ object fPedidos: TfPedidos
     Color = 11184895
     ParentBackground = False
     ShowCaption = False
-    TabOrder = 50
+    TabOrder = 49
     Visible = False
     object DBGrid4: TDBGrid
       Left = 23
@@ -1548,58 +1654,13 @@ object fPedidos: TfPedidos
       OnClick = Button19Click
     end
   end
-  object Panel11: TPanel
-    Left = 833
-    Top = 631
-    Width = 477
-    Height = 292
-    Caption = 'Panel11'
-    Color = 11184895
-    ParentBackground = False
-    ShowCaption = False
-    TabOrder = 40
-    Visible = False
-    object Memo1: TMemo
-      Left = 16
-      Top = 16
-      Width = 445
-      Height = 240
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Calibri'
-      Font.Style = []
-      Lines.Strings = (
-        'Memo1')
-      ParentFont = False
-      TabOrder = 0
-    end
-    object Button12: TButton
-      Left = 274
-      Top = 261
-      Width = 134
-      Height = 25
-      Caption = 'Ocultar'
-      TabOrder = 1
-      OnClick = Button12Click
-    end
-    object Button13: TButton
-      Left = 67
-      Top = 261
-      Width = 134
-      Height = 25
-      Caption = 'Copiar al portapapeles'
-      TabOrder = 2
-      OnClick = Button13Click
-    end
-  end
   object Button23: TButton
     Left = 531
     Top = 6
     Width = 90
     Height = 35
     Caption = 'Imp. detalle ediatble'
-    TabOrder = 59
+    TabOrder = 58
     WordWrap = True
     OnClick = Button23Click
   end
@@ -1609,7 +1670,7 @@ object fPedidos: TfPedidos
     Width = 90
     Height = 35
     Caption = 'Imprimir factura'
-    TabOrder = 60
+    TabOrder = 59
     WordWrap = True
     OnClick = Button24Click
   end
@@ -1620,70 +1681,8 @@ object fPedidos: TfPedidos
     Height = 25
     Caption = 'Control de pedidos habituales'
     PopupMenu = PopupMenu7
-    TabOrder = 61
+    TabOrder = 60
     OnClick = Button25Click
-  end
-  object Panel20: TPanel
-    Left = 215
-    Top = 673
-    Width = 316
-    Height = 460
-    Caption = 'Panel20'
-    Color = 11184895
-    ParentBackground = False
-    ShowCaption = False
-    TabOrder = 62
-    Visible = False
-    object Label19: TLabel
-      Left = 15
-      Top = 11
-      Width = 280
-      Height = 18
-      Alignment = taCenter
-      Caption = 'Clientes que a'#250'n no realizaron pedido'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
-    object DBGrid5: TDBGrid
-      Left = 16
-      Top = 32
-      Width = 285
-      Height = 388
-      DataSource = DScch
-      TabOrder = 0
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
-      Columns = <
-        item
-          Expanded = False
-          FieldName = 'cliente'
-          Title.Alignment = taCenter
-          Title.Caption = 'Cliente'
-          Title.Font.Charset = DEFAULT_CHARSET
-          Title.Font.Color = clWindowText
-          Title.Font.Height = -12
-          Title.Font.Name = 'Tahoma'
-          Title.Font.Style = [fsBold]
-          Width = 252
-          Visible = True
-        end>
-    end
-    object Button26: TButton
-      Left = 78
-      Top = 427
-      Width = 159
-      Height = 25
-      Caption = 'Cerrar'
-      TabOrder = 1
-      OnClick = Button26Click
-    end
   end
   object Button28: TButton
     Left = 571
@@ -1701,7 +1700,7 @@ object fPedidos: TfPedidos
     ParentShowHint = False
     PopupMenu = PopupMenu6
     ShowHint = True
-    TabOrder = 65
+    TabOrder = 63
     OnClick = Button28Click
   end
   object Button29: TButton
@@ -1720,7 +1719,7 @@ object fPedidos: TfPedidos
     ParentShowHint = False
     PopupMenu = PopupMenu4
     ShowHint = True
-    TabOrder = 66
+    TabOrder = 64
     OnClick = Button29Click
   end
   object Button30: TButton
@@ -1739,7 +1738,7 @@ object fPedidos: TfPedidos
     ParentShowHint = False
     PopupMenu = PopupMenu9
     ShowHint = True
-    TabOrder = 67
+    TabOrder = 65
     OnClick = Button30Click
   end
   object Button31: TButton
@@ -1758,7 +1757,7 @@ object fPedidos: TfPedidos
     ParentShowHint = False
     PopupMenu = PopupMenu10
     ShowHint = True
-    TabOrder = 68
+    TabOrder = 66
     OnClick = Button31Click
   end
   object Button32: TButton
@@ -1776,7 +1775,7 @@ object fPedidos: TfPedidos
     ParentFont = False
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 69
+    TabOrder = 67
     OnClick = Button32Click
   end
   object Button33: TButton
@@ -1795,7 +1794,7 @@ object fPedidos: TfPedidos
     ParentShowHint = False
     PopupMenu = PopupMenu8
     ShowHint = True
-    TabOrder = 70
+    TabOrder = 68
     OnClick = Button33Click
   end
   object Button34: TButton
@@ -1813,7 +1812,7 @@ object fPedidos: TfPedidos
     ParentFont = False
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 71
+    TabOrder = 69
     OnClick = Button34Click
   end
   object Button35: TButton
@@ -1831,7 +1830,7 @@ object fPedidos: TfPedidos
     ParentFont = False
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 72
+    TabOrder = 70
     OnClick = Button35Click
   end
   object Panel21: TPanel
@@ -1843,7 +1842,7 @@ object fPedidos: TfPedidos
     Color = 16766421
     ParentBackground = False
     ShowCaption = False
-    TabOrder = 73
+    TabOrder = 71
     object Label22: TLabel
       Left = 114
       Top = 10
@@ -1864,7 +1863,7 @@ object fPedidos: TfPedidos
       Width = 260
       Height = 160
       MultiSelect = True
-      Date = 43949.479812141200000000
+      Date = 43949.388494490740000000
       EndDate = 43949.000000000000000000
       MaxSelectRange = 500
       PopupMenu = PopupMenu1
@@ -1920,22 +1919,23 @@ object fPedidos: TfPedidos
     end
   end
   object Button36: TButton
-    Left = 884
-    Top = 76
+    Left = 956
+    Top = 25
     Width = 69
     Height = 18
     Caption = 'Presup.'
-    TabOrder = 74
+    TabOrder = 72
+    Visible = False
     OnClick = Button36Click
   end
   object Button37: TButton
-    Left = 884
+    Left = 882
     Top = 56
     Width = 69
-    Height = 19
+    Height = 40
     Caption = 'Copiar valor'
     PopupMenu = PopupMenu3
-    TabOrder = 75
+    TabOrder = 73
     OnClick = Button37Click
   end
   object rgOficinas: TRadioGroup
@@ -1944,8 +1944,592 @@ object fPedidos: TfPedidos
     Width = 703
     Height = 241
     Caption = 'Men'#250' para oficinas'
-    TabOrder = 79
+    TabOrder = 77
     OnClick = rgOficinasClick
+  end
+  object panel_invisible: TPanel
+    Left = 59
+    Top = 199
+    Width = 438
+    Height = 114
+    Caption = 'panel invisible'
+    Color = 13041607
+    ParentBackground = False
+    TabOrder = 79
+    Visible = False
+    object qry_etiquetas_viandas_normales: TMemo
+      Left = 21
+      Top = 14
+      Width = 63
+      Height = 50
+      Lines.Strings = (
+        'SELECT '
+        #9#9'pedidos.refCliente'
+        '        ,pedidos.comentario'
+        '        ,pedidos.refComida1'
+        '        ,pedidos.refComida2'
+        '        ,pedidos.refComida3'
+        '        ,pedidos.refProducto'
+        '        ,pedidos.comentarioParaCocina'
+        '        ,t_aux.nroApa'
+        
+          '        ,IF(comidas1.codigo = :una, '#39'1'#39', IF(comidas1.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas1.codigo)) AS c1'
+        
+          '        ,IF(comidas2.codigo = :una, '#39'1'#39', IF(comidas2.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas2.codigo)) AS c2'
+        
+          '        ,IF(comidas3.codigo = :una, '#39'1'#39', IF(comidas3.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas3.codigo)) AS c3'
+        
+          '        ,IF(comidas4.codigo = :una, '#39'1'#39', IF(comidas4.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas4.codigo)) AS c4'
+        
+          '        ,CAST(cantidades.refRepartidor AS UNSIGNED INTEGER) AS r' +
+          'efRep'
+        '        ,(cantidades.sectorReparto + 1) AS salidaRep'
+        
+          '        ,UPPER(SUBSTRING(repartidores.descripcion, 1, 4)) AS Rep' +
+          'artidor'
+        '        ,clientes.Numero AS Numero'
+        ''
+        'FROM'
+        #9#9'pedidos'
+        
+          '        LEFT JOIN comidas comidas1 ON comidas1.idComida = pedido' +
+          's.refComida1'
+        
+          '        LEFT JOIN comidas comidas2 ON comidas2.idComida = pedido' +
+          's.refComida2'
+        
+          '        LEFT JOIN comidas comidas3 ON comidas3.idComida = pedido' +
+          's.refComida3'
+        
+          '        LEFT JOIN comidas comidas4 ON comidas4.idComida = pedido' +
+          's.refComida4'
+        
+          '        LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.' +
+          'refCantidad'
+        
+          '        LEFT JOIN repartidores ON repartidores.idRepartidor = ca' +
+          'ntidades.refRepartidor'
+        
+          '        LEFT JOIN clientes ON clientes.idCliente = pedidos.refCl' +
+          'iente'
+        '        '
+        '        INNER JOIN'
+        '        ( '
+        #9#9#9#9#9'SELECT '#9'refComida1'
+        #9#9#9#9#9#9#9',refComida2'
+        '                            ,refComida3'
+        '                            ,comentarioParaCocina'
+        '                            ,COUNT(*) AS nroApa'
+        #9#9#9#9#9'FROM '#9
+        #9#9#9#9#9#9#9'pedidos'
+        
+          #9#9#9#9#9#9#9'LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.r' +
+          'efCantidad'
+        #9#9#9#9#9
+        '                    WHERE '
+        #9#9#9#9#9#9#9'momento >= :mi AND momento <= :mf '
+        #9#9#9#9#9#9#9'AND cantidades.sectorReparto = :sr'
+        #9#9#9#9#9#9#9'AND etiquetaImpresa = 0 '
+        #9#9#9#9#9#9#9'AND omitirEtiqueta = 0 '
+        
+          '                            AND refProducto = 1'#9'/*viandas normal' +
+          'es*/'
+        #9#9#9#9#9
+        '                    GROUP BY '
+        #9#9#9#9#9#9#9'refComida1'
+        '                            ,refComida2'
+        '                            ,refComida3'
+        '                            ,comentarioParaCocina'
+        #9#9') t_aux'
+        '        ON '
+        #9#9#9't_aux.refComida1 = pedidos.refComida1'
+        '            AND t_aux.refComida2 = pedidos.refComida2'
+        '            AND t_aux.refComida3 = pedidos.refComida3'
+        
+          '            AND t_aux.comentarioParaCocina = pedidos.comentarioP' +
+          'araCocina'
+        ''
+        'WHERE'#9
+        #9#9'pedidos.momento >= :mi AND pedidos.momento <= :mf'
+        '        AND cantidades.sectorReparto = :sr'
+        #9#9'AND pedidos.etiquetaImpresa = 0 '
+        #9#9'AND pedidos.omitirEtiqueta = 0 '
+        #9#9'AND ('
+        #9#9#9'(:filtrarRep = 0 AND pedidos.refProducto = 1)'
+        
+          #9#9#9'OR (:filtrarRep = 1 AND pedidos.refProducto = 1 AND cantidade' +
+          's.refRepartidor = :refRep)'
+        #9#9')'
+        '        '
+        '        '
+        '        '
+        'ORDER BY '
+        #9#9'pedidos.comentarioParaCocina'
+        '        ,t_aux.nroApa DESC'
+        '        ,pedidos.refComida1'
+        '        ,pedidos.refComida2'
+        '        ,pedidos.refComida3'
+        '        ,refRep')
+      TabOrder = 0
+      Visible = False
+      WordWrap = False
+    end
+    object qry_etiquetas_viandas_oficinas: TMemo
+      Left = 90
+      Top = 14
+      Width = 63
+      Height = 50
+      Lines.Strings = (
+        'SELECT '
+        #9#9'pedidos.refCliente'
+        '        ,pedidos.comentario'
+        '        ,pedidos.refComida1'
+        '        ,pedidos.refComida2'
+        '        ,pedidos.refComida3'
+        '        ,pedidos.refProducto'
+        '        ,pedidos.comentarioParaCocina'
+        '        ,t_aux.nroApa'
+        
+          '        ,IF(comidas1.codigo = :una, '#39'1'#39', IF(comidas1.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas1.codigo)) AS c1'
+        
+          '        ,IF(comidas2.codigo = :una, '#39'1'#39', IF(comidas2.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas2.codigo)) AS c2'
+        
+          '        ,IF(comidas3.codigo = :una, '#39'1'#39', IF(comidas3.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas3.codigo)) AS c3'
+        
+          '        ,IF(comidas4.codigo = :una, '#39'1'#39', IF(comidas4.codigo = :e' +
+          'ns, '#39'ENS'#39', comidas4.codigo)) AS c4'
+        
+          '        ,CAST(cantidades.refRepartidor AS UNSIGNED INTEGER) AS r' +
+          'efRep'
+        '        ,(cantidades.sectorReparto + 1) AS salidaRep'
+        
+          '        ,UPPER(SUBSTRING(repartidores.descripcion, 1, 4)) AS Rep' +
+          'artidor'
+        '        ,clientes.Numero AS Numero'
+        ''
+        'FROM'
+        #9#9'pedidos'
+        
+          '        LEFT JOIN comidas comidas1 ON comidas1.idComida = pedido' +
+          's.refComida1'
+        
+          '        LEFT JOIN comidas comidas2 ON comidas2.idComida = pedido' +
+          's.refComida2'
+        
+          '        LEFT JOIN comidas comidas3 ON comidas3.idComida = pedido' +
+          's.refComida3'
+        
+          '        LEFT JOIN comidas comidas4 ON comidas4.idComida = pedido' +
+          's.refComida4'
+        
+          '        LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.' +
+          'refCantidad'
+        
+          '        LEFT JOIN repartidores ON repartidores.idRepartidor = ca' +
+          'ntidades.refRepartidor'
+        
+          '        LEFT JOIN clientes ON clientes.idCliente = pedidos.refCl' +
+          'iente'
+        '        '
+        '        INNER JOIN'
+        '        ( '
+        #9#9#9#9#9'SELECT '#9'refComida1'
+        #9#9#9#9#9#9#9',refComida2'
+        '                            ,refComida3'
+        '                            ,comentarioParaCocina'
+        '                            ,COUNT(*) AS nroApa'
+        #9#9#9#9#9'FROM '#9
+        #9#9#9#9#9#9#9'pedidos'
+        
+          #9#9#9#9#9#9#9'LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.r' +
+          'efCantidad'
+        #9#9#9#9#9
+        '                    WHERE '
+        #9#9#9#9#9#9#9'momento >= :mi AND momento <= :mf '
+        #9#9#9#9#9#9#9'AND etiquetaImpresa = 0 '
+        #9#9#9#9#9#9#9'AND omitirEtiqueta = 0 '
+        
+          '                            AND refProducto = 2'#9'/*viandas oficin' +
+          'as*/'
+        #9#9#9#9#9
+        '                    GROUP BY '
+        #9#9#9#9#9#9#9'refComida1'
+        '                            ,refComida2'
+        '                            ,refComida3'
+        '                            ,comentarioParaCocina'
+        #9#9') t_aux'
+        '        ON '
+        #9#9#9't_aux.refComida1 = pedidos.refComida1'
+        '            AND t_aux.refComida2 = pedidos.refComida2'
+        '            AND t_aux.refComida3 = pedidos.refComida3'
+        
+          '            AND t_aux.comentarioParaCocina = pedidos.comentarioP' +
+          'araCocina'
+        ''
+        'WHERE'#9
+        #9#9'pedidos.momento >= :mi AND pedidos.momento <= :mf'
+        #9#9'AND pedidos.etiquetaImpresa = 0 '
+        #9#9'AND pedidos.omitirEtiqueta = 0 '
+        #9#9'AND pedidos.refProducto = 2 '
+        '        '
+        '        '
+        'ORDER BY '
+        #9#9'pedidos.comentarioParaCocina'
+        '        ,t_aux.nroApa DESC'
+        '        ,pedidos.refComida1'
+        '        ,pedidos.refComida2'
+        '        ,pedidos.refComida3'
+        '        ,refRep')
+      TabOrder = 1
+      Visible = False
+      WordWrap = False
+    end
+    object qry_pedidos: TMemo
+      Left = 159
+      Top = 14
+      Width = 63
+      Height = 50
+      Lines.Strings = (
+        'SELECT '
+        #9#9'idPedido'
+        '        ,TIME(momento) AS hora'
+        '        ,comentario'
+        '        ,refCantidad'
+        '        ,valor'
+        '        ,refProducto'
+        
+          '        ,IF(comidas1.codigo = :una, '#39'1'#39', IF(comidas1.codigo = :e' +
+          'ns, '#39'ENS'#39', IF(comidas1.codigo = '#39'NO'#39', '#39#39', comidas1.codigo))) AS ' +
+          'com1'
+        
+          '        ,IF(comidas2.codigo = :una, '#39'1'#39', IF(comidas2.codigo = :e' +
+          'ns, '#39'ENS'#39', IF(comidas2.codigo = '#39'NO'#39', '#39#39', comidas2.codigo))) AS ' +
+          'com2'
+        
+          '        ,IF(comidas3.codigo = :una, '#39'1'#39', IF(comidas3.codigo = :e' +
+          'ns, '#39'ENS'#39', IF(comidas3.codigo = '#39'NO'#39', '#39#39', comidas3.codigo))) AS ' +
+          'com3'
+        
+          '        ,IF(comidas4.codigo = :una, '#39'1'#39', IF(comidas4.codigo = :e' +
+          'ns, '#39'ENS'#39', IF(comidas4.codigo = '#39'NO'#39', '#39#39', comidas4.codigo))) AS ' +
+          'com4'
+        '        '
+        '          '
+        'FROM '
+        #9#9'pedidos '
+        
+          '        LEFT JOIN comidas comidas1 ON comidas1.idComida = pedido' +
+          's.refComida1'
+        
+          '        LEFT JOIN comidas comidas2 ON comidas2.idComida = pedido' +
+          's.refComida2'
+        
+          '        LEFT JOIN comidas comidas3 ON comidas3.idComida = pedido' +
+          's.refComida3'
+        
+          '        LEFT JOIN comidas comidas4 ON comidas4.idComida = pedido' +
+          's.refComida4'
+        '        '
+        '        '
+        'WHERE'
+        #9#9'pedidos.refCliente = :rc '
+        '        AND momento >= :mi AND momento <= :mf '
+        ''
+        'ORDER BY'
+        #9#9'momento')
+      TabOrder = 2
+      Visible = False
+      WordWrap = False
+    end
+    object qry_etiquetas_complementos: TMemo
+      Left = 228
+      Top = 14
+      Width = 63
+      Height = 50
+      Lines.Strings = (
+        'SELECT '
+        '        pedidos.comentario'
+        '        ,pedidos.refComida4'
+        '        ,comidas4.codigo AS c4'
+        '        ,t_aux.nroApa'
+        
+          '        ,CAST(cantidades.refRepartidor AS SIGNED INTEGER) AS ref' +
+          'Rep'
+        
+          '        ,CAST((cantidades.sectorReparto + 1) AS SIGNED INTEGER) ' +
+          'AS salidaRep'
+        
+          '        ,UPPER(SUBSTRING(repartidores.descripcion, 1, 4)) AS Rep' +
+          'artidor'
+        '        ,clientes.Numero AS Numero'
+        ''
+        'FROM'
+        #9#9'pedidos'
+        
+          '        LEFT JOIN comidas comidas4 ON comidas4.idComida = pedido' +
+          's.refComida4'
+        
+          '        LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.' +
+          'refCantidad'
+        
+          '        LEFT JOIN repartidores ON repartidores.idRepartidor = ca' +
+          'ntidades.refRepartidor'
+        
+          '        LEFT JOIN clientes ON clientes.idCliente = pedidos.refCl' +
+          'iente'
+        '        '
+        '        INNER JOIN'
+        '        ( '
+        #9#9#9#9#9'SELECT '#9'refComida4'
+        '                            ,COUNT(*) AS nroApa'
+        #9#9#9#9#9'FROM '#9
+        #9#9#9#9#9#9#9'pedidos'
+        
+          #9#9#9#9#9#9#9'LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.r' +
+          'efCantidad'
+        #9#9#9#9#9
+        '                    WHERE '
+        #9#9#9#9#9#9#9'momento >= :mi AND momento <= :mf '
+        #9#9#9#9#9#9#9'AND complementoImpreso = 0'
+        '                            AND pedidos.refComida4 > 1'
+        #9#9#9#9#9
+        '                    GROUP BY '
+        #9#9#9#9#9#9#9'refComida4'
+        #9#9') t_aux'
+        '        ON '
+        #9#9#9't_aux.refComida4 = pedidos.refComida4'
+        ''
+        'WHERE'#9
+        #9#9'pedidos.momento >= :mi AND pedidos.momento <= :mf'
+        '        AND pedidos.refComida4 > 1'
+        #9#9'AND pedidos.complementoImpreso = 0  '
+        '        AND pedidos.refComida4 <> :c1'
+        '        AND pedidos.refComida4 <> :c2'
+        '        '
+        '        '
+        'ORDER BY '
+        '        t_aux.nroApa DESC'
+        '        ,pedidos.refComida4'
+        '        ,refRep'
+        '        ,salidaRep')
+      TabOrder = 3
+      Visible = False
+      WordWrap = False
+    end
+    object qry_etiquetas_bolsas: TMemo
+      Left = 297
+      Top = 14
+      Width = 76
+      Height = 50
+      Lines.Strings = (
+        'SELECT'
+        #9#9'clientes.numero'
+        '        ,clientes.calle'
+        '        ,clientes.menuImpreso'
+        '        ,repartidores.nombreCorto AS rep'
+        
+          '        ,CONCAT(cantidades.nroBandejas, '#39' - '#39',  CASE cantidades.' +
+          'txtComplemento WHEN '#39#39' THEN '#39'NO'#39' ELSE cantidades.txtComplemento ' +
+          'END) AS detalle'
+        
+          '        ,(SELECT GROUP_CONCAT(DISTINCT comentario SEPARATOR '#39' & ' +
+          #39') FROM pedidos WHERE refCantidad = cantidades.idCantidad) AS co' +
+          'mentarios'
+        '        '
+        'FROM '#9'cantidades'
+        
+          #9#9'LEFT JOIN clientes ON clientes.idCliente = cantidades.refClien' +
+          'te'
+        
+          #9#9'LEFT JOIN repartidores ON repartidores.idRepartidor = cantidad' +
+          'es.refRepartidor'
+        ''
+        'WHERE '#9'cantidades.fecha = :f'
+        #9#9'AND cantidades.refRepartidor = :rep'
+        '        AND cantidades.sectorReparto = :sr'
+        ''
+        'ORDER BY numero')
+      TabOrder = 4
+      WordWrap = False
+    end
+  end
+  object Panel16: TPanel
+    Left = 956
+    Top = 59
+    Width = 368
+    Height = 231
+    Caption = 'Panel16'
+    Color = 11448063
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 47
+    Visible = False
+    object Label11: TLabel
+      Left = 12
+      Top = 4
+      Width = 346
+      Height = 18
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Clientes que pidieron esta comida'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object ListBox2: TListBox
+      Left = 19
+      Top = 26
+      Width = 346
+      Height = 170
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ItemHeight = 15
+      ParentFont = False
+      TabOrder = 0
+      OnDblClick = ListBox2DblClick
+    end
+    object Button16: TButton
+      Left = 114
+      Top = 202
+      Width = 153
+      Height = 25
+      Caption = 'Ocultar'
+      TabOrder = 1
+      OnClick = Button16Click
+    end
+  end
+  object Panel20: TPanel
+    Left = 215
+    Top = 673
+    Width = 316
+    Height = 460
+    Caption = 'Panel20'
+    Color = 11184895
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 61
+    Visible = False
+    object Label19: TLabel
+      Left = 15
+      Top = 11
+      Width = 280
+      Height = 18
+      Alignment = taCenter
+      Caption = 'Clientes que a'#250'n no realizaron pedido'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object DBGrid5: TDBGrid
+      Left = 16
+      Top = 32
+      Width = 285
+      Height = 388
+      DataSource = DScch
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'cliente'
+          Title.Alignment = taCenter
+          Title.Caption = 'Cliente'
+          Title.Font.Charset = DEFAULT_CHARSET
+          Title.Font.Color = clWindowText
+          Title.Font.Height = -12
+          Title.Font.Name = 'Tahoma'
+          Title.Font.Style = [fsBold]
+          Width = 252
+          Visible = True
+        end>
+    end
+    object Button26: TButton
+      Left = 78
+      Top = 427
+      Width = 159
+      Height = 25
+      Caption = 'Cerrar'
+      TabOrder = 1
+      OnClick = Button26Click
+    end
+  end
+  object Panel11: TPanel
+    Left = 833
+    Top = 631
+    Width = 477
+    Height = 292
+    Caption = 'Panel11'
+    Color = 11184895
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 40
+    Visible = False
+    object Memo1: TMemo
+      Left = 16
+      Top = 16
+      Width = 445
+      Height = 240
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Calibri'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo1')
+      ParentFont = False
+      TabOrder = 0
+    end
+    object Button12: TButton
+      Left = 274
+      Top = 261
+      Width = 134
+      Height = 25
+      Caption = 'Ocultar'
+      TabOrder = 1
+      OnClick = Button12Click
+    end
+    object Button13: TButton
+      Left = 67
+      Top = 261
+      Width = 134
+      Height = 25
+      Caption = 'Copiar al portapapeles'
+      TabOrder = 2
+      OnClick = Button13Click
+    end
+  end
+  object Panel22: TPanel
+    Left = 259
+    Top = 43
+    Width = 50
+    Height = 18
+    Hint = 'Este cliente no esta habilitado para comprar los d'#237'as s'#225'abados.'
+    Caption = 'S'#225'bado'
+    Color = 6974207
+    ParentBackground = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 82
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -2006,6 +2590,43 @@ object fPedidos: TfPedidos
     ReadOnly = True
     Left = 1280
     Top = 384
+    object ClientDataSet2idPedido: TIntegerField
+      FieldName = 'idPedido'
+    end
+    object ClientDataSet2hora: TTimeField
+      FieldName = 'hora'
+    end
+    object ClientDataSet2Comentario: TWideStringField
+      FieldName = 'Comentario'
+      Size = 30
+    end
+    object ClientDataSet2refCantidad: TIntegerField
+      FieldName = 'refCantidad'
+    end
+    object ClientDataSet2valor: TFMTBCDField
+      FieldName = 'valor'
+      DisplayFormat = '$0'
+      Size = 10
+    end
+    object ClientDataSet2refProducto: TIntegerField
+      FieldName = 'refProducto'
+    end
+    object ClientDataSet2com1: TWideStringField
+      FieldName = 'com1'
+      Size = 10
+    end
+    object ClientDataSet2com2: TWideStringField
+      FieldName = 'com2'
+      Size = 10
+    end
+    object ClientDataSet2com3: TWideStringField
+      FieldName = 'com3'
+      Size = 10
+    end
+    object ClientDataSet2com4: TWideStringField
+      FieldName = 'com4'
+      Size = 10
+    end
   end
   object PopupMenu1: TPopupMenu
     Left = 154
@@ -2116,6 +2737,35 @@ object fPedidos: TfPedidos
     ReadOnly = True
     Left = 1272
     Top = 459
+    object ClientDataSet3idCliente: TIntegerField
+      FieldName = 'idCliente'
+    end
+    object ClientDataSet3calle: TWideStringField
+      FieldName = 'calle'
+      Size = 40
+    end
+    object ClientDataSet3numero: TWideStringField
+      FieldName = 'numero'
+      Size = 10
+    end
+    object ClientDataSet3acumuladoGlobal: TFMTBCDField
+      FieldName = 'acumuladoGlobal'
+      Size = 10
+    end
+    object ClientDataSet3deuda: TFMTBCDField
+      FieldName = 'deuda'
+      Size = 10
+    end
+    object ClientDataSet3pos: TIntegerField
+      FieldName = 'pos'
+    end
+    object ClientDataSet3division: TIntegerField
+      FieldName = 'division'
+    end
+    object ClientDataSet3Repartidor: TWideStringField
+      FieldName = 'Repartidor'
+      Size = 15
+    end
   end
   object QueryEtiquetas: TSQLQuery
     MaxBlobSize = -1
@@ -3040,7 +3690,7 @@ object fPedidos: TfPedidos
       FieldName = 'Repartidor'
       Size = 0
     end
-    object CDSEtiquetasCompsalidaRep: TLargeintField
+    object CDSEtiquetasCompsalidaRep: TIntegerField
       FieldName = 'salidaRep'
     end
   end
@@ -3095,8 +3745,8 @@ object fPedidos: TfPedidos
     MaxBlobSize = -1
     Params = <>
     SQLConnection = SQLConnection1
-    Left = 432
-    Top = 248
+    Left = 440
+    Top = 240
   end
   object Timer3: TTimer
     Enabled = False
@@ -3109,8 +3759,8 @@ object fPedidos: TfPedidos
     MaxBlobSize = -1
     Params = <>
     SQLConnection = SQLConnection1
-    Left = 616
-    Top = 232
+    Left = 576
+    Top = 184
   end
   object PopupMenu3: TPopupMenu
     Left = 936
@@ -3121,8 +3771,8 @@ object fPedidos: TfPedidos
     end
   end
   object PopupMenu4: TPopupMenu
-    Left = 608
-    Top = 568
+    Left = 600
+    Top = 560
     object Copiarmensemanal1: TMenuItem
       Caption = 'Copiar men'#250' semanal'
       OnClick = Copiarmensemanal1Click
@@ -3130,6 +3780,10 @@ object fPedidos: TfPedidos
     object Menudeldaparaoficinas1: TMenuItem
       Caption = 'Menu del d'#237'a para oficinas'
       OnClick = Menudeldaparaoficinas1Click
+    end
+    object Menusemanalparaoficinas1: TMenuItem
+      Caption = 'Menu semanal para oficinas'
+      OnClick = Menusemanalparaoficinas1Click
     end
   end
   object PopupMenu5: TPopupMenu
@@ -3141,8 +3795,8 @@ object fPedidos: TfPedidos
     end
   end
   object PopupMenu6: TPopupMenu
-    Left = 560
-    Top = 584
+    Left = 528
+    Top = 552
     object BDRecibimoselsig1: TMenuItem
       Caption = 'BD - Recibimos el sig...'
       OnClick = BDRecibimoselsig1Click
@@ -3178,7 +3832,11 @@ object fPedidos: TfPedidos
   end
   object PopupMenu9: TPopupMenu
     Left = 640
-    Top = 608
+    Top = 552
+    object Informaciondeviandasnormales1: TMenuItem
+      Caption = 'Informacion de viandas normales'
+      OnClick = Informaciondeviandasnormales1Click
+    end
     object Informacinparaoficinas1: TMenuItem
       Caption = 'Informaci'#243'n para oficinas'
       OnClick = Informacinparaoficinas1Click
@@ -3191,6 +3849,446 @@ object fPedidos: TfPedidos
       Caption = 'Viandas para oficinas'
       Default = True
       OnClick = Viandasparaoficinas1Click
+    end
+  end
+  object DataSetProvider5: TDataSetProvider
+    DataSet = QueryRep
+    Left = 584
+    Top = 320
+  end
+  object CDS5: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProvider5'
+    Left = 624
+    Top = 320
+    object CDS5refRepartidor: TIntegerField
+      FieldName = 'refRepartidor'
+    end
+    object CDS5reparto: TIntegerField
+      FieldName = 'reparto'
+      DisplayFormat = '0'#176
+    end
+    object CDS5cantViandas: TFMTBCDField
+      FieldName = 'cantViandas'
+      Size = 5
+    end
+    object CDS5cantDirecciones: TLargeintField
+      FieldName = 'cantDirecciones'
+    end
+    object CDS5nombreRep: TWideStringField
+      FieldName = 'nombreRep'
+      Size = 10
+    end
+    object CDS5repartidor: TWideStringField
+      FieldName = 'repartidor'
+    end
+  end
+  object DataSource5: TDataSource
+    DataSet = CDS5
+    Left = 664
+    Top = 320
+  end
+  object Timer4: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = Timer4Timer
+    Left = 664
+    Top = 192
+  end
+  object QueryComidasEsp: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 1032
+    Top = 328
+  end
+  object DataSetProvider6: TDataSetProvider
+    DataSet = QueryComidasEsp
+    Left = 1040
+    Top = 464
+  end
+  object CDS6: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProvider6'
+    Left = 1080
+    Top = 464
+    object CDS6idComida: TIntegerField
+      FieldName = 'idComida'
+    end
+    object CDS6nComida: TWideStringField
+      FieldName = 'nComida'
+      Size = 60
+    end
+    object CDS6cantidad: TLargeintField
+      FieldName = 'cantidad'
+    end
+  end
+  object DataSource6: TDataSource
+    DataSet = CDS6
+    Left = 1120
+    Top = 464
+  end
+  object qValorTotal: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 496
+    Top = 344
+  end
+  object frxReport3: TfrxReport
+    Version = '6.9.3'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Default'
+    PrintOptions.PrintOnSheet = 0
+    PrintOptions.ShowDialog = False
+    ReportOptions.CreateDate = 43926.507441562500000000
+    ReportOptions.LastChange = 45100.380538356480000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      ''
+      'begin'
+      ''
+      'end.')
+    Left = 640
+    Top = 248
+    Datasets = <>
+    Variables = <>
+    Style = <
+      item
+        Name = 'Title'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Fill.BackColor = 14211288
+      end
+      item
+        Name = 'Header'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Fill.BackColor = 15790320
+      end
+      item
+        Name = 'Group header'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Fill.BackColor = 15790320
+      end
+      item
+        Name = 'Data'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = []
+        Frame.Typ = []
+      end
+      item
+        Name = 'Group footer'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = []
+        Frame.Typ = [ftTop]
+      end
+      item
+        Name = 'Header line'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = []
+        Frame.Typ = []
+        Frame.Width = 2.000000000000000000
+      end>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      PaperWidth = 105.000000000000000000
+      PaperHeight = 25.000000000000000000
+      PaperSize = 256
+      LeftMargin = 2.500000000000000000
+      Columns = 1
+      ColumnWidth = 81.000000000000000000
+      ColumnPositions.Strings = (
+        '0')
+      Frame.Typ = []
+      MirrorMode = []
+      object num1: TfrxMemoView
+        AllowVectorExport = True
+        Left = 2.779530000000000000
+        Top = 20.897650000000000000
+        Width = 181.417440000000000000
+        Height = 41.574830000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -47
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        HAlign = haCenter
+        Memo.UTF8W = (
+          'ADUCOMEX')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object rep1: TfrxMemoView
+        AllowVectorExport = True
+        Left = 149.716550080000000000
+        Top = 2.000000000000000000
+        Width = 34.015770000000000000
+        Height = 18.897650000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -16
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Fill.BackColor = clWindow
+        HAlign = haRight
+        Memo.UTF8W = (
+          'JORG')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object detalle1: TfrxMemoView
+        AllowVectorExport = True
+        Left = 5.000000000000000000
+        Top = 80.251973390000000000
+        Width = 181.417440000000000000
+        Height = 15.118120000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -16
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          '4 - 1+ENS+JQ+ARRCCQ')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object calle1: TfrxMemoView
+        AllowVectorExport = True
+        Left = 4.314880080000000000
+        Top = 1.881843390000000000
+        Width = 147.401670000000000000
+        Height = 18.897650000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -19
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          'S MARTIN 3483')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object num2: TfrxMemoView
+        AllowVectorExport = True
+        Left = 201.740157480000000000
+        Top = 20.677180000000000000
+        Width = 181.417440000000000000
+        Height = 41.574830000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -47
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        HAlign = haCenter
+        Memo.UTF8W = (
+          '2060.D12')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object rep2: TfrxMemoView
+        AllowVectorExport = True
+        Left = 352.236237560000000000
+        Top = 2.000000000000000000
+        Width = 30.236240000000000000
+        Height = 18.897650000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -16
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Fill.BackColor = clWindow
+        HAlign = haRight
+        Memo.UTF8W = (
+          'ALEJ')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object detalle2: TfrxMemoView
+        AllowVectorExport = True
+        Left = 203.740157480000000000
+        Top = 80.251973390000000000
+        Width = 181.417440000000000000
+        Height = 15.118120000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -16
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          '4 - 1+ENS+JQ+ARRCCQ')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object calle2: TfrxMemoView
+        AllowVectorExport = True
+        Left = 202.834567560000000000
+        Top = 1.661373390000000000
+        Width = 151.181200000000000000
+        Height = 18.897650000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -19
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          'S MARTIN 3483')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object comentario1: TfrxMemoView
+        AllowVectorExport = True
+        Left = 3.779530000000000000
+        Top = 63.472480000000000000
+        Width = 158.740260000000000000
+        Height = 15.118120000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          '4 - 1+ENS+JQ+ARRCCQ')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object menuImp1: TfrxMemoView
+        AllowVectorExport = True
+        Left = 165.299320000000000000
+        Top = 61.472480000000000000
+        Width = 18.897650000000000000
+        Height = 18.897650000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Arial Narrow'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          'M')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object comentario2: TfrxMemoView
+        AllowVectorExport = True
+        Left = 204.094620000000000000
+        Top = 63.472480000000000000
+        Width = 158.740260000000000000
+        Height = 15.118120000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Myriad Pro Cond'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          '4 - 1+ENS+JQ+ARRCCQ')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+      object menuImp2: TfrxMemoView
+        AllowVectorExport = True
+        Left = 365.614410000000000000
+        Top = 61.472480000000000000
+        Width = 18.897650000000000000
+        Height = 18.897650000000000000
+        AutoWidth = True
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Arial Narrow'
+        Font.Style = [fsBold]
+        Frame.Typ = []
+        Memo.UTF8W = (
+          'M')
+        ParentFont = False
+        WordWrap = False
+        VAlign = vaBottom
+      end
+    end
+  end
+  object QueryEtiquetasBolsas: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 1136
+    Top = 200
+  end
+  object PopupMenu11: TPopupMenu
+    Left = 584
+    Top = 256
+    object Imprimiretiquetasdebolsas1: TMenuItem
+      Caption = 'Imprimir etiquetas de bolsas'
+      OnClick = Imprimiretiquetasdebolsas1Click
+    end
+    object Vercomplementos1: TMenuItem
+      Caption = 'Ver complementos'
+      OnClick = Vercomplementos1Click
+    end
+    object Imprimiretiquetasdeviandasdeestereparto1: TMenuItem
+      Caption = 'Imprimir etiquetas de viandas de este reparto'
+      OnClick = Imprimiretiquetasdeviandasdeestereparto1Click
     end
   end
 end

@@ -50,6 +50,93 @@ __fastcall TfPedidos::TfPedidos(TComponent* Owner)
 }
 
 //---------------------------------------------------------------------------
+float TfPedidos::roundToHight10(float val)
+{
+	int aux = int(val / 10.0);
+
+	if((val - (10.0 * aux)) > 2.5)
+		return (aux + 1) * 10.0;
+	else
+		return aux * 10.0;
+}
+//---------------------------------------------------------------------------
+int TfPedidos::getRefCantidad(int refCliente, TDateTime dt)
+{
+	int refCantidad = 0;
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	QueryAux->SQL->Add("SELECT idCantidad FROM cantidades WHERE (fecha = :d AND refCliente = :rc) LIMIT 1");
+	QueryAux->ParamByName("d")->AsDate = DateOf(dt);
+	QueryAux->ParamByName("rc")->AsInteger = refCliente;
+	QueryAux->Open();
+
+	if(!QueryAux->IsEmpty())
+		refCantidad = QueryAux->FieldByName("idCantidad")->AsInteger;
+
+	QueryAux->Close();
+
+	return refCantidad;
+}
+
+//---------------------------------------------------------------------------
+void TfPedidos::getPedidos(int refCliente, TDateTime dt)
+{
+	ClientDataSet2->Active = false;
+	QueryPedidos->Close();
+	QueryPedidos->SQL->Clear();
+	QueryPedidos->SQL->Add(qry_pedidos->Text);
+	QueryPedidos->ParamByName("mi")->AsDateTime = StartOfTheDay(dt);
+	QueryPedidos->ParamByName("mf")->AsDateTime = EndOfTheDay(dt);
+	QueryPedidos->ParamByName("rc")->AsInteger = refCliente;
+	QueryPedidos->ParamByName("una")->AsString = una;
+	QueryPedidos->ParamByName("ens")->AsString = ens;
+	QueryPedidos->Open();
+	ClientDataSet2->Active = true;
+}
+
+//---------------------------------------------------------------------------
+String TfPedidos::getCodigoComidaFromID(int id)
+{
+	String codigo = "ERROR!";
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
+	QueryAux->ParamByName("id")->AsInteger = id;
+	QueryAux->Open();
+	if(!QueryAux->IsEmpty())
+		codigo = QueryAux->FieldByName("codigo")->AsString;
+	QueryAux->Close();
+
+	return codigo;
+}
+
+//---------------------------------------------------------------------------
+void TfPedidos::deleteComidaEspecial(int refPedido, int refComida)
+{
+	Query1->Close();
+	Query1->SQL->Clear();
+	Query1->SQL->Add("DELETE FROM comidasespeciales WHERE refPedido = :rp AND refComida = :refComida");
+	Query1->ParamByName("rp")->AsInteger = refPedido;
+	Query1->ParamByName("refComida")->AsInteger = refComida;
+	Query1->ExecSQL();
+}
+
+//---------------------------------------------------------------------------
+
+void TfPedidos::insertComidaEspecial(TDateTime dt, int refComida, int refPedido, int refReparto)
+{
+	Query1->Close();
+	Query1->SQL->Clear();
+	Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
+					 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
+	Query1->ParamByName("dt")->AsDateTime = dt;
+	Query1->ParamByName("idComEsp")->AsInteger = refComida;
+	Query1->ParamByName("rp")->AsInteger = refPedido;
+	Query1->ParamByName("or")->AsInteger = refReparto;
+	Query1->ExecSQL();
+}
+
+//---------------------------------------------------------------------------
 
 bool TfPedidos::esOpcionEspecial(int idComida)
 {
@@ -244,6 +331,67 @@ void TfPedidos::completarEtiquetaComplemento(String c4, String cliente,
 	rep->Text = repartidor;
 	pos->Text = nroReparto;
 }
+//---------------------------------------------------------------------------
+void TfPedidos::completarEtiquetaBolsa(String numero, String calle,
+										String repartidor,
+										String detalle,
+										String coment,
+										String menuImp, bool izq,
+										bool blanca)
+{
+	TfrxMemoView * num;
+	TfrxMemoView * call;
+	TfrxMemoView * rep;
+	TfrxMemoView * det;
+	TfrxMemoView * com;
+	TfrxMemoView * menu;
+
+
+	if (izq) {
+
+		num = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("num1"));
+		rep = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("rep1"));
+		call = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("calle1"));
+		det = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("detalle1"));
+		com = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("comentario1"));
+		menu = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("menuImp1"));
+	}
+	else {
+
+		num = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("num2"));
+		rep = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("rep2"));
+		call = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("calle2"));
+		det = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("detalle2"));
+		com = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("comentario2"));
+		menu = dynamic_cast <TfrxMemoView *> (fPedidos->frxReport3->FindObject("menuImp2"));
+	}
+
+	num->Visible = true;
+	rep->Visible = true;
+	call->Visible = true;
+	det->Visible = true;
+	com->Visible = true;
+	menu->Visible = true;
+
+
+	if (blanca) {
+		num->Visible = false;
+		rep->Visible = false;
+		call->Visible = false;
+		det->Visible = false;
+		com->Visible = false;
+		menu->Visible = false;
+
+		return;
+	}
+
+	num->Text = numero;
+	rep->Text = repartidor;
+	call->Text = calle;
+	det->Text = detalle;
+	com->Text = coment;
+	menu->Text = menuImp;
+}
 //--------------------------------------------------------------------------
 
 String TfPedidos::getImpresoraEtiquetas(void)
@@ -288,7 +436,7 @@ String TfPedidos::getImpresoraEtiquetas(void)
 
 //--------------------------------------------------------------------------
 
-void TfPedidos::procesoImpresionEtiquetasPedidos(int reparto)
+void TfPedidos::procesoImpresionEtiquetasPedidos(int reparto, int refRepartidor)
 {
 	int refComida1, refComida2, refComida3, nroApaAnt;
 	String c1, c2, c3, c4, comentario, cliente, repartidor, nroReparto;
@@ -408,20 +556,32 @@ void TfPedidos::procesoImpresionEtiquetasPedidos(int reparto)
 
 	if(Application->MessageBox(L"Las etiqueteas se imprimieron correctamente?" ,L"Impresión correcta?",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDYES)
 	{
-	   QueryEtiquetas->Close();
-	   CDSEtiquetas->Active = false;
+		QueryEtiquetas->Close();
+		CDSEtiquetas->Active = false;
 
-	   QueryAux->Close();
-	   QueryAux->SQL->Clear();
-	   QueryAux->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (momento >= :mi AND momento <= :mf AND refProducto = 1 "
-						  "AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = :sr)");
-//	   QueryAux->ParamByName("f")->AsDate = DTP->Date;
+		QueryAux->Close();
+		QueryAux->SQL->Clear();
+
+		if (refRepartidor == -1) {
+			QueryAux->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (momento >= :mi AND momento <= :mf AND refProducto = 1 AND etiquetaImpresa = 0 "
+								"AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = :sr)");
+		}
+		else {
+			QueryAux->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE (momento >= :mi AND momento <= :mf AND refProducto = 1 AND etiquetaImpresa = 0 "
+								"AND (SELECT sectorReparto FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = :sr "
+								"AND (SELECT refRepartidor FROM cantidades WHERE (pedidos.refCantidad = cantidades.idCantidad) LIMIT 1) = :refRep) ");
+		}
+
+		if (refRepartidor >= 0)
+			QueryAux->ParamByName("refRep")->AsInteger = refRepartidor;
+
+		QueryAux->ParamByName("sr")->AsInteger = reparto;
+
 	   QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
-	   QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
-	   QueryAux->ParamByName("sr")->AsInteger = reparto;
-	   QueryAux->ExecSQL();
+		QueryAux->ParamByName("mf")->AsDateTime = mStartPrinting; //EndOfTheDay(DTP->DateTime);
+		QueryAux->ExecSQL();
 
-	   Edit2->Text = "10000";
+		Edit2->Text = "10000";
 	   CheckBox1->Checked = false;
 	}
 	else
@@ -430,7 +590,8 @@ void TfPedidos::procesoImpresionEtiquetasPedidos(int reparto)
 	   Panel10->Top = (fPedidos->Height - Panel10->Height) / 2;
 	   Panel10->Visible = true;
 
-	   llamadorAux = reparto;
+		llamadorAux = reparto;
+		refRepartidorAux = refRepartidor;
 
 	   Application->MessageBox(L"Seleccionar próxima etiqueta a imprimir y presionar el botón." ,L"Seleccione punto de partida",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
 
@@ -565,7 +726,7 @@ void TfPedidos::procesoImpresionEtiquetasPedidosOficinas(void)
 	   QueryAux->SQL->Clear();
 	   QueryAux->SQL->Add("UPDATE pedidos SET etiquetaImpresa = 1 WHERE momento >= :mi AND momento <= :mf AND refProducto = 2");
 	   QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
-	   QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+	   QueryAux->ParamByName("mf")->AsDateTime = mStartPrinting;//EndOfTheDay(DTP->DateTime);
 	   QueryAux->ExecSQL();
 
 	   Edit2->Text = "10000";
@@ -648,9 +809,9 @@ void TfPedidos::procesoImpresionEtiquetasComplementos()
 	   QueryAux->SQL->Clear();
 	   QueryAux->SQL->Add("UPDATE pedidos SET complementoImpreso = 1 "
 						  "WHERE momento >= :mi AND momento <= :mf AND complementoImpreso = 0 AND refComida4 NOT IN(:c1,:c2) ");
-//	   QueryAux->ParamByName("f")->AsDate = DTP->Date;
+
 	   QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
-	   QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+	   QueryAux->ParamByName("mf")->AsDateTime = mStartPrinting;//EndOfTheDay(DTP->DateTime);
 	   QueryAux->ParamByName("c1")->AsInteger = arrIdComida[RGTexto->Items->Count - 3];
 	   QueryAux->ParamByName("c2")->AsInteger = arrIdComida[RGTexto->Items->Count - 2];
 	   QueryAux->ExecSQL();
@@ -669,24 +830,39 @@ void TfPedidos::procesoImpresionEtiquetasComplementos()
 }
 //--------------------------------------------------------------------------
 
-void TfPedidos::imprimirEtiquetas(int llamador)
+void TfPedidos::imprimirEtiquetas(int llamador, int refRepartidor)
 {
 	if (getImpresoraEtiquetas() != "NO_CONFIGURADA") {
 		frxReport1->PrintOptions->Printer = getImpresoraEtiquetas();
 	}
 	else return;
 
+	DTP->Time = Now();
+	mStartPrinting = DTP->DateTime;	//Es un limite al momento de seleccionar las etiquetas que se van a imprimir
+									//sirve sobre todo para marcar las etiquetas como impresas al final.
+									//con esto se pueden seguir cargando pedidos aunque otra PC se encuentre imprimiendo.
 
 	QueryAux->Close();
 	QueryAux->SQL->Clear();
 
-	QueryAux->SQL->Add("SELECT COUNT(*) AS cantidadPedidos FROM pedidos WHERE momento >= :mi AND momento <= :mf AND omitirEtiqueta = 0 AND etiquetaImpresa = 0 AND refProducto = 1 AND "
-					   "refCliente IN (SELECT refCliente FROM cantidades WHERE sectorReparto = :sr AND fecha = :f)");
+	String q;
+	if (refRepartidor == -1) {
+		q = "SELECT COUNT(*) AS cantidadPedidos FROM pedidos LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.refCantidad WHERE momento >= :mi AND momento <= :mf AND omitirEtiqueta = 0 AND etiquetaImpresa = 0 AND refProducto = 1 AND cantidades.sectorReparto = :sr";
+	}
+	else {
+		q = "SELECT COUNT(*) AS cantidadPedidos FROM pedidos LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.refCantidad WHERE momento >= :mi AND momento <= :mf AND omitirEtiqueta = 0 AND etiquetaImpresa = 0 AND refProducto = 1 AND cantidades.sectorReparto = :sr AND cantidades.refRepartidor = :refRep ";
+	}
 
-    QueryAux->ParamByName("f")->AsDate = DTP->DateTime;
+	QueryAux->SQL->Add(q);
 	QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
 	QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
 	QueryAux->ParamByName("sr")->AsInteger = llamador;
+
+	if (refRepartidor >= 0) {
+		QueryAux->ParamByName("refRep")->AsInteger = refRepartidor;
+	}
+
+
 	QueryAux->Open();
 	cantidadPedidos = QueryAux->FieldByName("cantidadPedidos")->AsInteger;
 	QueryAux->Close();
@@ -708,55 +884,27 @@ void TfPedidos::imprimirEtiquetas(int llamador)
 	  return;
 
 
-	String q;
-
-	q = "SELECT p.refCliente, p.comentario, p.refComida1, p.refComida2, p.refProducto, p.refComida3, g.nroApa, p.comentarioParaCocina, "
-
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida1 = comidas.idComida) LIMIT 1) AS c1, "
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida2 = comidas.idComida) LIMIT 1) AS c2, "
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida3 = comidas.idComida) LIMIT 1) AS c3, "
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida4 = comidas.idComida) LIMIT 1) AS c4, "
-
-	"(SELECT refRepartidor FROM cantidades WHERE (p.refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
-	"(SELECT sectorReparto + 1 FROM cantidades WHERE (p.refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
-
-	"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
-
-	"(SELECT numero FROM clientes WHERE (p.refCliente = clientes.idCliente) LIMIT 1) AS Numero "
-
-	"FROM pedidos p "
-
-	"INNER JOIN( "
-
-	"SELECT refComida1, refComida2, refComida3, refCliente, comentarioParaCocina, COUNT(*) AS nroApa FROM pedidos "
-	"WHERE momento >= :mi AND momento <= :mf "
-	"AND refCliente IN (SELECT refCliente FROM cantidades WHERE fecha = :f AND sectorReparto = :sr) "
-	"AND etiquetaImpresa = 0 "
-	"AND omitirEtiqueta = 0 "
-	"GROUP BY refComida1, refComida2, refComida3, comentarioParaCocina "//ORDER BY nroApa DESC, refComida1, refComida2 "
-
-	") g ON "
-
-	"p.refCliente IN (SELECT refCliente FROM cantidades WHERE fecha = :f AND sectorReparto = :sr) "
-	"AND p.refComida1 = g.refComida1 "
-	"AND p.refComida2 = g.refComida2 "
-	"AND p.refComida3 = g.refComida3 "
-	"AND p.comentarioParaCocina = g.comentarioParaCocina "
-	"AND p.momento >= :mi AND p.momento <= :mf "
-	"AND p.etiquetaImpresa = 0 "
-	"AND p.omitirEtiqueta = 0 "
-	"AND p.refProducto = 1 "
-	"ORDER BY comentarioParaCocina, nroApa DESC, refComida1, refComida2";
-
-
 	CDSEtiquetas->Active = false;
 	QueryEtiquetas->Close();
 	QueryEtiquetas->SQL->Clear();
-	QueryEtiquetas->SQL->Add(q);
-	QueryEtiquetas->ParamByName("f")->AsDate = DTP->Date;
+
+	QueryEtiquetas->SQL->Add(qry_etiquetas_viandas_normales->Text);
+
 	QueryEtiquetas->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
 	QueryEtiquetas->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+
 	QueryEtiquetas->ParamByName("sr")->AsInteger = llamador;
+
+
+	if (refRepartidor == -1) {
+		QueryEtiquetas->ParamByName("filtrarRep")->AsInteger = 0;
+	} else {
+      QueryEtiquetas->ParamByName("filtrarRep")->AsInteger = 1;
+	}
+
+	QueryEtiquetas->ParamByName("refRep")->AsInteger = refRepartidor;
+
+
 	QueryEtiquetas->ParamByName("una")->AsString = una;
 	QueryEtiquetas->ParamByName("ens")->AsString = ens;
 	QueryEtiquetas->Open();
@@ -765,7 +913,7 @@ void TfPedidos::imprimirEtiquetas(int llamador)
 
 	CDSEtiquetas->First();
 
-	procesoImpresionEtiquetasPedidos(llamador);
+	procesoImpresionEtiquetasPedidos(llamador, refRepartidor);
 }
 
 //--------------------------------------------------------------------------
@@ -776,6 +924,9 @@ void TfPedidos::imprimirEtiquetasOficinas(void)
 		frxReport1->PrintOptions->Printer = getImpresoraEtiquetas();
 	}
 	else return;
+
+	DTP->Time = Now();
+	mStartPrinting = DTP->DateTime;
 
 
 	QueryAux->Close();
@@ -806,49 +957,10 @@ void TfPedidos::imprimirEtiquetasOficinas(void)
 	  return;
 
 
-	String q;
-
-	q = "SELECT p.refCliente, p.comentario, p.refComida1, p.refComida2, p.refProducto, p.refComida3, g.nroApa, p.comentarioParaCocina, "
-
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida1 = comidas.idComida) LIMIT 1) AS c1, "
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida2 = comidas.idComida) LIMIT 1) AS c2, "
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida3 = comidas.idComida) LIMIT 1) AS c3, "
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (p.refComida4 = comidas.idComida) LIMIT 1) AS c4, "
-
-	"(SELECT refRepartidor FROM cantidades WHERE (p.refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
-	"(SELECT sectorReparto + 1 FROM cantidades WHERE (p.refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
-
-	"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
-
-	"(SELECT numero FROM clientes WHERE (p.refCliente = clientes.idCliente) LIMIT 1) AS Numero "
-
-	"FROM pedidos p "
-
-	"INNER JOIN( "
-
-	"SELECT refComida1, refComida2, refComida3, refCliente, comentarioParaCocina, COUNT(*) AS nroApa FROM pedidos "
-	"WHERE momento >= :mi AND momento <= :mf "
-	"AND etiquetaImpresa = 0 "
-	"AND omitirEtiqueta = 0 "
-	"GROUP BY refComida1, refComida2, refComida3, comentarioParaCocina "//ORDER BY nroApa DESC, refComida1, refComida2 "
-
-	") g ON "
-
-	"p.refComida1 = g.refComida1 "
-	"AND p.refComida2 = g.refComida2 "
-	"AND p.refComida3 = g.refComida3 "
-	"AND p.comentarioParaCocina = g.comentarioParaCocina "
-	"AND p.momento >= :mi AND p.momento <= :mf "
-	"AND p.etiquetaImpresa = 0 "
-	"AND p.omitirEtiqueta = 0 "
-	"AND p.refProducto = 2 "
-	"ORDER BY comentarioParaCocina, nroApa DESC, refComida1, refComida2";
-
-
 	CDSEtiquetas->Active = false;
 	QueryEtiquetas->Close();
 	QueryEtiquetas->SQL->Clear();
-	QueryEtiquetas->SQL->Add(q);
+	QueryEtiquetas->SQL->Add(qry_etiquetas_viandas_oficinas->Text);
 	QueryEtiquetas->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
 	QueryEtiquetas->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
 	QueryEtiquetas->ParamByName("una")->AsString = una;
@@ -871,6 +983,9 @@ void TfPedidos::imprimirComplementos(void)
 	}
 	else return;
 
+	DTP->Time = Now();
+	mStartPrinting = DTP->DateTime;
+
 
    QueryAux->Close();
    QueryAux->SQL->Clear();
@@ -879,7 +994,6 @@ void TfPedidos::imprimirComplementos(void)
 					  "AND complementoImpreso = 0 AND refComida4 > 1 AND refComida4 NOT IN(:c1,:c2) "
 					  "ORDER BY refComida4");
 
-//   QueryAux->ParamByName("f")->AsDate = DTP->Date;
    QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("c1")->AsInteger = arrIdComida[RGTexto->Items->Count - 3];
@@ -900,28 +1014,27 @@ void TfPedidos::imprimirComplementos(void)
 	  return;
 
 
-	String q;
-
-	q = "SELECT comentario, refComida4, "
-
-	"(SELECT codigo FROM comidas WHERE (refComida4 = comidas.idComida) LIMIT 1) AS c4, "
-
-	"(SELECT refRepartidor FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
-	"(SELECT sectorReparto + 1 FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
-
-	"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
-
-	"(SELECT numero FROM clientes WHERE (refCliente = clientes.idCliente) LIMIT 1) AS Numero "
-
-	"FROM pedidos WHERE momento >= :mi AND momento <= :mf AND complementoImpreso = 0 AND refComida4 > 1 AND refComida4 NOT IN(:c1,:c2) "
-
-	"ORDER BY refComida4";
+//	String q;
+//
+//	q = "SELECT comentario, refComida4, "
+//
+//	"(SELECT codigo FROM comidas WHERE (refComida4 = comidas.idComida) LIMIT 1) AS c4, "
+//
+//	"(SELECT refRepartidor FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
+//	"(SELECT sectorReparto + 1 FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
+//
+//	"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
+//
+//	"(SELECT numero FROM clientes WHERE (refCliente = clientes.idCliente) LIMIT 1) AS Numero "
+//
+//	"FROM pedidos WHERE momento >= :mi AND momento <= :mf AND complementoImpreso = 0 AND refComida4 > 1 AND refComida4 NOT IN(:c1,:c2) "
+//
+//	"ORDER BY refComida4, refRep";
 
 	CDSEtiquetasComp->Active = false;
 	QueryEtiquetasComp->Close();
 	QueryEtiquetasComp->SQL->Clear();
-	QueryEtiquetasComp->SQL->Add(q);
-//	QueryEtiquetasComp->ParamByName("f")->AsDate = DTP->Date;
+	QueryEtiquetasComp->SQL->Add(qry_etiquetas_complementos->Text);
 	QueryEtiquetasComp->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
 	QueryEtiquetasComp->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
 	QueryEtiquetasComp->ParamByName("c1")->AsInteger = arrIdComida[RGTexto->Items->Count - 3];
@@ -933,6 +1046,105 @@ void TfPedidos::imprimirComplementos(void)
 	CDSEtiquetasComp->First();
 
 	procesoImpresionEtiquetasComplementos();
+}
+
+//--------------------------------------------------------------------------
+
+
+void TfPedidos::imprimirEtiquetasBolsas(int refRep, int reparto)
+{
+	if (getImpresoraEtiquetas() != "NO_CONFIGURADA") {
+		frxReport3->PrintOptions->Printer = getImpresoraEtiquetas();
+	}
+	else return;
+
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	QueryAux->SQL->Add("SELECT COUNT(*) AS cantEtiquetas FROM cantidades WHERE fecha = :f AND refRepartidor = :rep AND cantidades.sectorReparto = :sr");
+	QueryAux->ParamByName("f")->AsDate = DTP->Date;
+	QueryAux->ParamByName("rep")->AsInteger = refRep;
+	QueryAux->ParamByName("sr")->AsInteger = reparto;
+	QueryAux->Open();
+
+	int cantEtiquetas = QueryAux->FieldByName("cantEtiquetas")->AsInteger;
+	QueryAux->Close();
+
+	if(cantEtiquetas == 0)
+	{
+	  Application->MessageBox(L"No hay etiquetas para imprimir :)" ,L"No hay nada para imprimir",MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
+	  return;
+	}
+
+	String msg = "Se van a imprimir " + IntToStr(cantEtiquetas) + " etiquetas. Desea continuar?";
+	if(Application->MessageBox(msg.w_str(), L"Imprimir etiquetasa?",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) != IDYES)
+	  return;
+
+
+	QueryEtiquetasBolsas->Close();
+	QueryEtiquetasBolsas->SQL->Clear();
+	QueryEtiquetasBolsas->SQL->Add(qry_etiquetas_bolsas->Text);
+	QueryEtiquetasBolsas->ParamByName("f")->AsDate = DTP->Date;
+	QueryEtiquetasBolsas->ParamByName("rep")->AsInteger = refRep;
+	QueryEtiquetasBolsas->ParamByName("sr")->AsInteger = reparto;
+	QueryEtiquetasBolsas->Open();
+
+	QueryEtiquetasBolsas->First();
+
+
+	String numero, calle, repartidor, detalle, coment, menuImp;
+
+	bool etiquetaIzq = true;
+
+	while (!QueryEtiquetasBolsas->Eof) {
+
+	   numero = QueryEtiquetasBolsas->FieldByName("numero")->AsString;
+	   calle = QueryEtiquetasBolsas->FieldByName("calle")->AsString;
+	   repartidor = QueryEtiquetasBolsas->FieldByName("rep")->AsString;
+	   detalle = QueryEtiquetasBolsas->FieldByName("detalle")->AsString;
+	   coment = QueryEtiquetasBolsas->FieldByName("comentarios")->AsString;
+	   menuImp = "";
+
+	   if(QueryEtiquetasBolsas->FieldByName("menuImpreso")->AsString == "S") {
+		  if((DayOfTheWeek(DTP->Date) == DayFriday) || menuImpreso) {
+			  menuImp = "M";
+		  }
+	   }
+
+
+	   completarEtiquetaBolsa(numero, calle, repartidor, detalle, coment, menuImp, etiquetaIzq, false);
+
+	   etiquetaIzq = !etiquetaIzq;
+
+	   QueryEtiquetasBolsas->Next();
+
+	   if (!QueryEtiquetasBolsas->Eof) {
+
+		   numero = QueryEtiquetasBolsas->FieldByName("numero")->AsString;
+		   calle = QueryEtiquetasBolsas->FieldByName("calle")->AsString;
+		   repartidor = QueryEtiquetasBolsas->FieldByName("rep")->AsString;
+		   detalle = QueryEtiquetasBolsas->FieldByName("detalle")->AsString;
+		   coment = QueryEtiquetasBolsas->FieldByName("comentarios")->AsString;
+		   menuImp = "";
+
+		   if(QueryEtiquetasBolsas->FieldByName("menuImpreso")->AsString == "S") {
+			  if(DayOfTheWeek(DTP->Date) == DayFriday) {
+				  menuImp = "M";
+			  }
+		   }
+
+		   completarEtiquetaBolsa(numero, calle, repartidor, detalle, coment, menuImp, etiquetaIzq, false);
+		   etiquetaIzq = !etiquetaIzq;
+	   }
+	   else	if (!etiquetaIzq) {
+
+		   completarEtiquetaBolsa("", "", "", "", "", "", false, true);
+	   }
+
+	   frxReport3->PrepareReport(true);
+	   frxReport3->Print();
+
+	   QueryEtiquetasBolsas->Next();
+	}
 }
 //---------------------------------------------------------------------------
 
@@ -947,20 +1159,92 @@ String TfPedidos::comaToDot(String str)
    str = str.Delete(p,1);
    return str.Insert(".",p);
 }
+
 //---------------------------------------------------------------------------
 
-String TfPedidos::generarCadComp(void)
+float TfPedidos::getValorTotal(void)
+{
+	qValorTotal->Close();
+	qValorTotal->SQL->Clear();
+	qValorTotal->SQL->Add("SELECT SUM(valor) AS valorTotal FROM pedidos WHERE (momento >= :mi AND momento <= :mf AND refCliente = :rc)");
+	qValorTotal->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+	qValorTotal->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+	qValorTotal->ParamByName("rc")->AsInteger = idCliSel;
+	qValorTotal->Open();
+
+	float valorTotal = qValorTotal->FieldByName("valorTotal")->AsFloat;
+	qValorTotal->Close();
+
+//	int recNo = ClientDataSet2->RecNo;
+//	DScch->Enabled = false;
+//
+//	ClientDataSet2->First();
+//
+//	while(!ClientDataSet2->Eof)
+//	{
+//		 valorTotal = valorTotal + ClientDataSet2->FieldByName("valor")->AsFloat;
+//		 ClientDataSet2->Next();
+//	}
+//
+//	ClientDataSet2->RecNo = recNo;
+//	DScch->Enabled = true;
+
+	return valorTotal;
+}
+//---------------------------------------------------------------------------
+
+String TfPedidos::generarCadComp(String tipo)
 {
 	  String strComp = "";
-	  ClientDataSet2->First();
+
+	  if (tipo == "cliente") {
+			QueryAux->Close();
+			QueryAux->SQL->Clear();
+			QueryAux->SQL->Add("SELECT (SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (pedidos.refComida4 = comidas.idComida) LIMIT 1) AS com4 FROM pedidos WHERE (momento >= :mi AND momento <= :mf AND refCliente = :rc AND refComida4 != 1)");
+			QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+			QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+			QueryAux->ParamByName("rc")->AsInteger = idCliSel;
+			QueryAux->ParamByName("una")->AsString = una;
+			QueryAux->ParamByName("ens")->AsString = ens;
+			QueryAux->Open();
+	  }
+	  else if (tipo == "repartidor") {
+			String q;
+			q = 	"SELECT \
+					IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) AS com4 \
+				FROM pedidos \
+				LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.refCantidad \
+				LEFT JOIN comidas ON comidas.idComida = pedidos.refComida4 \
+				WHERE \
+					cantidades.sectorReparto = :sr \
+					 AND refComida4 > 1 \
+					 AND pedidos.momento >= :mi AND pedidos.momento <= :mf \
+					 AND cantidades.refRepartidor = :refRep";
+
+	  		QueryAux->Close();
+			QueryAux->SQL->Clear();
+			QueryAux->SQL->Add(q);
+			QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+			QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+			QueryAux->ParamByName("refRep")->AsInteger = refRepartidorGCC;
+			QueryAux->ParamByName("sr")->AsInteger = sectorRepartoGCC;
+			QueryAux->ParamByName("una")->AsString = una;
+			QueryAux->ParamByName("ens")->AsString = ens;
+			QueryAux->Open();
+	  }
+
+
+
+	  QueryAux->First();
+
 	  int cont_1, cont_ens;
 	  cont_1 = 0;
 	  cont_ens = 0;
 
 	  String cod;
-	  while(!ClientDataSet2->Eof)
+	  while(!QueryAux->Eof)
 	  {
-		 cod = ClientDataSet2->FieldByName("com4")->AsString;
+		 cod = QueryAux->FieldByName("com4")->AsString;
 		 if(cod != "")
 		 {
 			if(cod == "1")
@@ -970,8 +1254,11 @@ String TfPedidos::generarCadComp(void)
 			else
 			   strComp = cod + "+" + strComp;
 		 }
-		 ClientDataSet2->Next();
+		 QueryAux->Next();
 	  }
+	  QueryAux->Close();
+
+
 
 	  if(strComp.SubString(strComp.Length(),1) == "+")   //para borrar el ultimo "+" en caso de que exista
 		 strComp = strComp.Delete(strComp.Length(),1);
@@ -1054,9 +1341,17 @@ void TfPedidos::CargarOpciones(void)
    cbRefMedioContacto->Enabled = false;
    CBmp->Enabled = false;
    cbRefProducto->Enabled = false;
+   Edit4->Enabled = false;
    Label9->Enabled = false;
    Label17->Enabled = false;
    Label8->Enabled = false;
+   Label25->Enabled = false;
+
+   Button43->Enabled = false;
+   Button44->Enabled = false;
+   Button45->Enabled = false;
+   Button46->Enabled = false;
+   SpeedButton1->Enabled = false;
 
    RG1->Items->Clear();
    RG2->Items->Clear();
@@ -1066,18 +1361,39 @@ void TfPedidos::CargarOpciones(void)
 
    Query1->Close();
    Query1->SQL->Clear();
-   String q = "SELECT *, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida1) AS c1, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida2) AS c2, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida3) AS c3, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida4) AS c4, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida5) AS c5, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida6) AS c6, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida7) AS c7, "
-			  "(SELECT nombre FROM comidas WHERE idComida = refComida8) AS c8, "
-			  "(SELECT codigo FROM comidas WHERE idComida = refComida7) AS una, "
-			  "(SELECT codigo FROM comidas WHERE idComida = refComida8) AS ens "
-			  "FROM menudeldia WHERE (fecha = :f) LIMIT 1";
+
+
+
+
+   String q;
+
+	q = "SELECT \
+				* \
+				,comidas1.nombre AS c1 \
+				,comidas2.nombre AS c2 \
+				,comidas3.nombre AS c3 \
+				,comidas4.nombre AS c4 \
+				,comidas5.nombre AS c5 \
+				,comidas6.nombre AS c6 \
+				,comidas7.nombre AS c7 \
+				,comidas8.nombre AS c8 \
+				,comidas7.codigo AS una \
+				,comidas8.codigo AS ens \
+		FROM \
+				menudeldia \
+				LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+				LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+				LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+				LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+				LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+				LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+				LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+				LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+		WHERE \
+				menudeldia.fecha = :f \
+		LIMIT 1";
+
+
    Query1->SQL->Add(q);
    Query1->ParamByName("f")->AsDate = DTP->Date;
    Query1->Open();
@@ -1102,7 +1418,6 @@ void TfPedidos::CargarOpciones(void)
 		 arrIdComida[i] = 1;
 
 	  int iID = 0;
-	  //RGTexto->Items->Add(Query1->FieldByName("c1")->AsString);
 	  opciones[iID] = Query1->FieldByName("c1")->AsString;
 	  arrIdComida[iID] = Query1->FieldByName("refComida1")->AsInteger;
 	  iID++;
@@ -1110,49 +1425,42 @@ void TfPedidos::CargarOpciones(void)
 
 	  if(Query1->FieldByName("refComida2")->AsInteger != 1)
 	  {
-		 //RGTexto->Items->Add(Query1->FieldByName("c2")->AsString);
 		 opciones[iID] = Query1->FieldByName("c2")->AsString;
 		 arrIdComida[iID] = Query1->FieldByName("refComida2")->AsInteger;
 		 iID++;
 	  }
 	  if(Query1->FieldByName("refComida3")->AsInteger != 1)
 	  {
-		 //RGTexto->Items->Add(Query1->FieldByName("c3")->AsString);
 		 opciones[iID] = Query1->FieldByName("c3")->AsString;
 		 arrIdComida[iID] = Query1->FieldByName("refComida3")->AsInteger;
 		 iID++;
 	  }
 	  if(Query1->FieldByName("refComida4")->AsInteger != 1)
 	  {
-		 //RGTexto->Items->Add(Query1->FieldByName("c4")->AsString);
 		 opciones[iID] = Query1->FieldByName("c4")->AsString;
 		 arrIdComida[iID] = Query1->FieldByName("refComida4")->AsInteger;
 		 iID++;
 	  }
 	  if(Query1->FieldByName("refComida5")->AsInteger != 1)
 	  {
-		 //RGTexto->Items->Add(Query1->FieldByName("c5")->AsString);
 		 opciones[iID] = Query1->FieldByName("c5")->AsString;
 		 arrIdComida[iID] = Query1->FieldByName("refComida5")->AsInteger;
 		 iID++;
 	  }
 	  if(Query1->FieldByName("refComida6")->AsInteger != 1)
 	  {
-		 //RGTexto->Items->Add(Query1->FieldByName("c6")->AsString);
 		 opciones[iID] = Query1->FieldByName("c6")->AsString;
 		 arrIdComida[iID] = Query1->FieldByName("refComida6")->AsInteger;
 		 iID++;
 	  }
 	  if(Query1->FieldByName("refComida7")->AsInteger != 1)
 	  {
-		 //RGTexto->Items->Add(Query1->FieldByName("c7")->AsString);
 		 opciones[iID] = Query1->FieldByName("c7")->AsString;
 		 arrIdComida[iID] = Query1->FieldByName("refComida7")->AsInteger;
 		 iID++;
 	  }
 	  if(Query1->FieldByName("refComida8")->AsInteger != 1)
 	  {
-		 //RGTexto->Items->Add(Query1->FieldByName("c8")->AsString);
 		 opciones[iID] = Query1->FieldByName("c8")->AsString;
 		 arrIdComida[iID] = Query1->FieldByName("refComida8")->AsInteger;
 		 iID++;
@@ -1290,15 +1598,27 @@ void TfPedidos::CargarOpciones(void)
 
 //-----CARGO OPCIONES PARA OFICINAS---------------------------------------------
 
+   q = 	"SELECT \
+				orden \
+				,fecha \
+				,refComida1 \
+				,refComida2 \
+				,esLight \
+				,esVeggie \
+				,comidas1.nombre AS c1 \
+				,comidas2.nombre AS c2 \
+		FROM \
+				menuoficinas \
+				LEFT JOIN comidas comidas1 ON comidas1.idComida = menuoficinas.refComida1 \
+				LEFT JOIN comidas comidas2 ON comidas2.idComida = menuoficinas.refComida2 \
+		WHERE \
+				fecha = :fecha \
+		ORDER BY \
+				orden";
+
    QueryAux->Close();
    QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("SELECT orden, fecha, refComida1, refComida2, esLight, esVeggie, "
-							  "(SELECT nombre FROM comidas WHERE idComida = refComida1) AS c1, "
-							  "(SELECT nombre FROM comidas WHERE idComida = refComida2) AS c2 "
-					  "FROM menuoficinas "
-					  "WHERE fecha = :fecha "
-					  "ORDER BY orden"
-					 );
+   QueryAux->SQL->Add(q);
 
    QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
    QueryAux->Open();
@@ -1352,6 +1672,7 @@ void TfPedidos::CargarOpciones(void)
 
 
    Edit1->Enabled = true;
+   Button42->Enabled = true;
    Button9->Enabled = true;
    cargandoOpciones = false;
    cargandoPedido = false;
@@ -1398,7 +1719,9 @@ void TfPedidos::RestablecerFormulario(void)
    cbRefProducto->ItemIndex = 0;
    cbRefMedioContacto->ItemIndex = 0;
    CBOmitirEtiqueta->Checked = false;
-   edComentario->Text = "";
+	edComentario->Text = "";
+	CBParaCocina->Checked = false;
+   Edit4->Text = FormatFloat("$ 0.00", valorVianda);
 
    RG1->Enabled = false;
    RG2->Enabled = false;
@@ -1411,9 +1734,18 @@ void TfPedidos::RestablecerFormulario(void)
    cbRefMedioContacto->Enabled = false;
    CBmp->Enabled = false;
    cbRefProducto->Enabled = false;
+   Edit4->Enabled = false;
    Label9->Enabled = false;
    Label17->Enabled = false;
    Label8->Enabled = false;
+
+   Label25->Enabled = false;
+
+   Button43->Enabled = false;
+   Button44->Enabled = false;
+   Button45->Enabled = false;
+   Button46->Enabled = false;
+   SpeedButton1->Enabled = false;
 
    RG1->ItemIndex = RG1->Items->Count - 1;
    RG2->ItemIndex = RG1->Items->Count - 1;
@@ -1429,6 +1761,8 @@ void TfPedidos::RestablecerFormulario(void)
    idOpEsp3 = 0;
    idOpEsp4 = 0;
 
+   Panel22->Hide();
+
    Label12->Caption = "";
 
    edUnidades->Text = "1,00";
@@ -1441,8 +1775,9 @@ void TfPedidos::RestablecerFormulario(void)
 
    Edit1->Clear();
    Edit1->Enabled = true;
+   Button42->Enabled = true;
    Button9->Enabled = true;
-   Edit1->SetFocus();
+	Edit1->SetFocus();
 }
 //---------------------------------------------------------------------------
 
@@ -1454,24 +1789,30 @@ String TfPedidos::GetCodigo(int idComida)
    if(idComida == arrIdComida[RG1->Items->Count - 2])
 	  return "ENS";
 
-   QueryAux->Close();
-   QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE(idComida = :id) LIMIT 1");
-   QueryAux->ParamByName("id")->AsString = idComida;
-   QueryAux->Open();
-   String codigo = QueryAux->FieldByName("codigo")->AsString;
-   QueryAux->Close();
-   return codigo;
+   return getCodigoComidaFromID(idComida);;
 }
 //---------------------------------------------------------------------------
 
 void TfPedidos::verClienteSeleccionado(int idCliente)
 {
+	String q;
+	q = "SELECT \
+				nroUnidades \
+				,nroBandejas \
+				,sectorReparto \
+				,txtComplemento \
+				,medioPago \
+				,repartidores.descripcion AS Repartidor \
+		FROM \
+				cantidades \
+				LEFT JOIN repartidores ON repartidores.idRepartidor = cantidades.refRepartidor \
+		WHERE \
+				cantidades.fecha = :d \
+				AND cantidades.refCliente = :rc";
+
 	 QueryAux->Close();
 	 QueryAux->SQL->Clear();
-	 QueryAux->SQL->Add("SELECT nroUnidades, nroBandejas, sectorReparto, txtComplemento, medioPago, "
-						"(SELECT descripcion FROM repartidores WHERE refRepartidor = idRepartidor LIMIT 1) AS Repartidor "
-						"FROM cantidades WHERE(fecha = :d AND refCliente = :rc)");
+	 QueryAux->SQL->Add(q);
 	 QueryAux->ParamByName("d")->AsDate = DTP->Date;
 	 QueryAux->ParamByName("rc")->AsInteger = idCliente;
 	 QueryAux->Open();
@@ -1504,6 +1845,14 @@ void TfPedidos::verClienteSeleccionado(int idCliente)
 		}
 
 		edUnidadesChange(edUnidades);
+
+		QueryAux->Close();
+		QueryAux->SQL->Clear();
+		QueryAux->SQL->Add("SELECT bonificacion FROM clientes WHERE idCliente = :rc LIMIT 1");
+		QueryAux->ParamByName("rc")->AsInteger = idCliente;
+		QueryAux->Open();
+		descuentoCliente = QueryAux->FieldByName("bonificacion")->AsFloat;
+		QueryAux->Close();
 	 }
 	 else
 	 {
@@ -1513,11 +1862,13 @@ void TfPedidos::verClienteSeleccionado(int idCliente)
 
 		QueryAux->Close();
 		QueryAux->SQL->Clear();
-		QueryAux->SQL->Add("SELECT medioPagoDefecto FROM clientes WHERE idCliente = :rc LIMIT 1");
+		QueryAux->SQL->Add("SELECT medioPagoDefecto, bonificacion FROM clientes WHERE idCliente = :rc LIMIT 1");
 		QueryAux->ParamByName("rc")->AsInteger = idCliente;
 		QueryAux->Open();
 
-        for(int i=0;i<CBmp->Items->Count;i++)
+		descuentoCliente = QueryAux->FieldByName("bonificacion")->AsFloat;
+
+		for(int i=0;i<CBmp->Items->Count;i++)
 		   if(CBmp->Items->Strings[i].SubString(1,1) == QueryAux->FieldByName("medioPagoDefecto")->AsString)
 		   {
 			  CBmp->ItemIndex = i;
@@ -1529,26 +1880,7 @@ void TfPedidos::verClienteSeleccionado(int idCliente)
 
 	 QueryAux->Close();
 
-	 String q1;
-	 q1 = "SELECT idPedido, TIME(momento) AS hora, comentario, refCantidad, "
-		  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', IF(codigo = 'NO', '', codigo))) FROM comidas WHERE refComida1 = idComida LIMIT 1) AS com1, "
-		  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', IF(codigo = 'NO', '', codigo))) FROM comidas WHERE refComida2 = idComida LIMIT 1) AS com2, "
-		  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', IF(codigo = 'NO', '', codigo))) FROM comidas WHERE refComida3 = idComida LIMIT 1) AS com3, "
-		  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', IF(codigo = 'NO', '', codigo))) FROM comidas WHERE refComida4 = idComida LIMIT 1) AS com4 "
-		  "FROM pedidos WHERE (refCliente = :rc AND momento >= :mi AND momento <= :mf) ORDER BY momento";
-
-	 ClientDataSet2->Active = false;
-	 QueryPedidos->Close();
-	 QueryPedidos->SQL->Clear();
-	 QueryPedidos->SQL->Add(q1);
-//	 QueryPedidos->ParamByName("d")->AsDate = DTP->Date;
-	 QueryPedidos->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
-	 QueryPedidos->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
-	 QueryPedidos->ParamByName("rc")->AsInteger = idCliSel;
-	 QueryPedidos->ParamByName("una")->AsString = una;
-	 QueryPedidos->ParamByName("ens")->AsString = ens;
-	 QueryPedidos->Open();
-	 ClientDataSet2->Active = true;
+	 getPedidos(idCliSel, DTP->DateTime);
 
 	 Button7->Enabled = true;
 	 Button2->Enabled = true;
@@ -1565,33 +1897,102 @@ void TfPedidos::verClienteSeleccionado(int idCliente)
 	 cbRefMedioContacto->Enabled = true;
 	 CBmp->Enabled = true;
 	 cbRefProducto->Enabled = true;
+	 Edit4->Enabled = true;
 	 Label9->Enabled = true;
 	 Label17->Enabled = true;
 	 Label8->Enabled = true;
 
+	 Label25->Enabled = true;
+
+	 Button43->Enabled = true;
+	 Button44->Enabled = true;
+	 Button45->Enabled = true;
+	 Button46->Enabled = true;
+	 SpeedButton1->Enabled = true;
+
 	 ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+
+	 lbComplementos->Caption = generarCadComp("cliente");
+	 Label20->Caption = FormatFloat("Costo total: $ 0.00", getValorTotal() * ((100.0 - descuentoCliente) / 100.0));
+	 Label26->Caption = FormatFloat("Dto Cliente: 0.00%", descuentoCliente);
+
+
+
+	 QueryAux->Close();
+	 QueryAux->SQL->Clear();
+	 QueryAux->SQL->Add("SELECT COUNT(*) AS cant FROM cantidades WHERE DAYOFWEEK(cantidades.fecha) = 7 AND refCliente = :rc AND cantidades.fecha > DATE_ADD(NOW(), INTERVAL -35 DAY)");
+	 QueryAux->ParamByName("rc")->AsInteger = idCliente;
+	 QueryAux->Open();
+
+	 if (QueryAux->FieldByName("cant")->AsInteger < 1) {
+		Panel22->Hide();
+	 }
+	 else
+		Panel22->Show();
+
+	 QueryAux->Close();
 }
 //---------------------------------------------------------------------------
 
 void TfPedidos::actualizarInfoVentas(void)
 {
-//   String q = "SELECT todas AS idComida, COUNT(*) AS cantidad, (SELECT nombre FROM comidas WHERE t.todas = comidas.idComida) AS nComida "
-//			  "FROM ((SELECT refComida1 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida1 > 1) "
-//			  "UNION ALL (SELECT refComida2 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida2 > 1) "
-//			  "UNION ALL (SELECT refComida3 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida3 > 1) "
-//			  "UNION ALL (SELECT refComida4 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida4 > 1)) t GROUP BY todas ";
+	String q;
+	
+	q = "SELECT \
+			t.todas AS idComida \
+			,comidas.nombre AS nComida \
+			,t.refProducto \
+			,COUNT(*) AS cantidad \
+	FROM \
+	( \
+			(SELECT refComida1 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida1 > 1 AND refProducto = 1) \
+			UNION ALL (SELECT refComida2 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida2 > 1 AND refProducto = 1) \
+			UNION ALL (SELECT refComida3 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida3 > 1 AND refProducto = 1) \
+			UNION ALL (SELECT refComida4 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida4 > 1 AND refProducto = 1) \
+	) t \
+			LEFT JOIN comidas ON comidas.idComida = t.todas \
+	WHERE	t.todas NOT IN ( \
+				SELECT refComida1 AS refComida FROM menudeldia WHERE fecha = :fecha \
+				UNION ALL (SELECT refComida2 AS refComida FROM menudeldia WHERE fecha = :fecha) \
+				UNION ALL (SELECT refComida3 AS refComida FROM menudeldia WHERE fecha = :fecha) \
+				UNION ALL (SELECT refComida4 AS refComida FROM menudeldia WHERE fecha = :fecha) \
+				UNION ALL (SELECT refComida5 AS refComida FROM menudeldia WHERE fecha = :fecha) \
+				UNION ALL (SELECT refComida6 AS refComida FROM menudeldia WHERE fecha = :fecha) \
+				UNION ALL (SELECT refComida7 AS refComida FROM menudeldia WHERE fecha = :fecha) \
+				UNION ALL (SELECT refComida8 AS refComida FROM menudeldia WHERE fecha = :fecha) \
+			) \
+			AND refProducto = 1 \
+	GROUP BY todas, nComida, refProducto \
+	ORDER BY nComida";
 
 
-   String q = "SELECT idComida, nComida, SUM(CASE "
-										"WHEN refProducto = 1 THEN cantidad "
-										"WHEN refProducto = 2 THEN CAST(cantidad * 0.5 AS SIGNED)"
-								   "END) AS cantidad FROM("
-			  "SELECT todas AS idComida, refProducto, COUNT(*) AS cantidad, (SELECT nombre FROM comidas WHERE t.todas = comidas.idComida) AS nComida "
-			  "FROM ((SELECT refComida1 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida1 > 1) "
-			  "UNION ALL (SELECT refComida2 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida2 > 1) "
-			  "UNION ALL (SELECT refComida3 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida3 > 1) "
-			  "UNION ALL (SELECT refComida4 AS todas, refProducto FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida4 > 1)) t GROUP BY todas, refProducto) t2 GROUP BY idComida, nComida ";
+	CDS6->Active = false;
+	QueryComidasEsp->Close();
+	QueryComidasEsp->SQL->Clear();
+	QueryComidasEsp->SQL->Add(q);
+	QueryComidasEsp->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+	QueryComidasEsp->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+	QueryComidasEsp->ParamByName("fecha")->AsDate = DTP->Date;
+	QueryComidasEsp->Open();
+	CDS6->Active = true;
+	ShowScrollBar(DBGrid7->Handle, SB_VERT, true);
 
+
+
+
+
+
+
+
+
+
+
+
+	q = "SELECT todas AS idComida, COUNT(*) AS cantidad, comidas.nombre AS nComida "
+			  "FROM ((SELECT refComida1 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida1 > 1) "
+			  "UNION ALL (SELECT refComida2 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida2 > 1) "
+			  "UNION ALL (SELECT refComida3 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida3 > 1) "
+			  "UNION ALL (SELECT refComida4 AS todas FROM pedidos WHERE momento >= :mi AND momento <= :mf AND refComida4 > 1)) t LEFT JOIN comidas ON comidas.idComida = t.todas GROUP BY todas ";
 
 
 
@@ -1603,7 +2004,6 @@ void TfPedidos::actualizarInfoVentas(void)
    QueryInfo->Open();
 
 
-   ListBox1->Clear();
    int id;
    int i;
    bool esNormal;
@@ -1622,43 +2022,87 @@ void TfPedidos::actualizarInfoVentas(void)
 			esNormal = true;
 		 }
 	  }
-	  if(!esNormal)
-	  {
-		 ListBox1->Items->Add(QueryInfo->FieldByName("nComida")->AsString + " x " + QueryInfo->FieldByName("cantidad")->AsString);
-	  }
 
 	  QueryInfo->Next();
    }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
    QueryInfo->Close();
    QueryInfo->SQL->Clear();
-   QueryInfo->SQL->Add("SELECT SUM(nroUnidades) AS cantidadViandas, COUNT(*) AS cantDomicilios, "
-					   "(SELECT valor FROM listasPrecio WHERE idListaPrecio = 1 LIMIT 1) AS valor "
+   QueryInfo->SQL->Add("SELECT IFNULL(SUM(nroUnidades), 0) AS cantidadViandas, COUNT(*) AS cantDomicilios, "
+					   "(SELECT valor FROM listasPrecio WHERE idListaPrecio = 1 LIMIT 1) AS valor, "
+						"(SELECT precio1 FROM productos WHERE idProducto = 3 LIMIT 1) AS valorEnvio, "
+						"(SELECT precio1 FROM productos WHERE idProducto = 4 LIMIT 1) AS valorViandaUnica, "
+					   "(SELECT precio1 FROM productos WHERE idProducto = 2 LIMIT 1) AS valorViandaOficina "
 					   "FROM cantidades WHERE fecha = :f");
    QueryInfo->ParamByName("f")->AsDate = DTP->Date;
    QueryInfo->Open();
 
-   Label12->Caption = "Cant. Vi: " + QueryInfo->FieldByName("cantidadViandas")->AsString +
-					  "   |   Cant. Dom: " + QueryInfo->FieldByName("cantDomicilios")->AsString;
+   Label12->Caption = "Viandas: " + QueryInfo->FieldByName("cantidadViandas")->AsString +
+					  "   |   Domicilios: " + QueryInfo->FieldByName("cantDomicilios")->AsString;
    valorVianda = QueryInfo->FieldByName("valor")->AsFloat;
+   valorEnvio =  QueryInfo->FieldByName("valorEnvio")->AsFloat;
+	valorViandaOficina =  QueryInfo->FieldByName("valorViandaOficina")->AsFloat;
+	valorViandaUnica =  QueryInfo->FieldByName("valorViandaUnica")->AsFloat;
    QueryInfo->Close();
 
-   QueryRep->Close();
-   QueryRep->SQL->Clear();
-   QueryRep->SQL->Add("SELECT refRepartidor, (sectorReparto + 1) AS reparto, RPAD(SUM(nroUnidades),5 , ' ') AS cantViandas, RPAD(COUNT(*), 2, ' ') AS cantDirecciones, "
-					  "(SELECT RPAD(nombreCorto, 5, ' ') FROM repartidores WHERE refRepartidor = idRepartidor LIMIT 1) AS nombreRep "
-					  "FROM cantidades WHERE fecha = :fecha "
-					  "GROUP BY refRepartidor, sectorReparto ORDER BY nombreRep, reparto");
-   QueryRep->ParamByName("fecha")->AsDate = DTP->Date;
-   QueryRep->Open();
-   ListBox3->Clear();
-   QueryRep->First();
-   while(!QueryRep->Eof)
-   {
-	  ListBox3->Items->Add(QueryRep->FieldByName("nombreRep")->AsString + " " + QueryRep->FieldByName("reparto")->AsString + "°- " + QueryRep->FieldByName("cantViandas")->AsString + " - " + QueryRep->FieldByName("cantDirecciones")->AsString);
-	  QueryRep->Next();
-   }
-   QueryRep->Close();
+   val1 = roundToHight10(valorVianda * 0.25);
+   val2 = roundToHight10(valorVianda * 0.50);
+   val3 = roundToHight10(valorVianda * 0.75);
+
+   Button43->Caption = FormatFloat("$0", val1);
+   Button44->Caption = FormatFloat("$0", val2);
+   Button45->Caption = FormatFloat("$0", val3);
+   Button46->Caption = FormatFloat("$0", valorVianda);
+
+   q =	"SELECT \
+				refRepartidor \
+				,(sectorReparto + 1) AS reparto \
+				,SUM(nroUnidades) AS cantViandas \
+				,COUNT(*) AS cantDirecciones \
+				,repartidores.nombreCorto AS nombreRep \
+				,repartidores.descripcion AS repartidor \
+		FROM \
+				cantidades \
+				LEFT JOIN repartidores ON repartidores.idRepartidor = cantidades.refRepartidor \
+		WHERE \
+				cantidades.fecha = :fecha \
+		GROUP BY \
+				refRepartidor \
+				,sectorReparto \
+		ORDER BY \
+				nombreRep \
+				,reparto";
+
+
+	CDS5->Active = false;
+	QueryRep->Close();
+	QueryRep->SQL->Clear();
+	QueryRep->SQL->Add(q);
+
+	QueryRep->ParamByName("fecha")->AsDate = DTP->Date;
+	QueryRep->Open();
+	if(QueryRep->IsEmpty())
+		return;
+
+	CDS5->Active = true;
+	ShowScrollBar(DBGrid6->Handle, SB_VERT, true);
 }
 //---------------------------------------------------------------------------
 
@@ -1673,7 +2117,9 @@ void __fastcall TfPedidos::FormShow(TObject *Sender)
    CheckBox1->Checked = false;
    Label20->Caption = "";
    Label21->Caption = "";
-   rgOficinas->Visible = false;
+   Label26->Caption = "";
+	rgOficinas->Visible = false;
+	menuImpreso = false;
 
    cbRefMedioContacto->Clear();
    QueryAux->Close();
@@ -1725,6 +2171,10 @@ void __fastcall TfPedidos::FormShow(TObject *Sender)
    RestablecerFormulario();
 
    actualizarInfoVentas();
+
+   Edit4->Text = FormatFloat("$ 0", valorVianda);
+
+
    Panel18->Visible = false;
    Panel19->Visible = false;
    Panel20->Visible = false;
@@ -1732,9 +2182,12 @@ void __fastcall TfPedidos::FormShow(TObject *Sender)
    blockRGTexto = false;
 //   actualizarInfoRepartos = 0;
 
+   Panel22->Hide();
+
    Edit1->SetFocus();
 
    Timer3->Enabled = true;
+   Timer4->Enabled = true;
 
    if(DayOfTheWeek(DTP->Date) == DayThursday)
 	  CopiarcombinacionesJUEVES1->Visible = true;
@@ -1814,9 +2267,11 @@ void __fastcall TfPedidos::Button2Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
 void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
 {
+	if(ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) //Es Envio
+		return;
+
    cargandoOpciones = true;
 
    RG1->Enabled = false;
@@ -1834,6 +2289,7 @@ void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
    int rp, rc1, rc2, rc3, rc4, rmc, oe, cpc;
    String coment;
    modificandoPedido = true;
+   float valor;
 
    advertirMismoCliente = false;
 
@@ -1851,6 +2307,7 @@ void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
    oe = QueryAux->FieldByName("omitirEtiqueta")->AsInteger;
    cpc = QueryAux->FieldByName("comentarioParaCocina")->AsInteger;
    coment = QueryAux->FieldByName("comentario")->AsString;
+   valor = QueryAux->FieldByName("valor")->AsFloat;
    QueryAux->Close();
 
    for(int i=0; i < RG1->Items->Count; i++)
@@ -1879,54 +2336,26 @@ void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
 	  CBParaCocina->Checked = true;
 
    edComentario->Text = coment;
-
+   Edit4->Text = FormatFloat("$ 0.00", valor);
 
    if((rc1 != 1) && (RG1->ItemIndex == RG1->Items->Count - 1))
    {
-      QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = rc1;
-	  QueryAux->Open();
-	  Label4->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
-
+	  Label4->Caption = getCodigoComidaFromID(rc1);
 	  idOpEsp1 = rc1;
    }
    if((rc2 != 1) && (RG2->ItemIndex == RG2->Items->Count - 1))
    {
-      QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = rc2;
-	  QueryAux->Open();
-	  Label5->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
-
+	  Label5->Caption = getCodigoComidaFromID(rc2);
 	  idOpEsp2 = rc2;
    }
    if((rc3 != 1) && (RG3->ItemIndex == RG3->Items->Count - 1))
    {
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = rc3;
-	  QueryAux->Open();
-	  Label6->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
-
+	  Label6->Caption = getCodigoComidaFromID(rc3);
 	  idOpEsp3 = rc3;
    }
    if((rc4 != 1) && (RG4->ItemIndex == RG4->Items->Count - 1))
    {
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = rc4;
-	  QueryAux->Open();
-	  Label7->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
-
+	  Label7->Caption = getCodigoComidaFromID(rc4);
 	  idOpEsp4 = rc4;
    }
 
@@ -1988,6 +2417,14 @@ void __fastcall TfPedidos::Modificarestepedido1Click(TObject *Sender)
    Label17->Enabled = true;
    Label8->Enabled = true;
 
+   Label25->Enabled = true;
+
+   Button43->Enabled = true;
+   Button44->Enabled = true;
+   Button45->Enabled = true;
+   Button46->Enabled = true;
+   SpeedButton1->Enabled = true;
+
    vTimer1 = 0;
    Panel18->Visible = true;
    Timer1->Enabled = true;
@@ -2023,7 +2460,6 @@ void __fastcall TfPedidos::Eliminarestepedido1Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    QueryAux->SQL->Add("SELECT refCantidad, COUNT(*) AS existe FROM pedidos WHERE (momento >= :mi AND momento <= :mf AND refCliente = :rc)");
-//   QueryAux->ParamByName("f")->AsDate = DTP->Date;
    QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("rc")->AsInteger = idCliSel;
@@ -2040,17 +2476,22 @@ void __fastcall TfPedidos::Eliminarestepedido1Click(TObject *Sender)
    }
    else
    {
+      float valorTotal = getValorTotal();
 	  int idCantidad = QueryAux->FieldByName("refCantidad")->AsInteger;
 	  QueryAux->Close();
 	  Query1->Close();
 	  Query1->SQL->Clear();
-	  Query1->SQL->Add("UPDATE cantidades SET nroUnidades = :cant, nroBandejas = :nb, txtComplemento = :txComp "
+	  Query1->SQL->Add("UPDATE cantidades SET nroUnidades = :cant, nroBandejas = :nb, txtComplemento = :txComp, valorTotal = :valorTotal "
 					   "WHERE idCantidad = :refCantidad");
 	  Query1->ParamByName("refCantidad")->AsInteger = idCantidad;
 	  Query1->ParamByName("cant")->AsString = comaToDot(edUnidades->Text);
 	  Query1->ParamByName("nb")->AsString = edBandGrand->Text;
-	  Query1->ParamByName("txComp")->AsString = generarCadComp();
+	  Query1->ParamByName("txComp")->AsString = generarCadComp("cliente");
+	  Query1->ParamByName("valorTotal")->AsFloat = valorTotal * ((100.0 - descuentoCliente) / 100.0);
 	  Query1->ExecSQL();
+
+	  //getPedidos(idCliSel, DTP->DateTime);
+	  Label20->Caption = FormatFloat("Costo total: $ 0.00", valorTotal * ((100.0 - descuentoCliente) / 100.0));
    }
 
    actualizarInfoVentas();
@@ -2072,7 +2513,6 @@ void __fastcall TfPedidos::Button7Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    QueryAux->SQL->Add("DELETE FROM comidasespeciales WHERE refPedido IN (SELECT idPedido FROM pedidos WHERE (refCliente = :id AND momento >= :mi AND momento <= :mf))");
-//   QueryAux->ParamByName("f")->AsDate = DTP->Date;
    QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("id")->AsInteger = idCliSel;
@@ -2081,7 +2521,6 @@ void __fastcall TfPedidos::Button7Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    QueryAux->SQL->Add("DELETE FROM pedidos WHERE (refCliente = :id AND momento >= :mi AND momento <= :mf)");
-//   QueryAux->ParamByName("f")->AsDate = DTP->Date;
    QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("id")->AsInteger = idCliSel;
@@ -2167,26 +2606,20 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
    }
 
 
+   if(Edit4->Text == "$ 0,00")
+	  if(Application->MessageBox(L"Se va a cargar un pedido SIN VALOR, es correcto?",L"Verificar precio",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) != IDYES)
+		 return;
+
 
    DTP->Time = Now();
-   int idCantidad = 0;
-
-
-   Query1->Close();
-   Query1->SQL->Clear();
-   Query1->SQL->Add("SELECT idCantidad, COUNT(*) AS existe FROM cantidades WHERE (fecha = :d AND refCliente = :rc) LIMIT 1");
-   Query1->ParamByName("d")->AsDate = DTP->Date;
-   Query1->ParamByName("rc")->AsInteger = idCliSel;
-   Query1->Open();
+   int idCantidad = getRefCantidad(idCliSel, DTP->DateTime);
 
    bool existeCantidad;
-   if(Query1->FieldByName("existe")->AsInteger == 0)
+
+   if(idCantidad == 0)
 	  existeCantidad = false;
    else
-   {
 	  existeCantidad = true;
-	  idCantidad = Query1->FieldByName("idCantidad")->AsInteger;
-   }
 
    Query1->Close();
    Query1->SQL->Clear();
@@ -2194,7 +2627,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
    if(!existeCantidad)
    {
 	  Query1->SQL->Add("INSERT INTO cantidades VALUES (NULL, :d, :rc, :cant, :nb, :txComp, "
-					   "(SELECT idRepartidor FROM repartidores WHERE descripcion = :rep LIMIT 1), :ubi, :cm, :mp)");
+					   "(SELECT idRepartidor FROM repartidores WHERE descripcion = :rep LIMIT 1), :ubi, :cm, :mp, :valorTotal)");
 	  Query1->ParamByName("d")->AsDate = DTP->Date;
 	  Query1->ParamByName("rc")->AsInteger = idCliSel;
 	  Query1->ParamByName("cant")->AsString = comaToDot(edUnidades->Text);
@@ -2203,6 +2636,8 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 		 Query1->ParamByName("txComp")->AsString = GetCodigo(arrIdComida[RG4->ItemIndex]);
 	  else
 		 Query1->ParamByName("txComp")->AsString = Label7->Caption;
+
+	  String j = GetCodigo(arrIdComida[RG4->ItemIndex]);
 
 	  Query1->ParamByName("rep")->AsString = cbRepartidor->Text;
 	  Query1->ParamByName("ubi")->AsInteger = rgUbicacion->ItemIndex;
@@ -2213,6 +2648,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 		 Query1->ParamByName("cm")->AsInteger = 1;
 
 	  Query1->ParamByName("mp")->AsString = CBmp->Text.SubString(1,1);
+      Query1->ParamByName("valorTotal")->AsFloat = StrToFloat(Edit4->Text.Delete(1,2)) * ((100.0 - descuentoCliente) / 100.0);
 	  Query1->ExecSQL();
 
 	  Query1->Close();
@@ -2229,49 +2665,25 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
    {
 	  modificado = true;
 	  nroRec = ClientDataSet2->RecNo;
+
 	  if(idOpEsp1Old != 0 && idOpEsp1Old != idOpEsp1)
-	  {
-		 Query1->Close();
-		 Query1->SQL->Clear();
-		 Query1->SQL->Add("DELETE FROM comidasespeciales WHERE refPedido = :rp AND refComida = :refComida");
-		 Query1->ParamByName("rp")->AsInteger = idMod;
-		 Query1->ParamByName("refComida")->AsInteger = idOpEsp1Old;
-		 Query1->ExecSQL();
-	  }
-	  if(idOpEsp2Old != 0 && idOpEsp1Old != idOpEsp2)
-	  {
-		 Query1->Close();
-		 Query1->SQL->Clear();
-		 Query1->SQL->Add("DELETE FROM comidasespeciales WHERE refPedido = :rp AND refComida = :refComida");
-		 Query1->ParamByName("rp")->AsInteger = idMod;
-		 Query1->ParamByName("refComida")->AsInteger = idOpEsp2Old;
-		 Query1->ExecSQL();
-	  }
-	  if(idOpEsp3Old != 0 && idOpEsp1Old != idOpEsp3)
-	  {
-		 Query1->Close();
-		 Query1->SQL->Clear();
-		 Query1->SQL->Add("DELETE FROM comidasespeciales WHERE refPedido = :rp AND refComida = :refComida");
-		 Query1->ParamByName("rp")->AsInteger = idMod;
-		 Query1->ParamByName("refComida")->AsInteger = idOpEsp3Old;
-		 Query1->ExecSQL();
-	  }
-	  if(idOpEsp4Old != 0 && idOpEsp1Old != idOpEsp4)
-	  {
-		 Query1->Close();
-		 Query1->SQL->Clear();
-		 Query1->SQL->Add("DELETE FROM comidasespeciales WHERE refPedido = :rp AND refComida = :refComida");
-		 Query1->ParamByName("rp")->AsInteger = idMod;
-		 Query1->ParamByName("refComida")->AsInteger = idOpEsp4Old;
-		 Query1->ExecSQL();
-	  }
+		 deleteComidaEspecial(idMod, idOpEsp1Old);
+
+	  if(idOpEsp2Old != 0 && idOpEsp2Old != idOpEsp2)
+		 deleteComidaEspecial(idMod, idOpEsp2Old);
+
+	  if(idOpEsp3Old != 0 && idOpEsp3Old != idOpEsp3)
+		 deleteComidaEspecial(idMod, idOpEsp3Old);
+
+	  if(idOpEsp4Old != 0 && idOpEsp4Old != idOpEsp4)
+		 deleteComidaEspecial(idMod, idOpEsp4Old);
 
 	  bool pedidoEspecial = false;
 
 	  Query1->Close();
 	  Query1->SQL->Clear();                //momento = :dt,
 	  Query1->SQL->Add("UPDATE pedidos SET refProducto = :rp, refComida1 = :rc1, refComida2 = :rc2, refComida3 = :rc3, "
-					   "refComida4 = :rc4, refMedioContacto = :rmc, comentario =  :com, omitirEtiqueta = :oe, "
+					   "refComida4 = :rc4, refMedioContacto = :rmc, comentario =  :com, omitirEtiqueta = :oe, valor = :valor, "
 					   "etiquetaImpresa = 0, complementoImpreso = 0, comentarioParaCocina = :cpc WHERE(idPedido = :idP) LIMIT 1");
 
 	  Query1->ParamByName("rp")->AsInteger = cbRefProducto->ItemIndex + 1;
@@ -2310,6 +2722,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
 	  Query1->ParamByName("rmc")->AsInteger = cbRefMedioContacto->ItemIndex + 1;
 	  Query1->ParamByName("com")->AsString = edComentario->Text;
+	  Query1->ParamByName("valor")->AsFloat = StrToFloat(Edit4->Text.Delete(1,2));
 	  Query1->ParamByName("idP")->AsInteger = idMod;
 	  if(CBOmitirEtiqueta->Checked)
 		 Query1->ParamByName("oe")->AsInteger = 1;
@@ -2323,59 +2736,22 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
 	  Query1->ExecSQL();
 
+	  if(cbRefProducto->ItemIndex == 1)		//Si es vianda de oficina entonces no es pedido especial
+	  	  pedidoEspecial = false;
+
 	  if(pedidoEspecial)
 	  {
 		 if(RG1->ItemIndex == ni && idOpEsp1 > 1 && idOpEsp1 != idOpEsp1Old)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp1;
-			Query1->ParamByName("rp")->AsInteger = idMod;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp1, idMod, rgUbicacion->ItemIndex);
 
 		 if(RG2->ItemIndex == ni && idOpEsp2 > 1 && idOpEsp2 != idOpEsp2Old)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp2;
-			Query1->ParamByName("rp")->AsInteger = idMod;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp2, idMod, rgUbicacion->ItemIndex);
 
 		 if(RG3->ItemIndex == ni && idOpEsp3 > 1 && idOpEsp3 != idOpEsp3Old)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp3;
-			Query1->ParamByName("rp")->AsInteger = idMod;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp3, idMod, rgUbicacion->ItemIndex);
 
 		 if(RG4->ItemIndex == ni && idOpEsp4 > 1 && idOpEsp4 != idOpEsp4Old)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp4;
-			Query1->ParamByName("rp")->AsInteger = idMod;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp4, idMod, rgUbicacion->ItemIndex);
 	  }
 
 	  modificandoPedido = false;
@@ -2386,7 +2762,7 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
 	  Query1->Close();
 	  Query1->SQL->Clear();
-	  Query1->SQL->Add("INSERT INTO pedidos VALUES (NULL, :dt, :rc, :rp, :rc1, :rc2, :rc3, :rc4, :rmc, 1, :com, :oe, 0, :refCantidad, 0, :cpc)");
+	  Query1->SQL->Add("INSERT INTO pedidos VALUES (NULL, :dt, :rc, :rp, :rc1, :rc2, :rc3, :rc4, :rmc, 1, :com, :oe, 0, :refCantidad, 0, :cpc, :valor)");
 	  Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
 	  Query1->ParamByName("rc")->AsInteger = idCliSel;
 	  Query1->ParamByName("rp")->AsInteger = cbRefProducto->ItemIndex + 1;
@@ -2426,6 +2802,8 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
 	  Query1->ParamByName("rmc")->AsInteger = cbRefMedioContacto->ItemIndex + 1;
 	  Query1->ParamByName("com")->AsString = edComentario->Text;
+	  Query1->ParamByName("valor")->AsFloat = StrToFloat(Edit4->Text.Delete(1,2));
+
 	  if(CBOmitirEtiqueta->Checked)
 		 Query1->ParamByName("oe")->AsInteger = 1;
 	  else
@@ -2438,6 +2816,9 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
 	  Query1->ExecSQL();
 
+	  if(cbRefProducto->ItemIndex == 1) 	//SI es vianda de oficina entonce sno es pedido especial
+	  	 pedidoEspecial = false;
+
 	  if(pedidoEspecial)
 	  {
 		 Query1->Close();
@@ -2448,56 +2829,17 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 		 Query1->Close();
 
 		 if(RG1->ItemIndex == ni && idOpEsp1 > 1)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp1;
-			Query1->ParamByName("rp")->AsInteger = id;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp1, id, rgUbicacion->ItemIndex);
 
 		 if(RG2->ItemIndex == ni && idOpEsp2 > 1)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp2;
-			Query1->ParamByName("rp")->AsInteger = id;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp2, id, rgUbicacion->ItemIndex);
 
 		 if(RG3->ItemIndex == ni && idOpEsp3 > 1)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp3;
-			Query1->ParamByName("rp")->AsInteger = id;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp3, id, rgUbicacion->ItemIndex);
 
 		 if(RG4->ItemIndex == ni && idOpEsp4 > 1)
-		 {
-			Query1->Close();
-			Query1->SQL->Clear();
-			Query1->SQL->Add("INSERT INTO comidasespeciales (refPedido, refComida, refEstadoPedido, ordenReparto, marcaTiempo) "
-							 "VALUES (:rp, :idComEsp, 1, :or, :dt)");
-			Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
-			Query1->ParamByName("idComEsp")->AsInteger = idOpEsp4;
-			Query1->ParamByName("rp")->AsInteger = id;
-			Query1->ParamByName("or")->AsInteger = rgUbicacion->ItemIndex;
-			Query1->ExecSQL();
-		 }
+			insertComidaEspecial(DTP->DateTime, idOpEsp4, id, rgUbicacion->ItemIndex);
+
 	  }
 
    }
@@ -2508,18 +2850,19 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
    {
 	  Query1->Close();
 	  Query1->SQL->Clear();
-	  Query1->SQL->Add("UPDATE cantidades SET nroUnidades = :cant, nroBandejas = :nb, txtComplemento = :txComp, medioPago = :mp "
-					   "WHERE (idCantidad = :id) LIMIT 1");
+	  Query1->SQL->Add("UPDATE cantidades SET nroUnidades = :cant, nroBandejas = :nb, txtComplemento = :txComp, medioPago = :mp, valorTotal = :valorTotal "
+					   " WHERE (idCantidad = :id) LIMIT 1");
 	  Query1->ParamByName("id")->AsInteger = idCantidad;
 	  Query1->ParamByName("cant")->AsString = comaToDot(edUnidades->Text);
 	  Query1->ParamByName("nb")->AsString = edBandGrand->Text;
-	  Query1->ParamByName("txComp")->AsString = generarCadComp();
+	  Query1->ParamByName("txComp")->AsString = generarCadComp("cliente");
 	  Query1->ParamByName("mp")->AsString = CBmp->Text.SubString(1,1);
+	  Query1->ParamByName("valorTotal")->AsFloat = getValorTotal() * ((100.0 - descuentoCliente) / 100.0);
 	  Query1->ExecSQL();
    }
 
-   lbComplementos->Caption = generarCadComp();
-
+	lbComplementos->Caption = generarCadComp("cliente");
+   Label20->Caption = FormatFloat("Costo total: $ 0.00", getValorTotal() * ((100.0 - descuentoCliente) / 100.0));
 
    RG1->ItemIndex = RG1->Items->Count - 1;
    RG2->ItemIndex = RG1->Items->Count - 1;
@@ -2539,12 +2882,15 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
    rgOficinas->ItemIndex = rgOficinas->Items->Count - 1;
 
+
+
    modificandoPedido = false;
    idMod = 0;
    cargandoOpciones = false;
    CBOmitirEtiqueta->Checked = false;
    CBParaCocina->Checked = false;
    edComentario->Text = "";
+   Edit4->Text = FormatFloat("$ 0", valorVianda);
    cbRefProducto->ItemIndex = 0;
 
    Image1->Enabled = true;
@@ -2563,6 +2909,8 @@ void __fastcall TfPedidos::Button8Click(TObject *Sender)
 
    if(modificado)
 	  ClientDataSet2->RecNo = nroRec;
+   else
+      ClientDataSet2->Last();
 
    Button27->Enabled = true;
 }
@@ -2586,6 +2934,7 @@ void __fastcall TfPedidos::Button1Click(TObject *Sender)
    DBGrid1->Repaint();
 
    Edit1->Enabled = true;
+   Button42->Enabled = true;
    Button9->Enabled = true;
    Edit1->SetFocus();
    Edit1->SelectAll();
@@ -2669,11 +3018,14 @@ void __fastcall TfPedidos::FormClose(TObject *Sender, TCloseAction &Action)
    }
    Timer1->Enabled = false;
    Timer3->Enabled = false;
+   Timer4->Enabled = false;
 
    ClientDataSet3->Active = false;
    CDSEtiquetas->Active = false;
    CDSEtiquetasComp->Active = false;
    ClientDataSet2->Active = false;
+   CDS5->Active = false;
+   CDS6->Active = false;
 
    Query1->Close();
    QueryAux->Close();
@@ -2684,6 +3036,8 @@ void __fastcall TfPedidos::FormClose(TObject *Sender, TCloseAction &Action)
    QueryGenCad->Close();
    QueryInfo->Close();
    QueryPedidos->Close();
+   QueryRep->Close();
+   QueryComidasEsp->Close();
 
    SQLConnection1->Close();
 }
@@ -2702,14 +3056,7 @@ void __fastcall TfPedidos::Image1Click(TObject *Sender)
 		 return;
 
 	  idOpEsp1 = fSeleccionarComida->idSeleccionado;
-
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = fSeleccionarComida->idSeleccionado;
-	  QueryAux->Open();
-	  Label4->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
+	  Label4->Caption = getCodigoComidaFromID(idOpEsp1);
    }
 }
 //---------------------------------------------------------------------------
@@ -2727,14 +3074,7 @@ void __fastcall TfPedidos::Image2Click(TObject *Sender)
 		 return;
 
 	  idOpEsp2 = fSeleccionarComida->idSeleccionado;
-
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = fSeleccionarComida->idSeleccionado;
-	  QueryAux->Open();
-	  Label5->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
+	  Label5->Caption = getCodigoComidaFromID(idOpEsp2);
    }
 }
 //---------------------------------------------------------------------------
@@ -2751,14 +3091,7 @@ void __fastcall TfPedidos::Image3Click(TObject *Sender)
 		 return;
 
 	  idOpEsp3 = fSeleccionarComida->idSeleccionado;
-
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = fSeleccionarComida->idSeleccionado;
-	  QueryAux->Open();
-	  Label6->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
+	  Label6->Caption = getCodigoComidaFromID(idOpEsp3);
    }
 }
 //---------------------------------------------------------------------------
@@ -2776,14 +3109,7 @@ void __fastcall TfPedidos::Image4Click(TObject *Sender)
 		 return;
 
 	  idOpEsp4 = fSeleccionarComida->idSeleccionado;
-
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = fSeleccionarComida->idSeleccionado;
-	  QueryAux->Open();
-	  Label7->Caption = QueryAux->FieldByName("codigo")->AsString;
-      QueryAux->Close();
+	  Label7->Caption = getCodigoComidaFromID(idOpEsp4);
    }
 }
 //---------------------------------------------------------------------------
@@ -2791,12 +3117,13 @@ void __fastcall TfPedidos::Image4Click(TObject *Sender)
 
 void __fastcall TfPedidos::Edit1Change(TObject *Sender)
 {
-   ClientDataSet3->Active = false;
+   idCliSel = 0;
+	ClientDataSet3->Active = false;
    advertirMismoCliente = false;
 
    if(Edit1->Text.Length() >= 3 || Sender == Button20)
    {
-      String q;
+	  String q;
 
 	  q = "SELECT idCliente, calle, numero, acumuladoGlobal, (acumuladoGlobal - acumuladoParcial) AS deuda, "
 		  "(SELECT descripcion FROM repartidores WHERE repartidores.idRepartidor = (SELECT refRepartidor FROM repartos WHERE (repartos.esSabado = :esSab AND repartos.refCliente = clientes.idCliente) LIMIT 1) LIMIT 1) AS Repartidor, "
@@ -2804,10 +3131,35 @@ void __fastcall TfPedidos::Edit1Change(TObject *Sender)
 		  "(SELECT posicion FROM repartos WHERE (repartos.refRepartidor = (SELECT refRepartidor FROM repartos WHERE (repartos.refCliente = clientes.idCliente AND esSabado = :esSab) LIMIT 1) AND refCliente = 1 AND esSabado = :esSab) LIMIT 1) AS division "
 		  "FROM clientes WHERE(UPPER(numero) LIKE :v AND idCliente > 2 AND esVisible = 1 AND (SELECT COUNT(*) FROM repartos WHERE (repartos.refCliente = clientes.idCliente AND repartos.esSabado = :esSab) LIMIT 1) > 0) ORDER BY numero LIMIT 7"; //selecciona 7 por vez
 
+
+//	  q = "SELECT \
+//				idCliente \
+//				,calle \
+//				,numero \
+//				,acumuladoGlobal \
+//				,(acumuladoGlobal - acumuladoParcial) AS deuda \
+//				,repartos.posicion AS pos \
+//				,(SELECT posicion FROM repartos WHERE refCliente = 1 AND refRepartidor = repartidores.idRepartidor AND esSabado = :esSab LIMIT 1) AS division \
+//				,repartidores.descripcion AS Repartidor \
+//		FROM \
+//				clientes \
+//				LEFT JOIN repartos ON repartos.refCliente = clientes.idCliente AND repartos.esSabado = :esSab \
+//				LEFT JOIN repartidores ON repartidores.idRepartidor = repartos.refRepartidor \
+//		WHERE \
+//				UPPER(clientes.numero) LIKE :v \
+//				AND clientes.idCliente > 2 \
+//				AND ((clientes.esVisible = 1)) \
+//		ORDER BY \
+//				numero \
+//		LIMIT 10";   //AND repartos.idReparto IS NOT NULL \
+//		//				LEFT JOIN repartos division_rep ON division_rep.refCliente = 1 AND repartos.esSabado = :esSab AND division_rep.idReparto = repartos.idReparto \
+//        // OR (idCliente IN (SELECT refCliente FROM cantidades WHERE fecha =:fecha))
+
 	  QueryCliente->Close();
 	  QueryCliente->SQL->Clear();
 	  QueryCliente->SQL->Add(q);
 	  QueryCliente->ParamByName("v")->AsString = "%" + Edit1->Text.UpperCase() + "%";
+      //QueryCliente->ParamByName("fecha")->AsDate = DTP->Date;
 
 	  if(DayOfTheWeek(DTP->Date) == 6)
 		 QueryCliente->ParamByName("esSab")->AsInteger = 1;
@@ -2847,6 +3199,7 @@ void __fastcall TfPedidos::Edit1Change(TObject *Sender)
 		 //-----------------------------------------------------------------
 
 		 idCliSel = ClientDataSet3->FieldByName("idCliente")->AsInteger;
+
 		 verClienteSeleccionado(idCliSel);
 
 		 if(ClientDataSet3->FieldByName("deuda")->AsFloat == 0 || ClientDataSet3->FieldByName("acumuladoGlobal")->AsFloat == 0)
@@ -2895,6 +3248,14 @@ void __fastcall TfPedidos::Edit1Change(TObject *Sender)
 		 Label17->Enabled = false;
 		 Label8->Enabled = false;
 
+		 Label25->Enabled = false;
+
+		 Button43->Enabled = false;
+		 Button44->Enabled = false;
+		 Button45->Enabled = false;
+		 Button46->Enabled = false;
+		 SpeedButton1->Enabled = false;
+
 		 RG1->ItemIndex = RG1->Items->Count - 1;
 		 RG2->ItemIndex = RG1->Items->Count - 1;
 		 RG3->ItemIndex = RG1->Items->Count - 1;
@@ -2918,7 +3279,7 @@ void __fastcall TfPedidos::Edit1Change(TObject *Sender)
 
 void __fastcall TfPedidos::DBGrid2DblClick(TObject *Sender)
 {
-   //--------------------------CARGA PLANILLA Y UBICACION POR DEFECTO
+	//--------------------------CARGA PLANILLA Y UBICACION POR DEFECTO
    cbRepartidor->ItemIndex = 0;
    while(1)
    {
@@ -2947,7 +3308,8 @@ void __fastcall TfPedidos::DBGrid2DblClick(TObject *Sender)
    //-----------------------------------------------------------------
 
 
-   idCliSel = ClientDataSet3->FieldByName("idCliente")->AsInteger;
+	idCliSel = ClientDataSet3->FieldByName("idCliente")->AsInteger;
+
    verClienteSeleccionado(idCliSel);
 
      if(ClientDataSet3->FieldByName("deuda")->AsFloat == 0)
@@ -2993,7 +3355,6 @@ void __fastcall TfPedidos::Button10Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    QueryAux->SQL->Add("UPDATE comidasespeciales SET ordenReparto = :or WHERE refPedido IN (SELECT idPedido FROM pedidos WHERE (refCliente = :id AND momento >= :mi AND momento <= :mf))");
-//   QueryAux->ParamByName("f")->AsDate = DTP->Date;
    QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("id")->AsInteger = idCliSel;
@@ -3028,12 +3389,36 @@ void __fastcall TfPedidos::Button9Click(TObject *Sender)
 
    if(fSeleccionarCliente->idSeleccionado > 2)
    {
+
+	  String q = "SELECT \
+				idCliente \
+				,calle \
+				,numero \
+				,acumuladoGlobal \
+				,(acumuladoGlobal - acumuladoParcial) AS deuda \
+				,repartos.posicion AS pos \
+				,division_rep.posicion AS division \
+				,repartidores.descripcion AS Repartidor \
+		FROM \
+				clientes \
+				LEFT JOIN repartos ON repartos.refCliente = clientes.idCliente AND repartos.esSabado = :esSab \
+				LEFT JOIN repartos division_rep ON division_rep.refCliente = 1 AND repartos.esSabado = :esSab AND division_rep.idReparto = repartos.idReparto \
+				LEFT JOIN repartidores ON repartidores.idRepartidor = repartos.refRepartidor \
+		WHERE \
+				idCliente = :idc \
+		LIMIT 10";
+		
 	  idCliSel = fSeleccionarCliente->idSeleccionado;
 	  ClientDataSet3->Active = false;
 	  QueryCliente->Close();
 	  QueryCliente->SQL->Clear();
-	  QueryCliente->SQL->Add("SELECT calle, numero, acumuladoGlobal, (acumuladoGlobal - acumuladoParcial) as deuda FROM clientes WHERE idCliente = :idc LIMIT 1");
+//	  QueryCliente->SQL->Add("SELECT idCliente, calle, numero, acumuladoGlobal, (acumuladoGlobal - acumuladoParcial) AS deuda, 0 AS pos, 0 AS division,  FROM clientes WHERE idCliente = :idc LIMIT 1");
+	  QueryCliente->SQL->Add(q);
 	  QueryCliente->ParamByName("idc")->AsInteger = idCliSel;
+	  if(DayOfTheWeek(DTP->Date) == 6)
+		 QueryCliente->ParamByName("esSab")->AsInteger = 1;
+	  else
+		 QueryCliente->ParamByName("esSab")->AsInteger = 0;
 	  QueryCliente->Open();
 	  ClientDataSet3->Active = true;
 
@@ -3074,19 +3459,21 @@ void __fastcall TfPedidos::Button9Click(TObject *Sender)
 
 void __fastcall TfPedidos::Button3Click(TObject *Sender)
 {
-   Button3->Enabled = false;
-   Button4->Enabled = false;
-   Button17->Enabled = false;
-   puedeSalir = false;
+	Button3->Enabled = false;
+	Button4->Enabled = false;
+	Button17->Enabled = false;
+	Button41->Enabled = false;
+	puedeSalir = false;
 
-   contLineasImpresas = 0;
-   cantLineas = StrToInt(Edit2->Text);
-   imprimirEtiquetas(0);
+	contLineasImpresas = 0;
+	cantLineas = StrToInt(Edit2->Text);
+	imprimirEtiquetas(0, -1);
 
-   Button3->Enabled = true;
-   Button4->Enabled = true;
-   Button17->Enabled = true;
-   puedeSalir = true;
+	Button3->Enabled = true;
+	Button4->Enabled = true;
+	Button17->Enabled = true;
+	Button41->Enabled = true;
+	puedeSalir = true;
 }
 //---------------------------------------------------------------------------
 
@@ -3105,7 +3492,7 @@ void __fastcall TfPedidos::Button5Click(TObject *Sender)
 	  procesoImpresionEtiquetasPedidosOficinas();
    }
    else
-      procesoImpresionEtiquetasPedidos(llamadorAux);
+      procesoImpresionEtiquetasPedidos(llamadorAux, refRepartidorAux);
 }
 //---------------------------------------------------------------------------
 
@@ -3120,18 +3507,20 @@ void __fastcall TfPedidos::Button6Click(TObject *Sender)
 
 void __fastcall TfPedidos::Button4Click(TObject *Sender)
 {
-   Button3->Enabled = false;
+	Button3->Enabled = false;
    Button4->Enabled = false;
-   Button17->Enabled = false;
+	Button17->Enabled = false;
+	Button41->Enabled = false;
    puedeSalir = false;
 
    contLineasImpresas = 0;
    cantLineas = StrToInt(Edit2->Text);
-   imprimirEtiquetas(1);
+   imprimirEtiquetas(1, -1);
 
    Button3->Enabled = true;
    Button4->Enabled = true;
-   Button17->Enabled = true;
+	Button17->Enabled = true;
+	Button41->Enabled = true;
    puedeSalir = true;
 }
 //---------------------------------------------------------------------------
@@ -3147,6 +3536,10 @@ void __fastcall TfPedidos::CheckBox1Click(TObject *Sender)
 
 void __fastcall TfPedidos::Agregaracoladeimpresin1Click(TObject *Sender)
 {
+   if (ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) {
+		  return;    
+   }
+   
    int id = ClientDataSet2->FieldByName("idPedido")->AsInteger;
 
    QueryAux->Close();
@@ -3160,6 +3553,11 @@ void __fastcall TfPedidos::Agregaracoladeimpresin1Click(TObject *Sender)
 
 void __fastcall TfPedidos::Marcarcomoimpresa1Click(TObject *Sender)
 {
+
+   if (ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) {
+		  return;    
+   }
+   
    int id = ClientDataSet2->FieldByName("idPedido")->AsInteger;
 
    QueryAux->Close();
@@ -3178,24 +3576,56 @@ void __fastcall TfPedidos::Mandaraimprimirestaetiqueta1Click(TObject *Sender)
 	}
 	else return;
 
+	if (ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) {
+		  return;    
+    }
+
 
 	String q;
 
-	q = "SELECT comentario, refComida1, refComida2, refComida3, comentarioParaCocina, "
+//	q = "SELECT comentario, refComida1, refComida2, refComida3, comentarioParaCocina, "
+//
+//		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida1 = comidas.idComida) LIMIT 1) AS c1, "
+//		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida2 = comidas.idComida) LIMIT 1) AS c2, "
+//		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida3 = comidas.idComida) LIMIT 1) AS c3, "
+//		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida4 = comidas.idComida) LIMIT 1) AS c4, "
+//
+//		"(SELECT refRepartidor FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
+//		"(SELECT sectorReparto + 1 FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
+//
+//		"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
+//
+//		"(SELECT numero FROM clientes WHERE (refCliente = clientes.idCliente) LIMIT 1) AS Numero "
+//
+//		"FROM pedidos WHERE idPedido = :idP";
 
-		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida1 = comidas.idComida) LIMIT 1) AS c1, "
-		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida2 = comidas.idComida) LIMIT 1) AS c2, "
-		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida3 = comidas.idComida) LIMIT 1) AS c3, "
-		"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida4 = comidas.idComida) LIMIT 1) AS c4, "
 
-		"(SELECT refRepartidor FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
-		"(SELECT sectorReparto + 1 FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
-
-		"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
-
-		"(SELECT numero FROM clientes WHERE (refCliente = clientes.idCliente) LIMIT 1) AS Numero "
-
-		"FROM pedidos WHERE idPedido = :idP";
+	 q = "SELECT \
+				pedidos.comentario \
+				,pedidos.refComida1 \
+				,pedidos.refComida2 \
+				,pedidos.refComida3 \
+				,pedidos.refProducto \
+				,pedidos.comentarioParaCocina \
+				,IF(comidas1.codigo = :una, '1', IF(comidas1.codigo = :ens, 'ENS', comidas1.codigo)) AS c1 \
+				,IF(comidas2.codigo = :una, '1', IF(comidas2.codigo = :ens, 'ENS', comidas2.codigo)) AS c2 \
+				,IF(comidas3.codigo = :una, '1', IF(comidas3.codigo = :ens, 'ENS', comidas3.codigo)) AS c3 \
+				,IF(comidas4.codigo = :una, '1', IF(comidas4.codigo = :ens, 'ENS', comidas4.codigo)) AS c4 \
+				,CAST(cantidades.refRepartidor AS UNSIGNED INTEGER) AS refRep \
+				,(cantidades.sectorReparto + 1) AS salidaRep \
+				,UPPER(SUBSTRING(repartidores.descripcion, 1, 4)) AS Repartidor \
+				,clientes.Numero AS Numero \
+		FROM \
+				pedidos \
+				LEFT JOIN comidas comidas1 ON comidas1.idComida = pedidos.refComida1 \
+				LEFT JOIN comidas comidas2 ON comidas2.idComida = pedidos.refComida2 \
+				LEFT JOIN comidas comidas3 ON comidas3.idComida = pedidos.refComida3 \
+				LEFT JOIN comidas comidas4 ON comidas4.idComida = pedidos.refComida4 \
+				LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.refCantidad \
+				LEFT JOIN repartidores ON repartidores.idRepartidor = cantidades.refRepartidor \
+				LEFT JOIN clientes ON clientes.idCliente = pedidos.refCliente \
+		WHERE \
+				pedidos.idPedido = :idP ";
 
 
 	QueryAux->Close();
@@ -3234,16 +3664,37 @@ void __fastcall TfPedidos::Mandaraimprimirestaetiqueta1Click(TObject *Sender)
 	if(QueryAux->FieldByName("comentarioParaCocina")->AsInteger != 0)
 	  comentarioEsp = true;
 
+	if (QueryAux->FieldByName("refProducto")->AsInteger == 1) {    //viandas normales
 
-	completarEtiquetaPedido(c1, c2, c3, c4, cliente, repartidor, nroReparto,
+		completarEtiquetaPedido(c1, c2, c3, c4, cliente, repartidor, nroReparto,
 							  comentario, true, c1Esp, c2Esp, c3Esp,
 							  comentarioEsp, false);
 
-	completarEtiquetaPedido("", "", "", "", "", "", "",
-							"", false, false, false, false,
-							false, true);
+		completarEtiquetaPedido("", "", "", "", "", "", "",
+								"", false, false, false, false,
+								false, true);	
+	}
+	else if (QueryAux->FieldByName("refProducto")->AsInteger == 2) {    //oficinas
 
+        c3 = "OFICINAS";
+		c4 = "";
+		c3Esp = true;
+	
+		completarEtiquetaPedido(c1, c2, c3, c4, cliente, repartidor, nroReparto,
+							  comentario, true, c1Esp, c2Esp, c3Esp,
+							  comentarioEsp, false);
 
+		completarEtiquetaPedido("", "", "", "", "", "", "",
+								"", false, false, false, false,
+								false, true);	
+	}
+	else
+	{
+		QueryAux->Close();
+		return;
+	}
+
+	
 	frxReport1->PrepareReport(true);
 	frxReport1->Print();
 
@@ -3333,6 +3784,7 @@ void __fastcall TfPedidos::RG1Click(TObject *Sender)
    if(!cargandoOpciones)
    {
 	  Edit1->Enabled = false;
+	  Button42->Enabled = false;
 	  Button9->Enabled = false;
 	  DBGrid2->Enabled = false;
 	  DBGrid1->Enabled = false;
@@ -3351,6 +3803,8 @@ void __fastcall TfPedidos::RG1Click(TObject *Sender)
 		 advertirMismoCliente = false;
 		 advertirRevisarCantidades = true;
 	  }
+
+	  idOpEsp1 = 0;
    }
 }
 //---------------------------------------------------------------------------
@@ -3360,6 +3814,7 @@ void __fastcall TfPedidos::RG2Click(TObject *Sender)
    if(!cargandoOpciones)
    {
 	  Edit1->Enabled = false;
+	  Button42->Enabled = false;
 	  Button9->Enabled = false;
 	  DBGrid2->Enabled = false;
 	  DBGrid1->Enabled = false;
@@ -3377,6 +3832,8 @@ void __fastcall TfPedidos::RG2Click(TObject *Sender)
 		 advertirMismoCliente = false;
 		 advertirRevisarCantidades = true;
 	  }
+
+	  idOpEsp2 = 0;
    }
 }
 //---------------------------------------------------------------------------
@@ -3386,6 +3843,7 @@ void __fastcall TfPedidos::RG3Click(TObject *Sender)
    if(!cargandoOpciones)
    {
 	  Edit1->Enabled = false;
+	  Button42->Enabled = false;
 	  Button9->Enabled = false;
 	  DBGrid2->Enabled = false;
 	  DBGrid1->Enabled = false;
@@ -3403,6 +3861,8 @@ void __fastcall TfPedidos::RG3Click(TObject *Sender)
 		 advertirMismoCliente = false;
 		 advertirRevisarCantidades = true;
 	  }
+
+	  idOpEsp3 = 0;
    }
 }
 //---------------------------------------------------------------------------
@@ -3412,6 +3872,7 @@ void __fastcall TfPedidos::RG4Click(TObject *Sender)
    if(!cargandoOpciones)
    {
 	  Edit1->Enabled = false;
+	  Button42->Enabled = false;
 	  Button9->Enabled = false;
 	  DBGrid2->Enabled = false;
 	  DBGrid1->Enabled = false;
@@ -3430,6 +3891,8 @@ void __fastcall TfPedidos::RG4Click(TObject *Sender)
 		 advertirMismoCliente = false;
 		 advertirRevisarCantidades = true;
 	  }
+
+	  idOpEsp4 = 0;
    }
 }
 //---------------------------------------------------------------------------
@@ -3451,6 +3914,8 @@ void __fastcall TfPedidos::Button15Click(TObject *Sender)
 	  cbRefMedioContacto->ItemIndex = 0;
 	  CBOmitirEtiqueta->Checked = false;
 	  edComentario->Text = "";
+	  CBParaCocina->Checked = false;
+	  Edit4->Text = FormatFloat("$ 0.00", valorVianda);
 
 	  idOpEsp1 = 0;
 	  idOpEsp2 = 0;
@@ -3467,13 +3932,16 @@ void __fastcall TfPedidos::Button15Click(TObject *Sender)
 	  RG1->ItemIndex = RG1->Items->Count - 1;
 	  RG2->ItemIndex = RG1->Items->Count - 1;
 	  RG3->ItemIndex = RG1->Items->Count - 1;
-      RG4->ItemIndex = RG1->Items->Count - 1;
+	  RG4->ItemIndex = RG1->Items->Count - 1;
+	  rgOficinas->ItemIndex = rgOficinas->Items->Count - 1;
+	  rgOficinas->Visible = false;
 	  cargandoOpciones = false;
 
 	  DBGrid1->Enabled = true;
 	  DBGrid1->Repaint();
 
 	  Edit1->Enabled = true;
+	  Button42->Enabled = true;
 	  Button9->Enabled = true;
 	  Edit1->SetFocus();
 	  Edit1->SelectAll();
@@ -3486,43 +3954,6 @@ void __fastcall TfPedidos::Button14Click(TObject *Sender)
 {
    fVerCargaManual->MC->Date = DTP->Date;
    fVerCargaManual->ShowModal();
-}
-//---------------------------------------------------------------------------
-
-
-void __fastcall TfPedidos::ListBox1DblClick(TObject *Sender)
-{
-   if(ListBox1->Items->Count < 1)
-	  return;
-   if(ListBox1->ItemIndex < 0)
-      return;
-
-   String n = ListBox1->Items->Strings[ListBox1->ItemIndex];
-   n = n.SubString(1,n.Pos(" x "));
-
-   QueryInfo->Close();
-   QueryInfo->SQL->Clear();
-   QueryInfo->SQL->Add("SELECT CONCAT(calle, ' ',numero) AS cliente FROM clientes WHERE idCliente IN (SELECT refCliente FROM pedidos WHERE momento >= :mi AND momento <= :mf AND("
-					   "refComida1 = (SELECT idComida FROM comidas WHERE nombre = :n LIMIT 1) "
-					   "OR refComida2 = (SELECT idComida FROM comidas WHERE nombre = :n LIMIT 1) "
-					   "OR refComida3 = (SELECT idComida FROM comidas WHERE nombre = :n LIMIT 1) "
-					   "OR refComida4 = (SELECT idComida FROM comidas WHERE nombre = :n LIMIT 1)))");
-//   QueryInfo->ParamByName("f")->AsDate = DTP->Date;
-   QueryInfo->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
-   QueryInfo->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
-   QueryInfo->ParamByName("n")->AsString = n;
-   QueryInfo->Open();
-
-   ListBox2->Clear();
-   QueryInfo->First();
-   while(!QueryInfo->Eof)
-   {
-      ListBox2->Items->Add(QueryInfo->FieldByName("cliente")->AsString);
-	  QueryInfo->Next();
-   }
-   QueryInfo->Close();
-
-   Panel16->Visible = true;;
 }
 //---------------------------------------------------------------------------
 
@@ -3603,6 +4034,10 @@ void __fastcall TfPedidos::Vermenusemanal1Click(TObject *Sender)
 
 void __fastcall TfPedidos::Marcarcomplementocomoimpreso1Click(TObject *Sender)
 {
+   if (ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) {
+		  return;    
+   }
+   
    int id = ClientDataSet2->FieldByName("idPedido")->AsInteger;
 
    QueryAux->Close();
@@ -3617,6 +4052,10 @@ void __fastcall TfPedidos::Marcarcomplementocomoimpreso1Click(TObject *Sender)
 void __fastcall TfPedidos::Marcarparavolveraimprimircomplemento1Click(TObject *Sender)
 
 {
+   if (ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) {
+		  return;    
+   }
+   
    int id = ClientDataSet2->FieldByName("idPedido")->AsInteger;
 
    QueryAux->Close();
@@ -3630,10 +4069,11 @@ void __fastcall TfPedidos::Marcarparavolveraimprimircomplemento1Click(TObject *S
 
 void __fastcall TfPedidos::Button17Click(TObject *Sender)
 {
-   Button3->Enabled = false;
+	Button3->Enabled = false;
    Button4->Enabled = false;
-   Button17->Enabled = false;
-   puedeSalir = false;
+	Button17->Enabled = false;
+	Button41->Enabled = false;
+	puedeSalir = false;
 
    contLineasImpresas = 0;
    cantLineas = StrToInt(Edit2->Text);
@@ -3641,8 +4081,9 @@ void __fastcall TfPedidos::Button17Click(TObject *Sender)
 
    Button3->Enabled = true;
    Button4->Enabled = true;
-   Button17->Enabled = true;
-   puedeSalir = true;
+	Button17->Enabled = true;
+	Button41->Enabled = true;
+	puedeSalir = true;
 }
 //---------------------------------------------------------------------------
 
@@ -3679,25 +4120,57 @@ void __fastcall TfPedidos::Copiarmenparawhatsapp1Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    String q;
-   q = "SELECT *, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8, "
-	   "(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual "
-	   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+//   q = "SELECT *, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8, "
+//	   "(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual "
+//	   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+
+	q = "SELECT \
+			* \
+			,comidas1.nombre AS c1 \
+			,comidas1.refCategoriaComida AS cat1 \
+			,comidas2.nombre AS c2 \
+			,comidas2.refCategoriaComida AS cat2 \
+			,comidas3.nombre AS c3 \
+			,comidas3.refCategoriaComida AS cat3 \
+			,comidas4.nombre AS c4 \
+			,comidas4.refCategoriaComida AS cat4 \
+			,comidas5.nombre AS c5 \
+			,comidas5.refCategoriaComida AS cat5 \
+			,comidas6.nombre AS c6 \
+			,comidas6.refCategoriaComida AS cat6 \
+			,comidas7.nombre AS c7 \
+			,comidas7.refCategoriaComida AS cat7 \
+			,comidas8.nombre AS c8 \
+			,comidas8.refCategoriaComida AS cat8 \
+			,(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual \
+	FROM \
+			menudeldia \
+			LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+			LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+			LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+			LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+			LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+			LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+			LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+			LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+	WHERE \
+			menudeldia.fecha = :fecha";
 
    QueryAux->SQL->Add(q);
    QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
@@ -3763,12 +4236,29 @@ void __fastcall TfPedidos::Copiarmenparawhatsapp1Click(TObject *Sender)
    Memo2->Lines->Add("  " + IntToStr(p) + L" ‣ " + QueryAux->FieldByName(c)->AsString);
 
 
-   Memo2->Lines->Add("");
-   Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", QueryAux->FieldByName("precioactual")->AsFloat) + ".");
-   Memo2->Lines->Add(L"🛵 Envío sin cargo en nuestra zona de cobertura");
-   Memo2->Lines->Add("");
-   Memo2->Lines->Add("_Para dejar de recibir estos mensajes por favor responder con la palabra BAJA._");
-   Memo2->Lines->Add("_El Sembrador - Viandas saludables_");
+   String menu = Memo2->Text;
+   String valor = FormatFloat("$0", QueryAux->FieldByName("precioactual")->AsFloat);
+   String dir = GetCurrentDir() + "\\mensajes\\menuDelDia.txt";
+
+   Memo2->Clear();
+   Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+
+   int p1;
+   p1 = Memo2->Lines->Text.Pos("***MENU***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(menu, p1);
+
+   p1 = Memo2->Lines->Text.Pos("***$$$***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(valor, p1);
+
+
+//   Memo2->Lines->Add("");
+//   Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", QueryAux->FieldByName("precioactual")->AsFloat) + ".");
+//   Memo2->Lines->Add(L"🛵 Envío sin cargo en nuestra zona de cobertura");
+//   Memo2->Lines->Add("");
+//   Memo2->Lines->Add("_Para dejar de recibir estos mensajes por favor responder con la palabra BAJA._");
+//   Memo2->Lines->Add("_El Sembrador - Viandas saludables_");
 
 
    QueryAux->Close();
@@ -3791,24 +4281,57 @@ void __fastcall TfPedidos::CopiarmenparaMailFBIG1Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    String q;
-   q = "SELECT *, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8 "
-	   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+//   q = "SELECT *, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8 "
+//	   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+
+
+	q = "SELECT \
+			* \
+			,comidas1.nombre AS c1 \
+			,comidas1.refCategoriaComida AS cat1 \
+			,comidas2.nombre AS c2 \
+			,comidas2.refCategoriaComida AS cat2 \
+			,comidas3.nombre AS c3 \
+			,comidas3.refCategoriaComida AS cat3 \
+			,comidas4.nombre AS c4 \
+			,comidas4.refCategoriaComida AS cat4 \
+			,comidas5.nombre AS c5 \
+			,comidas5.refCategoriaComida AS cat5 \
+			,comidas6.nombre AS c6 \
+			,comidas6.refCategoriaComida AS cat6 \
+			,comidas7.nombre AS c7 \
+			,comidas7.refCategoriaComida AS cat7 \
+			,comidas8.nombre AS c8 \
+			,comidas8.refCategoriaComida AS cat8 \
+	FROM \
+			menudeldia \
+			LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+			LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+			LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+			LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+			LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+			LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+			LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+			LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+	WHERE \
+			menudeldia.fecha = :fecha";
+			
 
    QueryAux->SQL->Add(q);
    QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
@@ -3890,6 +4413,10 @@ void __fastcall TfPedidos::Agregarunpedidoigual1Click(TObject *Sender)
    if(!ClientDataSet2->Active)
 	  return;
 
+   if (ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) {
+		  return;    
+   }
+
    advertirMismoCliente = false;
    advertirRevisarCantidades = true;
 
@@ -3902,7 +4429,7 @@ void __fastcall TfPedidos::Agregarunpedidoigual1Click(TObject *Sender)
    else
       Button1Click(PopupMenu1);
 
-   advertirMismoCliente = true;
+   //advertirMismoCliente = true;
 
    vTimer1 = 0;
    Panel18->Visible = true;
@@ -3940,20 +4467,40 @@ void __fastcall TfPedidos::Mandaraimprimirestecomplemento1Click(TObject *Sender)
 	}
 	else return;
 
+	if (ClientDataSet2->FieldByName("refProducto")->AsInteger == 3) {
+		  return;    
+    }
+
 	String q;
 
-	q = "SELECT comentario, refComida4, "
+//	q = "SELECT comentario, refComida4, "
+//
+//	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida4 = comidas.idComida) LIMIT 1) AS c4, "
+//
+//	"(SELECT refRepartidor FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
+//	"(SELECT sectorReparto + 1 FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
+//
+//	"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
+//
+//	"(SELECT numero FROM clientes WHERE (refCliente = clientes.idCliente) LIMIT 1) AS Numero "
+//
+//	"FROM pedidos WHERE idPedido = :idPedido";
 
-	"(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE (refComida4 = comidas.idComida) LIMIT 1) AS c4, "
-
-	"(SELECT refRepartidor FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS refRep, "
-	"(SELECT sectorReparto + 1 FROM cantidades WHERE (refCantidad = cantidades.idCantidad) LIMIT 1) AS salidaRep, "
-
-	"(SELECT UPPER(SUBSTRING(descripcion, 1, 4)) FROM repartidores WHERE (repartidores.idRepartidor = refRep) LIMIT 1) AS Repartidor, "
-
-	"(SELECT numero FROM clientes WHERE (refCliente = clientes.idCliente) LIMIT 1) AS Numero "
-
-	"FROM pedidos WHERE idPedido = :idPedido";
+	q = "SELECT \
+				comentario \
+				,refComida4 \
+				,IF(comidas.codigo = :una, '1', IF(comidas.codigo = :ens, 'ENS', comidas.codigo)) AS c4 \
+				,cantidades.refRepartidor AS refRep \
+				,(cantidades.sectorReparto + 1) AS salidaRep \
+				,UPPER(SUBSTRING(repartidores.descripcion, 1, 4)) AS Repartidor \
+				,clientes.numero AS Numero  \
+		FROM \
+				pedidos \
+				LEFT JOIN comidas ON comidas.idComida = pedidos.refComida4 \
+				LEFT JOIN cantidades ON cantidades.idCantidad = pedidos.refCantidad \
+				LEFT JOIN repartidores ON repartidores.idRepartidor = cantidades.refRepartidor \
+				LEFT JOIN clientes ON clientes.idCliente = pedidos.refCliente  \
+		WHERE pedidos.idPedido = :idPedido";
 
 
 	QueryAux->Close();
@@ -4001,75 +4548,30 @@ void __fastcall TfPedidos::Verpedidosdehoy1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TfPedidos::Button20Click(TObject *Sender)
-{
-//	String q1 =   "SELECT * FROM ("
-//				  "SELECT refCliente, refCantidad, ("
-//						"SUM((SELECT IF(idComida = 1, 0, IF(refCategoriaComida = 1, 0.5, 0.25)) AS pesoValor1 FROM comidas WHERE refComida1 = idComida LIMIT 1)) + "
-//						"SUM((SELECT IF(idComida = 1, 0, IF(refCategoriaComida = 1, 0.5, 0.25)) AS pesoValor2 FROM comidas WHERE refComida2 = idComida LIMIT 1))  + "
-//						"SUM((SELECT IF(idComida = 1, 0, IF(refCategoriaComida = 1, 0.5, 0.25)) AS pesoValor3 FROM comidas WHERE refComida3 = idComida LIMIT 1)) + "
-//						"SUM((SELECT IF(idComida = 1, 0, IF(refCategoriaComida = 1, 0.5, 0.25)) AS pesoValor4 FROM comidas WHERE refComida4 = idComida LIMIT 1))) AS pesoValor, "
-//						"(SELECT CONCAT(Calle, ' ', Numero) AS Dir FROM clientes WHERE idCliente = refCliente) AS domicilio, "
-//						"(SELECT nroUnidades AS unid FROM cantidades WHERE idCantidad = refCantidad LIMIT 1) AS unidades "
-//				  "FROM pedidos WHERE momento >= :mi AND momento <= :mf "
-//				  "GROUP BY refCliente, domicilio, refCantidad "
-//			  ") t "
-//			  "WHERE unidades <> pesoValor ";
-//
-//   QueryAux->Close();
-//   QueryAux->SQL->Clear();
-//   QueryAux->SQL->Add(q1);
-//   QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
-//   QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
-//   QueryAux->Open();
-//
-//   while(!QueryAux->Eof){
-//		Memo5->Lines->Add(QueryAux->FieldByName("domicilio")->AsString + "   " + QueryAux->FieldByName("pesoValor")->AsString);
-//		QueryAux->Next();
-//   }
-//   QueryAux->Close();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfPedidos::ListBox1DrawItem(TWinControl *Control, int Index, TRect &Rect,
-		  TOwnerDrawState State)
-{
-   if(State.Contains(odSelected))
-   {
-	  dynamic_cast <TListBox *>(Control)->Canvas->Font->Color = clWhite;
-	  dynamic_cast <TListBox *>(Control)->Canvas->Brush->Color = TColor(0x00C07000);
-   }
-   else
-   {
-	  if(Index % 2 == 0)
-		 dynamic_cast <TListBox *>(Control)->Canvas->Brush->Color = TColor(0x00D9D9D9);
-	  else
-		 dynamic_cast <TListBox *>(Control)->Canvas->Brush->Color = TColor(0x00F2F2F2);
-   }
-
-
-   String s = dynamic_cast <TListBox *>(Control)->Items->Strings[Index];
-   int l = Rect.Left  + 5;//+ (Rect.Width() - dynamic_cast <TListBox *>(Control)->Canvas->TextWidth(s)) / 2;
-
-   dynamic_cast <TListBox *>(Control)->Canvas->FillRect(Rect);
-   dynamic_cast <TListBox *>(Control)->Canvas->TextOutW(l, Rect.Top, s);
-}
-//---------------------------------------------------------------------------
-
 void __fastcall TfPedidos::DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect,
           int DataCol, TColumn *Column, TGridDrawState State)
 {
    if(State.Contains(gdSelected))
    {
 	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Color = clWhite;
-	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00C07000);
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Size = 9;
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Style = TFontStyles() << fsBold;
+
+	   if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("refProducto")->AsInteger == 1)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00FF901E);
+	   else if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("refProducto")->AsInteger == 2)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x004763FF);
+	   else
+		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00A9A9A9);
    }
    else
    {
-	  if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->RecNo % 2)
-		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00D9D9D9);
-       else
-		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00F2F2F2);
+	   if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("refProducto")->AsInteger == 1)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00FACE87);
+	   else if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("refProducto")->AsInteger == 2)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x007A96E9);
+	   else
+		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00D3D3D3);
    }
    dynamic_cast <TDBGrid *>(Sender)->DefaultDrawColumnCell(Rect, DataCol, Column, State);
 }
@@ -4078,16 +4580,24 @@ void __fastcall TfPedidos::DBGrid1DrawColumnCell(TObject *Sender, const TRect &R
 void __fastcall TfPedidos::DBGrid2DrawColumnCell(TObject *Sender, const TRect &Rect,
           int DataCol, TColumn *Column, TGridDrawState State)
 {
+
+
    if(State.Contains(gdSelected))
    {
-	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Color = clWhite;
-	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00C07000);
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Style = TFontStyles() << fsBold;
+
+	   if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("pos")->AsInteger == -1)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00208FFF);
+
+	   else
+		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00D9D9D9);
    }
    else
    {
-	  if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->RecNo % 2)
-		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00D9D9D9);
-       else
+	   if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("pos")->AsInteger == -1)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x004FA7FF);
+
+	   else
 		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00F2F2F2);
    }
    dynamic_cast <TDBGrid *>(Sender)->DefaultDrawColumnCell(Rect, DataCol, Column, State);
@@ -4307,7 +4817,6 @@ void __fastcall TfPedidos::Mem(TObject *Sender)
 	QueryEtiquetasComp->Close();
 	QueryEtiquetasComp->SQL->Clear();
 	QueryEtiquetasComp->SQL->Add(q);
-//	QueryEtiquetasComp->ParamByName("f")->AsDate = DTP->Date;
 	QueryEtiquetasComp->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
 	QueryEtiquetasComp->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
 	QueryEtiquetasComp->ParamByName("c1")->AsInteger = arrIdComida[RGTexto->Items->Count - 3];
@@ -4358,8 +4867,8 @@ void __fastcall TfPedidos::Button23Click(TObject *Sender)
 
    fImprimirResumenManual->Show();
    fImprimirResumenManual->mostrarCliente(idCliSel);
-   fImprimirResumenManual->Edit3->Text = edBandGrand->Text;
-   fImprimirResumenManual->Edit5->Text = FormatFloat("0.00", fImprimirResumenManual->valorUnidad);
+   fImprimirResumenManual->Edit3->Text = "1";//edBandGrand->Text;
+   fImprimirResumenManual->Edit5->Text = FormatFloat("0.00", getValorTotal());
    fImprimirResumenManual->Edit5->SetFocus();
 }
 //---------------------------------------------------------------------------
@@ -4379,10 +4888,22 @@ void __fastcall TfPedidos::Button24Click(TObject *Sender)
 	  return;
 
    fEmitirComprobanteElectronico->Show();
+
+   float total = getValorTotal() * ((100.0 - descuentoCliente) / 100.0);
+
+   fEmitirComprobanteElectronico->FDMemTable1->Active = false;
+   fEmitirComprobanteElectronico->FDMemTable1->Active = true;
    fEmitirComprobanteElectronico->mostrarCliente(idCliSel);
-   fEmitirComprobanteElectronico->Edit3->Text = edBandGrand->Text;
-   fEmitirComprobanteElectronico->Edit5->Text = FormatFloat("0.00", fEmitirComprobanteElectronico->valorUnidad);
-   fEmitirComprobanteElectronico->Edit5->SetFocus();
+
+   if (total > 0.0) {
+		fEmitirComprobanteElectronico->FDMemTable1->Insert();
+		fEmitirComprobanteElectronico->FDMemTable1->FieldByName("nroUnidades")->AsFloat = 1.0;
+		fEmitirComprobanteElectronico->FDMemTable1->FieldByName("Descripcion")->AsString = "Pedido";
+		fEmitirComprobanteElectronico->FDMemTable1->FieldByName("precioUnitario")->AsFloat = total;
+		fEmitirComprobanteElectronico->FDMemTable1->Post();
+   }
+
+   fEmitirComprobanteElectronico->calcular2();
 }
 //---------------------------------------------------------------------------
 
@@ -4405,29 +4926,44 @@ void __fastcall TfPedidos::Edit1KeyPress(TObject *Sender, System::WideChar &Key)
    if(Key == '+')
    {
       Key = NULL;
-	  Button9Click(Edit1);
+//	  Button9Click(Edit1);
+	  fRepartos->ultimoNumeroAgregado = "";
+	  fRepartos->ShowModal();
+	  Edit1->Text = fRepartos->ultimoNumeroAgregado;
+	  Edit1Change(Sender);
    }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button25Click(TObject *Sender)
 {
+   if(DayOfTheWeek(DTP->Date) == 7)	//Domingo
+   		return;
+
    String q;
-   q = "SELECT cliente FROM (SELECT refCliente, "
-					 "(IFNULL((SELECT nroUnidades FROM cantidades WHERE cantidades.fecha = :fecha AND cantidades.refCliente = clientesHabituales.refCliente LIMIT 1), 0)) AS pedido, "
-					 "(SELECT CONCAT(calle, ' ', numero) AS cliente FROM clientes WHERE clientesHabituales.refCliente = clientes.idCliente LIMIT 1) AS cliente ";
+
+   q = "SELECT \
+				CONCAT(clientes.calle, ' ', clientes.numero) AS cliente \
+		FROM \
+				clienteshabituales \
+				LEFT JOIN clientes ON clientes.idCliente = clienteshabituales.refCliente \
+		WHERE \
+				clienteshabituales.refCliente NOT IN (SELECT refCliente FROM cantidades WHERE fecha = :fecha) ";
+
    if(DayOfTheWeek(DTP->Date) == 1)
-	  q = q + "FROM clientesHabituales WHERE Lunes = 1) t WHERE pedido = 0";
+	  q = q + " AND clienteshabituales.Lunes = 1";
    else if(DayOfTheWeek(DTP->Date) == 2)
-	  q = q + "FROM clientesHabituales WHERE Martes = 1) t WHERE pedido = 0";
+	  q = q + " AND clienteshabituales.Martes = 1";
    else if(DayOfTheWeek(DTP->Date) == 3)
-	  q = q + "FROM clientesHabituales WHERE Miercoles = 1) t WHERE pedido = 0";
+	  q = q + " AND clienteshabituales.Miercoles = 1";
    else if(DayOfTheWeek(DTP->Date) == 4)
-	  q = q + "FROM clientesHabituales WHERE Jueves = 1) t WHERE pedido = 0";
+	  q = q + " AND clienteshabituales.Jueves = 1";
    else if(DayOfTheWeek(DTP->Date) == 5)
-	  q = q + "FROM clientesHabituales WHERE Viernes = 1) t WHERE pedido = 0";
+	  q = q + " AND clienteshabituales.Viernes = 1";
    else if(DayOfTheWeek(DTP->Date) == 6)
-	  q = q + "FROM clientesHabituales WHERE Sabado = 1) t WHERE pedido = 0";
+	  q = q + " AND clienteshabituales.Sabado = 1";
+
+   q = q + " ORDER BY cliente";
 
    Querych->Close();
    Querych->SQL->Clear();
@@ -4580,25 +5116,56 @@ void __fastcall TfPedidos::CopiarmenusemanalparaWhatsapp1Click(TObject *Sender)
 		QueryComida->Close();
 		QueryComida->SQL->Clear();
 		String q;
-		q = "SELECT *, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8, "
-		   "(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual "
-		   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+//		q = "SELECT *, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8, "
+//		   "(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual "
+//		   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+	q = "SELECT \
+			* \
+			,comidas1.nombre AS c1 \
+			,comidas1.refCategoriaComida AS cat1 \
+			,comidas2.nombre AS c2 \
+			,comidas2.refCategoriaComida AS cat2 \
+			,comidas3.nombre AS c3 \
+			,comidas3.refCategoriaComida AS cat3 \
+			,comidas4.nombre AS c4 \
+			,comidas4.refCategoriaComida AS cat4 \
+			,comidas5.nombre AS c5 \
+			,comidas5.refCategoriaComida AS cat5 \
+			,comidas6.nombre AS c6 \
+			,comidas6.refCategoriaComida AS cat6 \
+			,comidas7.nombre AS c7 \
+			,comidas7.refCategoriaComida AS cat7 \
+			,comidas8.nombre AS c8 \
+			,comidas8.refCategoriaComida AS cat8 \
+			,(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual \
+	FROM \
+			menudeldia \
+			LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+			LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+			LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+			LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+			LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+			LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+			LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+			LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+	WHERE \
+			menudeldia.fecha = :fecha";
 
 		QueryComida->SQL->Add(q);
 		QueryComida->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(DTP->Date), w);
@@ -4705,24 +5272,46 @@ void __fastcall TfPedidos::CopiarcombinacionesJUEVES1Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    String q;
-   q = "SELECT *, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8 "
-	   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+
+
+	q = "SELECT \
+			* \
+			,comidas1.nombre AS c1 \
+			,comidas1.refCategoriaComida AS cat1 \
+			,comidas1.admiteDoble AS admDoble1 \
+			,comidas2.nombre AS c2 \
+			,comidas2.refCategoriaComida AS cat2 \
+			,comidas2.admiteDoble AS admDoble2 \
+			,comidas3.nombre AS c3 \
+			,comidas3.refCategoriaComida AS cat3 \
+			,comidas3.admiteDoble AS admDoble3 \
+			,comidas4.nombre AS c4 \
+			,comidas4.refCategoriaComida AS cat4 \
+			,comidas4.admiteDoble AS admDoble4 \
+			,comidas5.nombre AS c5 \
+			,comidas5.refCategoriaComida AS cat5 \
+			,comidas5.admiteDoble AS admDoble5 \
+			,comidas6.nombre AS c6 \
+			,comidas6.refCategoriaComida AS cat6 \
+			,comidas6.admiteDoble AS admDoble6 \
+			,comidas7.nombre AS c7 \
+			,comidas7.refCategoriaComida AS cat7 \
+			,comidas7.admiteDoble AS admDoble7 \
+			,comidas8.nombre AS c8 \
+			,comidas8.refCategoriaComida AS cat8 \
+			,comidas8.admiteDoble AS admDoble8 \
+	FROM \
+			menudeldia \
+			LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+			LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+			LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+			LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+			LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+			LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+			LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+			LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+	WHERE \
+			menudeldia.fecha = :fecha";
 
    QueryAux->SQL->Add(q);
    QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
@@ -4734,43 +5323,128 @@ void __fastcall TfPedidos::CopiarcombinacionesJUEVES1Click(TObject *Sender)
 	  return;
    }
 
-   TStringList *Lista;
-   Lista = new TStringList();
-   Lista->Add(QueryAux->FieldByName("c1")->AsString);  //[0]
-   Lista->Add(QueryAux->FieldByName("c3")->AsString);  //[1]
-   Lista->Add(QueryAux->FieldByName("c5")->AsString);  //[2]
-   Lista->Add(QueryAux->FieldByName("c6")->AsString);  //[3]
 
-   Lista->Add(QueryAux->FieldByName("c7")->AsString);  //[4]
-   Lista->Add(QueryAux->FieldByName("c8")->AsString);  //[5]
+   String comidas[8];
+   String comidasAux[8];
+   int catComidas[8];
+   int admDoble[8];
 
-   Lista->Add(QueryAux->FieldByName("c1")->AsString);  //[6]
-   Lista->Strings[6] = Lista->Strings[6].SubString(1, Lista->Strings[6].Pos("salsa") + 4);
-   Lista->Add(QueryAux->FieldByName("c3")->AsString);  //[7]
-   Lista->Strings[7] = Lista->Strings[7].SubString(1, Lista->Strings[7].Pos("salsa") + 4);
-
-   QueryAux->Close();
+   comidas[0] = QueryAux->FieldByName("c1")->AsString;
+   comidas[1] = QueryAux->FieldByName("c2")->AsString;
+   comidas[2] = QueryAux->FieldByName("c3")->AsString;
+   comidas[3] = QueryAux->FieldByName("c4")->AsString;
+   comidas[4] = QueryAux->FieldByName("c5")->AsString;
+   comidas[5] = QueryAux->FieldByName("c6")->AsString;
+   comidas[6] = QueryAux->FieldByName("c7")->AsString;
+   comidas[7] = QueryAux->FieldByName("c8")->AsString;
 
 
-   Memo2->Lines->Add(L"*1 ➧* " + Lista->Strings[0] + " (Doble porción) + " + Lista->Strings[4]);
-   Memo2->Lines->Add(L"*2 ➧* " + Lista->Strings[0] + " (Doble porción) + " + Lista->Strings[5]);
-   Memo2->Lines->Add(L"*3 ➧* " + Lista->Strings[1] + " (Doble porción) + " + Lista->Strings[4]);
-   Memo2->Lines->Add(L"*4 ➧* " + Lista->Strings[1] + " (Doble porción) + " + Lista->Strings[5]);
-   Memo2->Lines->Add(L"*5 ➧* " + Lista->Strings[2] + " + " + Lista->Strings[3] + " + " + Lista->Strings[4]);
-   Memo2->Lines->Add(L"*6 ➧* " + Lista->Strings[2] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
-   Memo2->Lines->Add(L"*7 ➧* " + Lista->Strings[6] + " + " + Lista->Strings[2] + " + " + Lista->Strings[4]);
-   Memo2->Lines->Add(L"*8 ➧* " + Lista->Strings[6] + " + " + Lista->Strings[2] + " + " + Lista->Strings[5]);
-   Memo2->Lines->Add(L"*9 ➧* " + Lista->Strings[7] + " + " + Lista->Strings[2] + " + " + Lista->Strings[4]);
-   Memo2->Lines->Add(L"*10 ➧* " + Lista->Strings[7] + " + " + Lista->Strings[2] + " + " + Lista->Strings[5]);
-   Memo2->Lines->Add(L"*11 ➧* " + Lista->Strings[0] + " + " + Lista->Strings[3] + " + " + Lista->Strings[4]);
-   Memo2->Lines->Add(L"*12 ➧* " + Lista->Strings[0] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
-   Memo2->Lines->Add(L"*13 ➧* " + Lista->Strings[1] + " + " + Lista->Strings[3] + " + " + Lista->Strings[4]);
-   Memo2->Lines->Add(L"*14 ➧* " + Lista->Strings[1] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
+   for (int i = 0; i < 8; i++) {
+	   if (comidas[i].Pos(" con ")) {
+		   comidasAux[i] = comidas[i].SubString(1, comidas[i].Pos(" con ") - 1) + " con salsa";
+	   }
+	   else
+	   	   comidasAux[i] = comidas[i];
+   }
+
+
+   catComidas[0] = QueryAux->FieldByName("cat1")->AsInteger;
+   catComidas[1] = QueryAux->FieldByName("cat2")->AsInteger;
+   catComidas[2] = QueryAux->FieldByName("cat3")->AsInteger;
+   catComidas[3] = QueryAux->FieldByName("cat4")->AsInteger;
+   catComidas[4] = QueryAux->FieldByName("cat5")->AsInteger;
+   catComidas[5] = QueryAux->FieldByName("cat6")->AsInteger;
+   catComidas[6] = QueryAux->FieldByName("cat7")->AsInteger;
+   catComidas[7] = QueryAux->FieldByName("cat8")->AsInteger;
+
+   admDoble[0] = QueryAux->FieldByName("admDoble1")->AsInteger;
+   admDoble[1] = QueryAux->FieldByName("admDoble2")->AsInteger;
+   admDoble[2] = QueryAux->FieldByName("admDoble3")->AsInteger;
+   admDoble[3] = QueryAux->FieldByName("admDoble4")->AsInteger;
+   admDoble[4] = QueryAux->FieldByName("admDoble5")->AsInteger;
+   admDoble[5] = QueryAux->FieldByName("admDoble6")->AsInteger;
+   admDoble[6] = QueryAux->FieldByName("admDoble7")->AsInteger;
+   admDoble[7] = QueryAux->FieldByName("admDoble8")->AsInteger;
+
+   String s;
+
+   for (int i = 0; i < 6; i++) {
+
+       if (comidas[i] != "Ninguna") {
+		   if (catComidas[i] == 1) {
+			   if (admDoble[i] == 1) {
+				   s = comidas[i] + " (Doble porción) + " + comidas[6];
+				   Memo2->Lines->Add(s);
+				   s = comidas[i] + " (Doble porción) + " + comidas[7];
+				   Memo2->Lines->Add(s);
+			   }
+			  for (int j = 0; j < 6; j++) {
+					   if ((j != i) && (comidas[j] != "Ninguna") && (catComidas[j] != 1 || admDoble[j] == 1) && (catComidas[j] != 5)) {
+						   if (admDoble[j] == 1) {
+							   s = comidas[i] + " + " + comidasAux[j] + " + " + comidas[6];
+							   Memo2->Lines->Add(s);
+							   s = comidas[i] + " + " + comidasAux[j] + " + " + comidas[7];
+							   Memo2->Lines->Add(s);
+						   }
+						   else {
+							   s = comidas[i] + " + " + comidas[j] + " + " + comidas[6];
+							   Memo2->Lines->Add(s);
+							   s = comidas[i] + " + " + comidas[j] + " + " + comidas[7];
+							   Memo2->Lines->Add(s);
+						   }
+					   }
+				   }
+		   }
+	   }
+
+   }
+
+   String idx;
+   for (int i = 0; i < Memo2->Lines->Count; i++) {
+	   s = Memo2->Lines->Strings[i];
+	   idx = IntToStr(i+1);
+	   s = "*" + idx + L"➧* " + s;
+       Memo2->Lines->Strings[i] = s;
+   }
+
+
+//   TStringList *Lista;
+//   Lista = new TStringList();
+//   Lista->Add(QueryAux->FieldByName("c1")->AsString);  //[0]
+//   Lista->Add(QueryAux->FieldByName("c3")->AsString);  //[1]
+//   Lista->Add(QueryAux->FieldByName("c5")->AsString);  //[2]
+//   Lista->Add(QueryAux->FieldByName("c6")->AsString);  //[3]
+//
+//   Lista->Add(QueryAux->FieldByName("c7")->AsString);  //[4]
+//   Lista->Add(QueryAux->FieldByName("c8")->AsString);  //[5]
+//
+//   Lista->Add(QueryAux->FieldByName("c1")->AsString);  //[6]
+//   Lista->Strings[6] = Lista->Strings[6].SubString(1, Lista->Strings[6].Pos("salsa") + 4);
+//   Lista->Add(QueryAux->FieldByName("c3")->AsString);  //[7]
+//   Lista->Strings[7] = Lista->Strings[7].SubString(1, Lista->Strings[7].Pos("salsa") + 4);
+//
+//   QueryAux->Close();
+//
+//
+//   Memo2->Lines->Add(L"*1 ➧* " + Lista->Strings[0] + " (Doble porción) + " + Lista->Strings[4]);
+//   Memo2->Lines->Add(L"*2 ➧* " + Lista->Strings[0] + " (Doble porción) + " + Lista->Strings[5]);
+//   Memo2->Lines->Add(L"*3 ➧* " + Lista->Strings[1] + " (Doble porción) + " + Lista->Strings[4]);
+//   Memo2->Lines->Add(L"*4 ➧* " + Lista->Strings[1] + " (Doble porción) + " + Lista->Strings[5]);
+//   Memo2->Lines->Add(L"*5 ➧* " + Lista->Strings[2] + " + " + Lista->Strings[3] + " + " + Lista->Strings[4]);
+//   Memo2->Lines->Add(L"*6 ➧* " + Lista->Strings[2] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
+//   Memo2->Lines->Add(L"*7 ➧* " + Lista->Strings[6] + " + " + Lista->Strings[2] + " + " + Lista->Strings[4]);
+//   Memo2->Lines->Add(L"*8 ➧* " + Lista->Strings[6] + " + " + Lista->Strings[2] + " + " + Lista->Strings[5]);
+//   Memo2->Lines->Add(L"*9 ➧* " + Lista->Strings[7] + " + " + Lista->Strings[2] + " + " + Lista->Strings[4]);
+//   Memo2->Lines->Add(L"*10 ➧* " + Lista->Strings[7] + " + " + Lista->Strings[2] + " + " + Lista->Strings[5]);
+//   Memo2->Lines->Add(L"*11 ➧* " + Lista->Strings[0] + " + " + Lista->Strings[3] + " + " + Lista->Strings[4]);
+//   Memo2->Lines->Add(L"*12 ➧* " + Lista->Strings[0] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
+//   Memo2->Lines->Add(L"*13 ➧* " + Lista->Strings[1] + " + " + Lista->Strings[3] + " + " + Lista->Strings[4]);
+//   Memo2->Lines->Add(L"*14 ➧* " + Lista->Strings[1] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
 
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
 
-   delete Lista;
+   //delete Lista;
    blockRGTexto = true;
    RGTexto->ItemIndex =  RGTexto->Items->Count - 1;
 }
@@ -4796,17 +5470,39 @@ void __fastcall TfPedidos::CopiarpedidoparaWhatsApp1Click(TObject *Sender)
 
 
    String q1;
-   q1 = "SELECT refComida1, refComida2, refComida3, refComida4, comentario, "
-		  "(SELECT nombre FROM comidas WHERE refComida1 = idComida LIMIT 1) AS com1, "
-		  "(SELECT nombre FROM comidas WHERE refComida2 = idComida LIMIT 1) AS com2, "
-		  "(SELECT nombre FROM comidas WHERE refComida3 = idComida LIMIT 1) AS com3, "
-		  "(SELECT nombre FROM comidas WHERE refComida4 = idComida LIMIT 1) AS com4 "
-		  "FROM pedidos WHERE (refCliente = :rc AND momento >= :mi AND momento <= :mf) ORDER BY momento";
+//   q1 = "SELECT refComida1, refComida2, refComida3, refComida4, comentario, "
+//		  "(SELECT nombre FROM comidas WHERE refComida1 = idComida LIMIT 1) AS com1, "
+//		  "(SELECT nombre FROM comidas WHERE refComida2 = idComida LIMIT 1) AS com2, "
+//		  "(SELECT nombre FROM comidas WHERE refComida3 = idComida LIMIT 1) AS com3, "
+//		  "(SELECT nombre FROM comidas WHERE refComida4 = idComida LIMIT 1) AS com4 "
+//		  "FROM pedidos WHERE (refCliente = :rc AND momento >= :mi AND momento <= :mf) ORDER BY momento";
+
+	 q1 = "SELECT \
+				refComida1 \
+				,refComida2 \
+				,refComida3 \
+				,refComida4 \
+				,comentario \
+				,comidas1.nombre AS com1 \
+				,comidas2.nombre AS com2 \
+				,comidas3.nombre AS com3 \
+				,comidas4.nombre AS com4 \
+				,refProducto \
+		FROM \
+				pedidos \
+				LEFT JOIN comidas comidas1 ON comidas1.idComida = pedidos.refComida1 \
+				LEFT JOIN comidas comidas2 ON comidas2.idComida = pedidos.refComida2 \
+				LEFT JOIN comidas comidas3 ON comidas3.idComida = pedidos.refComida3 \
+				LEFT JOIN comidas comidas4 ON comidas4.idComida = pedidos.refComida4 \
+		WHERE \
+				refCliente = :rc \
+				AND momento >= :mi AND momento <= :mf \
+		ORDER BY \
+				momento";
 
    QueryAux->Close();
    QueryAux->SQL->Clear();
    QueryAux->SQL->Add(q1);
-//   QueryAux->ParamByName("d")->AsDate = DTP->Date;
    QueryAux->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
    QueryAux->ParamByName("rc")->AsInteger = idCliSel;
@@ -4820,30 +5516,32 @@ void __fastcall TfPedidos::CopiarpedidoparaWhatsApp1Click(TObject *Sender)
    int idx = 1;
    while(!QueryAux->Eof)
    {
-	  Memo2->Lines->Add("");
-	  Memo2->Lines->Add("_*Pedido " + IntToStr(idx) + ":*_");
-	  idx++;
+	  if (QueryAux->FieldByName("refProducto")->AsInteger != 3) {
+		  Memo2->Lines->Add("");
+		  Memo2->Lines->Add("_*Pedido " + IntToStr(idx) + ":*_");
+		  idx++;
 
-	  if(QueryAux->FieldByName("refComida1")->AsInteger != 1)
-	  {
-		 pedido = QueryAux->FieldByName("com1")->AsString;
+		  if(QueryAux->FieldByName("refComida1")->AsInteger != 1)
+		  {
+			 pedido = QueryAux->FieldByName("com1")->AsString;
 
-		 if(QueryAux->FieldByName("refComida1")->AsInteger == QueryAux->FieldByName("refComida2")->AsInteger)
-			pedido = pedido + " (Doble porción)";
-		 else if(QueryAux->FieldByName("refComida2")->AsInteger != 1)
-			pedido = pedido + " + " + QueryAux->FieldByName("com2")->AsString;
-		 if(QueryAux->FieldByName("refComida3")->AsInteger != 1)
-			pedido = pedido + " + " + QueryAux->FieldByName("com3")->AsString;
-		 if(QueryAux->FieldByName("refComida4")->AsInteger != 1)
-			pedido = pedido + " + " + QueryAux->FieldByName("com4")->AsString;
+			 if(QueryAux->FieldByName("refComida1")->AsInteger == QueryAux->FieldByName("refComida2")->AsInteger)
+				pedido = pedido + " (Doble porción)";
+			 else if(QueryAux->FieldByName("refComida2")->AsInteger != 1)
+				pedido = pedido + " + " + QueryAux->FieldByName("com2")->AsString;
+			 if(QueryAux->FieldByName("refComida3")->AsInteger != 1)
+				pedido = pedido + " + " + QueryAux->FieldByName("com3")->AsString;
+			 if(QueryAux->FieldByName("refComida4")->AsInteger != 1)
+				pedido = pedido + " + " + QueryAux->FieldByName("com4")->AsString;
+		  }
+		  else
+			 pedido = QueryAux->FieldByName("com4")->AsString;
+
+		  if(QueryAux->FieldByName("comentario")->AsString != "")
+			 pedido = pedido + " (*" + QueryAux->FieldByName("comentario")->AsString + "*)";
+
+		  Memo2->Lines->Add(pedido);
 	  }
-	  else
-		 pedido = QueryAux->FieldByName("com4")->AsString;
-
-	  if(QueryAux->FieldByName("comentario")->AsString != "")
-		 pedido = pedido + " (*" + QueryAux->FieldByName("comentario")->AsString + "*)";
-
-	  Memo2->Lines->Add(pedido);
 	  QueryAux->Next();
    }
    QueryAux->Close();
@@ -4885,118 +5583,147 @@ void __fastcall TfPedidos::Button29Click(TObject *Sender)
 
 void __fastcall TfPedidos::Button28Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->Add(L"¡Buen día! 😃");
-   Memo2->Lines->Add(L"Recibimos tu pedido. ¡Muchas gracias!");
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\buendia.txt";
+
+	Memo2->Clear();
+//	Memo2->Lines->Add(L"¡Buen día! 😃");
+//	Memo2->Lines->Add(L"Recibimos tu pedido. ¡Muchas gracias!");
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button30Click(TObject *Sender)
 {
-   QueryAux->Close();
-   QueryAux->SQL->Clear();
-   String q;
-   q = "SELECT valor FROM listasprecio WHERE idListaPrecio = 1 LIMIT 1";
-   QueryAux->SQL->Add(q);
-   QueryAux->Open();
-   float valor = QueryAux->FieldByName("valor")->AsFloat;
-   QueryAux->Close();
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	String q;
+	q = "SELECT * FROM ((SELECT valor AS vn FROM listasprecio WHERE idListaPrecio = 1 LIMIT 1) AS vn, "
+					 "(SELECT precio1 AS vo FROM productos WHERE idProducto = 2 LIMIT 1) AS vo, "
+					 "(SELECT precio1 AS en FROM productos WHERE idProducto = 3 LIMIT 1) AS en, "
+					 "(SELECT precio1 AS vu FROM productos WHERE idProducto = 4 LIMIT 1) AS vu) ";
+	QueryAux->SQL->Add(q);
+	QueryAux->Open();
+	float vn = QueryAux->FieldByName("vn")->AsFloat;
+	float vo = QueryAux->FieldByName("vo")->AsFloat;
+	float en = QueryAux->FieldByName("en")->AsFloat;
+	float vu = QueryAux->FieldByName("vu")->AsFloat;
+	QueryAux->Close();
 
+	String dir = GetCurrentDir() + "\\mensajes\\InfoServicioTotal.txt";
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	int p1 = Memo2->Lines->Text.Pos("***$vn$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", vn), p1);
+	p1 = Memo2->Lines->Text.Pos("***$vo$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", vo), p1);
+	p1 = Memo2->Lines->Text.Pos("***$en$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", en), p1);
+	p1 = Memo2->Lines->Text.Pos("***$vu$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", vu), p1);
 
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("InfoServicio.txt", TEncoding::UTF8);
-   int p1 = Memo2->Lines->Text.Pos("***$$$***");
-   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
-   Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", valor), p1);
-
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button32Click(TObject *Sender)
 {
-   QueryAux->Close();
-   QueryAux->SQL->Clear();
-   String q;
-   q = "SELECT valor FROM listasprecio WHERE idListaPrecio = 1 LIMIT 1";
-   QueryAux->SQL->Add(q);
-   QueryAux->Open();
-   float valor = QueryAux->FieldByName("valor")->AsFloat;
-   QueryAux->Close();
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	String q;
+	q = "SELECT valor FROM listasprecio WHERE idListaPrecio = 1 LIMIT 1";
+	QueryAux->SQL->Add(q);
+	QueryAux->Open();
+	float valor = QueryAux->FieldByName("valor")->AsFloat;
+	QueryAux->Close();
 
 
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("InfoPrecio.txt", TEncoding::UTF8);
-   int p1 = Memo2->Lines->Text.Pos("***$$$***");
-   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
-   Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", valor), p1);
+	String dir = GetCurrentDir() + "\\mensajes\\InfoPrecio.txt";
 
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	int p1 = Memo2->Lines->Text.Pos("***$$$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", valor), p1);
+
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button31Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("ArmarVianda.txt", TEncoding::UTF8);
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\ArmarVianda.txt";
+
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button33Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("InfoCBU_ElSembrador.txt", TEncoding::UTF8);
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\InfoCBU_ElSembrador.txt";
+
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button34Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->Add(L"¡Hola, llegamos con tu pedido! 🎉\n");
-   Memo2->Lines->Add(L"¿Podrías por favor confirmarnos si podés recibirlo?");
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\llegamos.txt";
+
+	Memo2->Clear();
+//   Memo2->Lines->Add(L"¡Hola, llegamos con tu pedido! 🎉\n");
+//   Memo2->Lines->Add(L"¿Podrías por favor confirmarnos si podés recibirlo?");
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button35Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("ListasWhatsapp.txt", TEncoding::UTF8);
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\ListasWhatsapp.txt";
+
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::edUnidadesChange(TObject *Sender)
 {
-   float costo = StrToFloat(edUnidades->Text) * valorVianda;
-   int v = int(costo);
-   int resto = v % 10;
-
-   if(resto >= 5)
-	  v = v + (10 - resto);
-   else
-	  v = v - resto;
-
-
-   Label20->Caption = "Costo redondeado: $ " + IntToStr(v);
-   Label21->Caption = "Costo exacto: $ " + FormatFloat("0.00", costo);
+//   float costo = StrToFloat(edUnidades->Text) * valorVianda;
+//   int v = int(costo);
+//   int resto = v % 10;
+//
+//   if(resto >= 5)
+//	  v = v + (10 - resto);
+//   else
+//	  v = v - resto;
+//
+//
+//   Label20->Caption = "Costo redondeado: $ " + IntToStr(v);
+//   Label21->Caption = "Costo exacto: $ " + FormatFloat("0.00", costo);
 }
 //---------------------------------------------------------------------------
 
@@ -5068,40 +5795,58 @@ void __fastcall TfPedidos::MCClick(TObject *Sender)
 
 void __fastcall TfPedidos::Imprimirtodosestospedidos1Click(TObject *Sender)
 {
+   int recNo = ClientDataSet2->RecNo;
+   DScch->Enabled = false;
+
+
    ClientDataSet2->First();
    while(!ClientDataSet2->Eof)
    {
-	  Mandaraimprimirestaetiqueta1Click(Sender);
+	  if (ClientDataSet2->FieldByName("refProducto")->AsInteger != 3) {
+      	  Mandaraimprimirestaetiqueta1Click(Sender);    
+	  }
 	  ClientDataSet2->Next();
    }
+
+   ClientDataSet2->RecNo = recNo;
+   DScch->Enabled = true;
 }
 //---------------------------------------------------------------------------
 
 
 void __fastcall TfPedidos::Imprimirtodosestoscomplementos1Click(TObject *Sender)
 {
+   int recNo = ClientDataSet2->RecNo;
+   DScch->Enabled = false;
+
    ClientDataSet2->First();
    while(!ClientDataSet2->Eof)
    {
-	  Mandaraimprimirestecomplemento1Click(Sender);
+	  if (ClientDataSet2->FieldByName("refProducto")->AsInteger != 3) {
+		  Mandaraimprimirestecomplemento1Click(Sender);    
+	  }
+	  
 	  ClientDataSet2->Next();
    }
+
+   ClientDataSet2->RecNo = recNo;
+   DScch->Enabled = true;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Button37Click(TObject *Sender)
 {
-   float costo = StrToFloat(edUnidades->Text) * valorVianda;
-   int v = int(costo);
-   int resto = v % 10;
-
-   if(resto >= 5)
-	  v = v + (10 - resto);
-   else
-	  v = v - resto;
+//   float costo = StrToFloat(edUnidades->Text) * valorVianda;
+//   int v = int(costo);
+//   int resto = v % 10;
+//
+//   if(resto >= 5)
+//	  v = v + (10 - resto);
+//   else
+//	  v = v - resto;
 
    Memo2->Clear();
-   Memo2->Lines->Add(L"El valor de este pedido es de $" + IntToStr(v));
+   Memo2->Lines->Add(L"El valor de este pedido es de $" + FormatFloat("0", getValorTotal()));
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
    Beep();
@@ -5110,18 +5855,18 @@ void __fastcall TfPedidos::Button37Click(TObject *Sender)
 
 void __fastcall TfPedidos::Copiarsaludoyvalor1Click(TObject *Sender)
 {
-   float costo = StrToFloat(edUnidades->Text) * valorVianda;
-   int v = int(costo);
-   int resto = v % 10;
-
-   if(resto >= 5)
-	  v = v + (10 - resto);
-   else
-	  v = v - resto;
+//   float costo = StrToFloat(edUnidades->Text) * valorVianda;
+//   int v = int(costo);
+//   int resto = v % 10;
+//
+//   if(resto >= 5)
+//	  v = v + (10 - resto);
+//   else
+//	  v = v - resto;
 
    Memo2->Clear();
    Memo2->Lines->Add(L"¡Buen día! 😃");
-   Memo2->Lines->Add(L"Recibimos tu pedido, el valor total es de $" + IntToStr(v));
+   Memo2->Lines->Add(L"Recibimos tu pedido, el valor total es de $" + FormatFloat("0", getValorTotal()));
    Memo2->Lines->Add(L"¡Muchas gracias!");
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
@@ -5132,30 +5877,62 @@ void __fastcall TfPedidos::Copiarsaludoyvalor1Click(TObject *Sender)
 void __fastcall TfPedidos::Copiarmensemanal1Click(TObject *Sender)
 {
    Memo2->Clear();
-   for(int w = DayOfWeek(Now()) - 2; w < 6; w++)
+   for(int w = DayOfWeek(DTP->DateTime) - 2; w < 6; w++)
    {
 		QueryComida->Close();
 		QueryComida->SQL->Clear();
 		String q;
-		q = "SELECT *, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
-		   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
-		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8, "
-		   "(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual "
-		   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+//		q = "SELECT *, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
+//		   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
+//		   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8, "
+//		   "(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual "
+//		   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+
+	q = "SELECT \
+			* \
+			,comidas1.nombre AS c1 \
+			,comidas1.refCategoriaComida AS cat1 \
+			,comidas2.nombre AS c2 \
+			,comidas2.refCategoriaComida AS cat2 \
+			,comidas3.nombre AS c3 \
+			,comidas3.refCategoriaComida AS cat3 \
+			,comidas4.nombre AS c4 \
+			,comidas4.refCategoriaComida AS cat4 \
+			,comidas5.nombre AS c5 \
+			,comidas5.refCategoriaComida AS cat5 \
+			,comidas6.nombre AS c6 \
+			,comidas6.refCategoriaComida AS cat6 \
+			,comidas7.nombre AS c7 \
+			,comidas7.refCategoriaComida AS cat7 \
+			,comidas8.nombre AS c8 \
+			,comidas8.refCategoriaComida AS cat8 \
+			,(SELECT valor FROM listasprecio WHERE idListaPrecio = 1) AS precioactual \
+	FROM \
+			menudeldia \
+			LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+			LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+			LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+			LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+			LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+			LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+			LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+			LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+	WHERE \
+			menudeldia.fecha = :fecha";
 
 		QueryComida->SQL->Add(q);
 		QueryComida->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(DTP->Date), w);
@@ -5230,12 +6007,29 @@ void __fastcall TfPedidos::Copiarmensemanal1Click(TObject *Sender)
    }
 
 
-   Memo2->Lines->Add("");
-   Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", QueryComida->FieldByName("precioactual")->AsFloat) + ".");
-   Memo2->Lines->Add(L"🛵 Envío sin cargo en nuestra zona de cobertura");
-   Memo2->Lines->Add("");
-   Memo2->Lines->Add("_Para dejar de recibir estos mensajes por favor responder con la palabra BAJA._");
-   Memo2->Lines->Add("_El Sembrador - Viandas saludables_");
+   String menu = Memo2->Text;
+   String valor = FormatFloat("$0", QueryComida->FieldByName("precioactual")->AsFloat);
+   String dir = GetCurrentDir() + "\\mensajes\\menusemanal.txt";
+
+   Memo2->Clear();
+   Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+
+   int p1;
+   p1 = Memo2->Lines->Text.Pos("***MENU***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(menu, p1);
+
+   p1 = Memo2->Lines->Text.Pos("***$$$***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(valor, p1);
+
+
+//   Memo2->Lines->Add("");
+//   Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", QueryComida->FieldByName("precioactual")->AsFloat) + ".");
+//   Memo2->Lines->Add(L"🛵 Envío sin cargo en nuestra zona de cobertura");
+//   Memo2->Lines->Add("");
+//   Memo2->Lines->Add("_Para dejar de recibir estos mensajes por favor responder con la palabra BAJA._");
+//   Memo2->Lines->Add("_El Sembrador - Viandas saludables_");
 
    QueryComida->Close();
 
@@ -5265,17 +6059,17 @@ void __fastcall TfPedidos::Button40Click(TObject *Sender)
 
 void __fastcall TfPedidos::Establecercomopredeterminado1Click(TObject *Sender)
 {
-   if(idCliSel < 3)
+	if(idCliSel < 3)
 	  return;
 
    Button40Click(Sender);
 
    QueryAux->Close();
-   QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("UPDATE clientes SET medioPagoDefecto = :mp WHERE idCliente = :idc LIMIT 1");
-   QueryAux->ParamByName("idc")->AsInteger = idCliSel;
-   QueryAux->ParamByName("mp")->AsString = CBmp->Text.SubString(1,1);
-   QueryAux->ExecSQL();
+	QueryAux->SQL->Clear();
+	QueryAux->SQL->Add("UPDATE clientes SET medioPagoDefecto = :mp WHERE idCliente = :idc LIMIT 1");
+	QueryAux->ParamByName("idc")->AsInteger = idCliSel;
+	QueryAux->ParamByName("mp")->AsString = CBmp->Text.SubString(1,1);
+	QueryAux->ExecSQL();
 }
 //---------------------------------------------------------------------------
 
@@ -5288,12 +6082,35 @@ void __fastcall TfPedidos::BDRecibimoselsig1Click(TObject *Sender)
 
 
    String q1;
-   q1 = "SELECT refComida1, refComida2, refComida3, refComida4, comentario, "
-		  "(SELECT nombre FROM comidas WHERE refComida1 = idComida LIMIT 1) AS com1, "
-		  "(SELECT nombre FROM comidas WHERE refComida2 = idComida LIMIT 1) AS com2, "
-		  "(SELECT nombre FROM comidas WHERE refComida3 = idComida LIMIT 1) AS com3, "
-		  "(SELECT nombre FROM comidas WHERE refComida4 = idComida LIMIT 1) AS com4 "
-		  "FROM pedidos WHERE (refCliente = :rc AND momento >= :mi AND momento <= :mf) ORDER BY momento";
+//   q1 = "SELECT refComida1, refComida2, refComida3, refComida4, comentario, "
+//		  "(SELECT nombre FROM comidas WHERE refComida1 = idComida LIMIT 1) AS com1, "
+//		  "(SELECT nombre FROM comidas WHERE refComida2 = idComida LIMIT 1) AS com2, "
+//		  "(SELECT nombre FROM comidas WHERE refComida3 = idComida LIMIT 1) AS com3, "
+//		  "(SELECT nombre FROM comidas WHERE refComida4 = idComida LIMIT 1) AS com4 "
+//		  "FROM pedidos WHERE (refCliente = :rc AND momento >= :mi AND momento <= :mf) ORDER BY momento";
+
+   q1 = "SELECT \
+				refComida1 \
+				,refComida2 \
+				,refComida3 \
+				,refComida4 \
+				,comentario \
+				,comidas1.nombre AS com1 \
+				,comidas2.nombre AS com2 \
+				,comidas3.nombre AS com3 \
+				,comidas4.nombre AS com4 \
+				,refProducto \
+		FROM \
+				pedidos \
+				LEFT JOIN comidas comidas1 ON comidas1.idComida = pedidos.refComida1 \
+				LEFT JOIN comidas comidas2 ON comidas2.idComida = pedidos.refComida2 \
+				LEFT JOIN comidas comidas3 ON comidas3.idComida = pedidos.refComida3 \
+				LEFT JOIN comidas comidas4 ON comidas4.idComida = pedidos.refComida4 \
+		WHERE \
+				refCliente = :rc \
+				AND momento >= :mi AND momento <= :mf \
+		ORDER BY \
+				momento";	
 
    QueryAux->Close();
    QueryAux->SQL->Clear();
@@ -5306,10 +6123,10 @@ void __fastcall TfPedidos::BDRecibimoselsig1Click(TObject *Sender)
 
    String pedido;
 
-   Memo2->Lines->Add(L"¡Buen día! 😃");
-   Memo2->Lines->Add(L"Recibimos el siguiente pedido:");
-
-   Memo2->Lines->Add("");
+//   Memo2->Lines->Add(L"¡Buen día! 😃");
+//   Memo2->Lines->Add(L"Recibimos el siguiente pedido:");
+//
+//   Memo2->Lines->Add("");
 
    int idx = 1;
    while(!QueryAux->Eof)
@@ -5343,18 +6160,35 @@ void __fastcall TfPedidos::BDRecibimoselsig1Click(TObject *Sender)
    QueryAux->Close();
 
 
-   float costo = StrToFloat(edUnidades->Text) * valorVianda;
-   int v = int(costo);
-   int resto = v % 10;
+//   float costo = StrToFloat(edUnidades->Text) * valorVianda;
+//   int v = int(costo);
+//   int resto = v % 10;
+//
+//   if(resto >= 5)
+//	  v = v + (10 - resto);
+//   else
+//	  v = v - resto;
 
-   if(resto >= 5)
-	  v = v + (10 - resto);
-   else
-	  v = v - resto;
 
-   Memo2->Lines->Add(L"");
-   Memo2->Lines->Add(L"El costo del pedido de hoy es de $" + IntToStr(v));
-   Memo2->Lines->Add(L"¡Muchas gracias! 😄");
+   String texto = Memo2->Text;
+   String valor = FormatFloat("$0", getValorTotal());
+   String dir = GetCurrentDir() + "\\mensajes\\recibimosElSiguientePedido.txt";
+
+   Memo2->Clear();
+   Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+
+   int p1;
+   p1 = Memo2->Lines->Text.Pos("***PEDIDO***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,12);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(texto, p1);
+
+   p1 = Memo2->Lines->Text.Pos("***$$$***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(valor, p1);
+
+//   Memo2->Lines->Add(L"");
+//   Memo2->Lines->Add(L"El costo del pedido de hoy es de $" + IntToStr(v));
+//   Memo2->Lines->Add(L"¡Muchas gracias! 😄");
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
    Beep();
@@ -5363,13 +6197,17 @@ void __fastcall TfPedidos::BDRecibimoselsig1Click(TObject *Sender)
 
 void __fastcall TfPedidos::BDVananecesitarvia1Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->Add(L"¡Buen día! 😃");
-   Memo2->Lines->Add(L"Se aproxima el horario de salida de nuestros repartidores"
-					  " y queríamos consultar si van a necesitar viandas para este día");
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\vanANecesitarVianda.txt";
+
+	Memo2->Clear();
+//	Memo2->Lines->Add(L"¡Buen día! 😃");
+//	Memo2->Lines->Add(L"Se aproxima el horario de salida de nuestros repartidores"
+//					  " y queríamos consultar si van a necesitar viandas para este día");
+
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
@@ -5384,24 +6222,55 @@ void __fastcall TfPedidos::Errorpedidojueves1Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    String q;
-   q = "SELECT *, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
-	   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
-	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8 "
-	   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+//   q = "SELECT *, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida1 LIMIT 1) AS c1, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida1 LIMIT 1) AS cat1, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida2 LIMIT 1) AS c2, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida2 LIMIT 1) AS cat2, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida3 LIMIT 1) AS c3, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida3 LIMIT 1) AS cat3, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida4 LIMIT 1) AS c4, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida4 LIMIT 1) AS cat4, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida5 LIMIT 1) AS c5, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida5 LIMIT 1) AS cat5, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida6 LIMIT 1) AS c6, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida6 LIMIT 1) AS cat6, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida7 LIMIT 1) AS c7, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida7 LIMIT 1) AS cat7, "
+//	   "(SELECT nombre FROM comidas WHERE idComida = refComida8 LIMIT 1) AS c8, "
+//	   "(SELECT refCategoriaComida FROM comidas WHERE idComida = refComida8 LIMIT 1) AS cat8 "
+//	   "FROM menudeldia WHERE fecha = :fecha LIMIT 1";
+
+	q = "SELECT \
+			* \
+			,comidas1.nombre AS c1 \
+			,comidas1.refCategoriaComida AS cat1 \
+			,comidas2.nombre AS c2 \
+			,comidas2.refCategoriaComida AS cat2 \
+			,comidas3.nombre AS c3 \
+			,comidas3.refCategoriaComida AS cat3 \
+			,comidas4.nombre AS c4 \
+			,comidas4.refCategoriaComida AS cat4 \
+			,comidas5.nombre AS c5 \
+			,comidas5.refCategoriaComida AS cat5 \
+			,comidas6.nombre AS c6 \
+			,comidas6.refCategoriaComida AS cat6 \
+			,comidas7.nombre AS c7 \
+			,comidas7.refCategoriaComida AS cat7 \
+			,comidas8.nombre AS c8 \
+			,comidas8.refCategoriaComida AS cat8 \
+	FROM \
+			menudeldia \
+			LEFT JOIN comidas comidas1 ON comidas1.idComida = menudeldia.refComida1 \
+			LEFT JOIN comidas comidas2 ON comidas2.idComida = menudeldia.refComida2 \
+			LEFT JOIN comidas comidas3 ON comidas3.idComida = menudeldia.refComida3 \
+			LEFT JOIN comidas comidas4 ON comidas4.idComida = menudeldia.refComida4 \
+			LEFT JOIN comidas comidas5 ON comidas5.idComida = menudeldia.refComida5 \
+			LEFT JOIN comidas comidas6 ON comidas6.idComida = menudeldia.refComida6 \
+			LEFT JOIN comidas comidas7 ON comidas7.idComida = menudeldia.refComida7 \
+			LEFT JOIN comidas comidas8 ON comidas8.idComida = menudeldia.refComida8 \
+	WHERE \
+			menudeldia.fecha = :fecha";
 
    QueryAux->SQL->Add(q);
    QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
@@ -5431,12 +6300,12 @@ void __fastcall TfPedidos::Errorpedidojueves1Click(TObject *Sender)
    QueryAux->Close();
 
 
-   Memo2->Lines->Add(L"Por lo que podemos ver, el pedido realizado no está completo 😅. Te recordamos que "
-					  "una vianda se compone de 3 opciones del menú del día. "
-					  "Sabemos que los días jueves son diferentes por lo que te enviamos "
-					  "las opciones presentadas de otra forma. Quizás te resulte de ayuda.");
+//   Memo2->Lines->Add(L"Por lo que podemos ver, el pedido realizado no está completo 😅. Te recordamos que "
+//					  "una vianda se compone de 3 opciones del menú del día. "
+//					  "Sabemos que los días jueves son diferentes por lo que te enviamos "
+//					  "las opciones presentadas de otra forma. Quizás te resulte de ayuda.");
 
-   Memo2->Lines->Add("");
+//   Memo2->Lines->Add("");
    Memo2->Lines->Add(L"*1 ➧* " + Lista->Strings[0] + " (Doble porción) + " + Lista->Strings[4]);
    Memo2->Lines->Add(L"*2 ➧* " + Lista->Strings[0] + " (Doble porción) + " + Lista->Strings[5]);
    Memo2->Lines->Add(L"*3 ➧* " + Lista->Strings[1] + " (Doble porción) + " + Lista->Strings[4]);
@@ -5451,6 +6320,20 @@ void __fastcall TfPedidos::Errorpedidojueves1Click(TObject *Sender)
    Memo2->Lines->Add(L"*12 ➧* " + Lista->Strings[0] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
    Memo2->Lines->Add(L"*13 ➧* " + Lista->Strings[1] + " + " + Lista->Strings[3] + " + " + Lista->Strings[4]);
    Memo2->Lines->Add(L"*14 ➧* " + Lista->Strings[1] + " + " + Lista->Strings[3] + " + " + Lista->Strings[5]);
+
+
+
+   String dir = GetCurrentDir() + "\\mensajes\\errorJueves.txt";
+   String texto = Memo2->Text;
+
+   Memo2->Clear();
+   Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+
+   int p1;
+   p1 = Memo2->Lines->Text.Pos("***COMBINACIONES***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,19);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(texto, p1);
+
 
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
@@ -5472,44 +6355,63 @@ void __fastcall TfPedidos::Verclientesquenormalmentesolicitan1Click(TObject *Sen
 
 void __fastcall TfPedidos::DatosdeMonica1Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("InfoCBU_Monica.txt", TEncoding::UTF8);
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\InfoCBU_Monica.txt";
+
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::CopiardatosdeWilliams1Click(TObject *Sender)
 {
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("InfoCBU_Williams.txt", TEncoding::UTF8);
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+	String dir = GetCurrentDir() + "\\mensajes\\InfoCBU_Williams.txt";
+
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfPedidos::Informacinparaoficinas1Click(TObject *Sender)
 {
-   float costo = 0.5 * valorVianda;
-   int v = int(costo);
-   int resto = v % 10;
+//	float costo = 0.5 * valorVianda;
+//	int v = int(costo);
+//	int resto = v % 10;
+//
+//	if(resto >= 5)
+//		v = v + (10 - resto);
+//	else
+//		v = v - resto;
 
-   if(resto >= 5)
-	  v = v + (10 - resto);
-   else
-	  v = v - resto;
 
-   Memo2->Clear();
-   Memo2->Lines->LoadFromFile("InfoServicioOficinas.txt", TEncoding::UTF8);
-   int p1 = Memo2->Lines->Text.Pos("***$$$***");
-   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
-   Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", v), p1);
+	String menu = Memo2->Text;
+	String valor = FormatFloat("$0", valorViandaOficina);
+	String _valorEnvio = FormatFloat("$0", valorEnvio);
+	String dir = GetCurrentDir() + "\\mensajes\\InfoServicioOficinas.txt";
 
-   Memo2->SelectAll();
-   Memo2->CopyToClipboard();
-   Beep();
+
+
+
+
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+    int p1;
+	p1 = Memo2->Lines->Text.Pos("***$$$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(valor, p1);
+
+	p1 = Memo2->Lines->Text.Pos("***$$$ENVIO***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,14);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(_valorEnvio, p1);
+
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 
@@ -5527,16 +6429,33 @@ void __fastcall TfPedidos::Menudeldaparaoficinas1Click(TObject *Sender)
 {
    Memo2->Clear();
 
+   String q;
+   q = "SELECT \
+				orden \
+				,fecha \
+				,refComida1 \
+				,refComida2 \
+				,esLight \
+				,esVeggie \
+				,comidas1.nombre AS c1 \
+				,comidas2.nombre AS c2 \
+		FROM \
+				menuoficinas \
+				LEFT JOIN comidas comidas1 ON comidas1.idComida = menuoficinas.refComida1 \
+				LEFT JOIN comidas comidas2 ON comidas2.idComida = menuoficinas.refComida2 \
+		WHERE	fecha = :fecha \
+		ORDER BY orden";
+
    QueryAux->Close();
    QueryAux->SQL->Clear();
-   QueryAux->SQL->Add("SELECT orden, fecha, refComida1, refComida2, esLight, esVeggie, "
-							  "(SELECT nombre FROM comidas WHERE idComida = refComida1) AS c1, "
-							  "(SELECT nombre FROM comidas WHERE idComida = refComida2) AS c2 "
-					  "FROM menuoficinas "
-					  "WHERE fecha = :fecha "
-					  "ORDER BY orden"
-					 );
-
+//   QueryAux->SQL->Add("SELECT orden, fecha, refComida1, refComida2, esLight, esVeggie, "
+//							  "(SELECT nombre FROM comidas WHERE idComida = refComida1) AS c1, "
+//							  "(SELECT nombre FROM comidas WHERE idComida = refComida2) AS c2 "
+//					  "FROM menuoficinas "
+//					  "WHERE fecha = :fecha "
+//					  "ORDER BY orden"
+//					 );
+   QueryAux->SQL->Add(q);
    QueryAux->ParamByName("fecha")->AsDate = DTP->Date;
    QueryAux->Open();
 
@@ -5574,9 +6493,36 @@ void __fastcall TfPedidos::Menudeldaparaoficinas1Click(TObject *Sender)
    }
    QueryAux->Close();
 
-   Memo2->Lines->Add("");
-   Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", valorVianda * 0.5) + ".");
-   Memo2->Lines->Add(L"🛵 Precio de envío: $150.");
+
+
+   String menu = Memo2->Text;
+   String valor = FormatFloat("$0", valorViandaOficina);
+   String _valorEnvio = FormatFloat("$0", valorEnvio);
+   String dir = GetCurrentDir() + "\\mensajes\\menuoficinas.txt";
+
+   Memo2->Clear();
+   Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+
+   int p1;
+   p1 = Memo2->Lines->Text.Pos("***MENU***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(menu, p1);
+
+   p1 = Memo2->Lines->Text.Pos("***$$$***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(valor, p1);
+
+   p1 = Memo2->Lines->Text.Pos("***$$$ENVIO***");
+   Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,14);
+   Memo2->Lines->Text = Memo2->Lines->Text.Insert(_valorEnvio, p1);
+
+
+
+
+
+//   Memo2->Lines->Add("");
+//   Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", valorViandaOficina) + ".");
+//   Memo2->Lines->Add(L"🛵 Precio de envío: " + FormatFloat("$0", valorEnvio));
 
    Memo2->SelectAll();
    Memo2->CopyToClipboard();
@@ -5586,9 +6532,10 @@ void __fastcall TfPedidos::Menudeldaparaoficinas1Click(TObject *Sender)
 
 void __fastcall TfPedidos::Button41Click(TObject *Sender)
 {
-   Button3->Enabled = false;
+	Button3->Enabled = false;
    Button4->Enabled = false;
-   Button17->Enabled = false;
+	Button17->Enabled = false;
+	Button41->Enabled = false;
    puedeSalir = false;
 
    contLineasImpresas = 0;
@@ -5597,7 +6544,8 @@ void __fastcall TfPedidos::Button41Click(TObject *Sender)
 
    Button3->Enabled = true;
    Button4->Enabled = true;
-   Button17->Enabled = true;
+	Button17->Enabled = true;
+	Button41->Enabled = true;
    puedeSalir = true;
 }
 //---------------------------------------------------------------------------
@@ -5607,15 +6555,27 @@ void __fastcall TfPedidos::cbRefProductoChange(TObject *Sender)
    if(cbRefProducto->ItemIndex == 1)
    {
 	  rgOficinas->Visible = true;
+	  Edit4->Text = FormatFloat("$ 0", valorViandaOficina);
 
 	  Image1->Enabled = false;
 	  Image2->Enabled = false;
 	  Image3->Enabled = false;
 	  Image4->Enabled = false;
-   }
+	  edComentario->Text = "";
+	  CBParaCocina->Checked = false;
+	}
+	else if(cbRefProducto->ItemIndex == 3)
+	{
+	  Edit4->Text = FormatFloat("$ 0", valorViandaUnica);
+	  edComentario->Text = "VIANDA UNICA";
+	  CBParaCocina->Checked = true;
+	}
    else
    {
 	  rgOficinas->Visible = false;
+	  Edit4->Text = FormatFloat("$ 0", valorVianda);
+	  edComentario->Text = "";
+	  CBParaCocina->Checked = false;
 
 	  Image1->Enabled = true;
 	  Image2->Enabled = true;
@@ -5664,14 +6624,7 @@ void __fastcall TfPedidos::rgOficinasClick(TObject *Sender)
    if(!encontrado)
    {
 	  idOpEsp1 = c1;
-
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = c1;
-	  QueryAux->Open();
-	  Label4->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
+	  Label4->Caption = getCodigoComidaFromID(idOpEsp1);
    }
 
    encontrado = false;
@@ -5688,14 +6641,7 @@ void __fastcall TfPedidos::rgOficinasClick(TObject *Sender)
    if(!encontrado)
    {
 	  idOpEsp2 = c2;
-
-	  QueryAux->Close();
-	  QueryAux->SQL->Clear();
-	  QueryAux->SQL->Add("SELECT codigo FROM comidas WHERE idComida = :id LIMIT 1");
-	  QueryAux->ParamByName("id")->AsInteger = c2;
-	  QueryAux->Open();
-	  Label5->Caption = QueryAux->FieldByName("codigo")->AsString;
-	  QueryAux->Close();
+	  Label5->Caption = getCodigoComidaFromID(idOpEsp2);
    }
 
 
@@ -5708,6 +6654,506 @@ void __fastcall TfPedidos::rgOficinasClick(TObject *Sender)
 	  Label4->Caption = "";
 	  Label5->Caption = "";
    }
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfPedidos::Edit4Exit(TObject *Sender)
+{
+   try {
+		StrToFloat(Edit4->Text);
+   } catch (...) {
+		ShowMessage("El precio indicado no es un valor correcto");
+		Edit4->Text = "$ 0,00";
+		return;
+   }
+
+   Edit4->Text = FormatFloat("$ 0.00", StrToFloat(Edit4->Text));
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Edit4Enter(TObject *Sender)
+{
+	Edit4->Text = Edit4->Text.Delete(1,2);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Button43Click(TObject *Sender)
+{
+	Edit4->Text = FormatFloat("$ 0.00", val1);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Button44Click(TObject *Sender)
+{
+	Edit4->Text = FormatFloat("$ 0.00", val2);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Button45Click(TObject *Sender)
+{
+	Edit4->Text = FormatFloat("$ 0.00", val3);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Button46Click(TObject *Sender)
+{
+	Edit4->Text = FormatFloat("$ 0.00", valorVianda);
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfPedidos::SpeedButton1Click(TObject *Sender)
+{
+	if(idCliSel < 3)
+		return;
+
+
+	int refCantidad = getRefCantidad(idCliSel, DTP->DateTime);
+
+	if(refCantidad == 0)
+	{
+		Application->MessageBox(L"Un envío solo puede ser agregado cuando hay pedidos para enviar.",L"No se realizaron cambios",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
+		QueryAux->Close();
+		return;
+	}
+
+
+
+    QueryAux->Close();
+	QueryAux->SQL->Clear();
+	QueryAux->SQL->Add("SELECT idPedido FROM pedidos WHERE refCantidad = :refCantidad AND refProducto = 3 LIMIT 1");
+	QueryAux->ParamByName("refCantidad")->AsInteger = refCantidad;
+	QueryAux->Open();
+	if(!QueryAux->IsEmpty())
+	{
+		QueryAux->Close();
+		Application->MessageBox(L"Solo se puede agregar un envio por domicilio.",L"No se realizaron cambios",MB_OK | MB_ICONWARNING | MB_DEFBUTTON1);
+        return;
+	}
+
+	Query1->Close();
+	Query1->SQL->Clear();
+	Query1->SQL->Add("INSERT INTO pedidos VALUES (NULL, :dt, :rc, :rp, 1, 1, 1, 1, 1, 1, 'ENVIO', 1, 0, :refCantidad, 0, 0, :valor)");
+	Query1->ParamByName("dt")->AsDateTime = DTP->DateTime;
+	Query1->ParamByName("rc")->AsInteger = idCliSel;
+	Query1->ParamByName("rp")->AsInteger = 3;
+	Query1->ParamByName("refCantidad")->AsInteger = refCantidad;
+	Query1->ParamByName("valor")->AsFloat = valorEnvio;
+	Query1->ExecSQL();
+
+	float valorTotal = getValorTotal();
+
+	Query1->Close();
+	Query1->SQL->Clear();
+	Query1->SQL->Add("UPDATE cantidades SET valorTotal = :valorTotal WHERE idCantidad = :id LIMIT 1");
+	Query1->ParamByName("id")->AsInteger = refCantidad;
+	Query1->ParamByName("valorTotal")->AsFloat = valorTotal * ((100.0 - descuentoCliente) / 100.0);
+	Query1->ExecSQL();
+
+	getPedidos(idCliSel, DTP->DateTime);
+	Label20->Caption = FormatFloat("Costo total: $ 0.00", valorTotal * ((100.0 - descuentoCliente) / 100.0));
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TfPedidos::Menusemanalparaoficinas1Click(TObject *Sender)
+{
+   Memo2->Clear();
+   for(int w = DayOfWeek(DTP->DateTime) - 2; w < 5; w++)
+   {
+	   String q;
+	   q = "SELECT \
+					orden \
+					,fecha \
+					,refComida1 \
+					,refComida2 \
+					,esLight \
+					,esVeggie \
+					,comidas1.nombre AS c1 \
+					,comidas2.nombre AS c2 \
+			FROM \
+					menuoficinas \
+					LEFT JOIN comidas comidas1 ON comidas1.idComida = menuoficinas.refComida1 \
+					LEFT JOIN comidas comidas2 ON comidas2.idComida = menuoficinas.refComida2 \
+			WHERE	fecha = :fecha \
+			ORDER BY orden";
+
+	   QueryAux->Close();
+	   QueryAux->SQL->Clear();
+	   QueryAux->SQL->Add(q);
+	   QueryAux->ParamByName("fecha")->AsDate = IncDay(StartOfTheWeek(DTP->Date), w);
+	   QueryAux->Open();
+	   QueryAux->First();
+
+
+
+	   if(QueryAux->IsEmpty() || QueryAux->FieldByName("refComida1")->AsInteger <= 1)
+	   {
+	   	  Memo2->Lines->Add(L"📋 *Menú para oficinas: " + FormatDateTime("dddd dd/mm/yyyy", IncDay(StartOfTheWeek(DTP->Date), w)) + "*");
+	      Memo2->Lines->Add("");
+		  Memo2->Lines->Add("	CERRADO");
+	   }
+	   else
+	   {
+	   	   Memo2->Lines->Add(L"📋 *Menú para oficinas: " + FormatDateTime("dddd dd/mm/yyyy", QueryAux->FieldByName("fecha")->AsDateTime) + "*");
+	       Memo2->Lines->Add("");
+		   String o, c1, c2, L, V;
+		   while(!QueryAux->Eof)
+		   {
+			  o = QueryAux->FieldByName("orden")->AsString;
+			  c1 = QueryAux->FieldByName("c1")->AsString;
+			  c2 = QueryAux->FieldByName("c2")->AsString;
+			  L = QueryAux->FieldByName("esLight")->AsString;
+			  V = QueryAux->FieldByName("esVeggie")->AsString;
+
+			  if(L == "S")
+				 L = " *(Light)*";
+			  else
+				 L = "";
+
+			  if(V == "S")
+				 V = " *(Veggie)*";
+			  else
+				 V = "";
+
+			  if(c1 != c2)
+				 Memo2->Lines->Add("Opción " + o + ": " + c1 + " + " + c2 + L + V);
+			  else
+				 Memo2->Lines->Add("Opción " + o + ": " + c1 + L + V);
+			  QueryAux->Next();
+		   }
+	   }
+	   Memo2->Lines->Add("");
+	   Memo2->Lines->Add("");
+	}
+	QueryAux->Close();
+
+	String menu = Memo2->Text;
+	String valor = FormatFloat("$0", valorViandaOficina);
+	String _valorEnvio = FormatFloat("$0", valorEnvio);
+	String dir = GetCurrentDir() + "\\mensajes\\menuOficinasSemanal.txt";
+
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+
+	int p1;
+	p1 = Memo2->Lines->Text.Pos("***MENU***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,10);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(menu, p1);
+
+	p1 = Memo2->Lines->Text.Pos("***$$$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(valor, p1);
+
+	p1 = Memo2->Lines->Text.Pos("***$$$ENVIO***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,14);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(_valorEnvio, p1);
+
+
+//	Memo2->Lines->Add("");
+//	Memo2->Lines->Add(L"💰 Precio por vianda: " + FormatFloat("$0", valorViandaOficina) + ".");
+//	Memo2->Lines->Add(L"🛵 Precio de envío: " + FormatFloat("$0", valorEnvio));
+
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+    Beep();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::DBGrid6DrawColumnCell(TObject *Sender, const TRect &Rect,
+		  int DataCol, TColumn *Column, TGridDrawState State)
+{
+   if(State.Contains(gdSelected))
+   {
+//	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Color = clWhite;
+//	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Size = 9;
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Style = TFontStyles() << fsBold;
+
+	   if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("cantDirecciones")->AsInteger >= 25)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x007774FA);
+	   else if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("cantDirecciones")->AsInteger >= 21)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00208FFF);
+	   else if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("cantDirecciones")->AsInteger >= 18)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x0053FFEA);
+	   else
+		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x0091FF94);
+   }
+   else
+   {
+	   if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("cantDirecciones")->AsInteger >= 25)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x008F8CFB);
+	   else if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("cantDirecciones")->AsInteger >= 21)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x004FA7FF);
+	   else if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("cantDirecciones")->AsInteger >= 18)
+		  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x0095FFF2);
+	   else
+		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00C6FFC7);
+   }
+   dynamic_cast <TDBGrid *>(Sender)->DefaultDrawColumnCell(Rect, DataCol, Column, State);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::DBGrid6DblClick(TObject *Sender)
+{
+	if(!CDS5->Active)
+		return;
+
+    Timer4->Enabled = false;	
+	
+	
+	fImprimirPlanillas->Show();
+	fImprimirPlanillas->Hide();
+	fImprimirPlanillas->MC->Date = DTP->Date;
+	if(DayOfTheWeek(DTP->DateTime) == DaySaturday)
+	{
+		fImprimirPlanillas->esSabado = 1;
+	}
+	else
+		fImprimirPlanillas->esSabado = 0;
+
+	fImprimirPlanillas->ComboBox1->ItemIndex = fImprimirPlanillas->ComboBox1->Items->IndexOf(CDS5->FieldByName("repartidor")->AsString);
+	fImprimirPlanillas->idRepartidor = CDS5->FieldByName("refRepartidor")->AsInteger;
+	fImprimirPlanillas->Button2Click(fRepartos);
+	fImprimirPlanillas->Close(); 
+	Timer4->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Timer4Timer(TObject *Sender)
+{
+	if (!CDS5->Active || CDS5->IsEmpty()) {
+        return;
+	}
+
+	int cantReg = CDS5->RecordCount;
+	int regActual = CDS5->RecNo;
+
+	if (regActual == (cantReg)) {
+		CDS5->RecNo = 1;
+		ShowScrollBar(DBGrid6->Handle, SB_VERT, true);
+		return;	
+	}
+	
+	int proximoReg = regActual + 9;
+	
+	if (proximoReg < cantReg) {
+		CDS5->RecNo = proximoReg;	
+	}
+	else {
+		CDS5->RecNo = cantReg;	
+	}
+	ShowScrollBar(DBGrid6->Handle, SB_VERT, true);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::DBGrid6CellClick(TColumn *Column)
+{
+	Timer4->Enabled = false;	
+	Timer4->Enabled = true;	
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::DBGrid7DrawColumnCell(TObject *Sender, const TRect &Rect,
+          int DataCol, TColumn *Column, TGridDrawState State)
+{
+   if(Column->Field->Index == 3 && Column->Field->AsFloat > 0)
+   {
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Color = clGreen;
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Style = TFontStyles() << fsBold;
+   }
+   else if(Column->Field->Index == 3)
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Color = clBlack;
+
+   if(State.Contains(gdSelected))
+   {
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Font->Color = clWhite;
+	  dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00C07000);
+   }
+   else
+   {
+	  if(dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->RecNo % 2)
+		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00D9D9D9);
+       else
+		 dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x00F2F2F2);
+   }
+   dynamic_cast <TDBGrid *>(Sender)->DefaultDrawColumnCell(Rect, DataCol, Column, State);	
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::DBGrid7DblClick(TObject *Sender)
+{
+   if (!CDS6->Active || CDS6->IsEmpty()) {
+       return;
+   }
+
+   String q;
+
+	q = "SELECT \
+			refCliente \
+			,CONCAT(clientes.calle, ' ', clientes.numero) AS cliente \
+	FROM \
+			pedidos \
+			LEFT JOIN clientes ON clientes.idCliente = pedidos.refCliente \
+	WHERE \
+			pedidos.momento >= :mi AND pedidos.momento <= :mf  \
+			AND refProducto = 1 \
+			AND ( \
+				pedidos.refComida1 = :idComida \
+				OR pedidos.refComida2 = :idComida \
+				OR pedidos.refComida3 = :idComida \
+				OR pedidos.refComida4 = :idComida \
+			) \
+	ORDER BY cliente";
+
+   QueryInfo->Close();
+   QueryInfo->SQL->Clear();
+   QueryInfo->SQL->Add(q);
+   QueryInfo->ParamByName("mi")->AsDateTime = StartOfTheDay(DTP->DateTime);
+   QueryInfo->ParamByName("mf")->AsDateTime = EndOfTheDay(DTP->DateTime);
+   QueryInfo->ParamByName("idComida")->AsString = CDS6->FieldByName("idComida")->AsInteger;
+   QueryInfo->Open();
+
+   ListBox2->Clear();
+   QueryInfo->First();
+   String s = "";
+   while(!QueryInfo->Eof)
+   {
+	  s = QueryInfo->FieldByName("cliente")->AsString;
+	  ListBox2->Items->Add(s);
+	  QueryInfo->Next();
+   }
+   QueryInfo->Close();
+
+   Panel16->Visible = true;	
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::ListBox2DblClick(TObject *Sender)
+{
+	if (ListBox2->Items->Count < 1) {
+        return;
+	}
+	if (cargandoPedido) {
+        return;
+	}	
+
+	String q;
+	q = "SELECT idCliente, numero FROM clientes WHERE CONCAT(nombre, ' ', numero) = :cliente LIMIT 1";
+
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	QueryAux->SQL->Add(q);
+	QueryAux->ParamByName("cliente")->AsString = ListBox2->Items->Strings[ListBox2->ItemIndex];
+	QueryAux->Open();
+	int id = QueryAux->FieldByName("idCliente")->AsInteger;
+	Edit1->Text = QueryAux->FieldByName("numero")->AsString;
+	QueryAux->Close();
+
+	if (ClientDataSet3->RecordCount > 1) {
+		ClientDataSet3->First();
+		while(!ClientDataSet3->Eof) {
+
+			if(ClientDataSet3->FieldByName("idCliente")->AsInteger == id) {
+				DBGrid2DblClick(Sender);
+				return;
+			}
+			ClientDataSet3->Next();
+		}
+	}
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Imprimiretiquetasdebolsas1Click(TObject *Sender)
+{
+	if(DayOfTheWeek(DTP->Date) == DayThursday) {
+		if(Application->MessageBox(L"Agregar marca para entrega de menú impreso?\nSi mañana es feriado, posiblemente sea necesario enviar hoy la hoja de menú impreso" ,L"MENÚ IMPRESO?",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2) == IDYES)
+			menuImpreso = true;
+	}
+
+	imprimirEtiquetasBolsas(CDS5->FieldByName("refRepartidor")->AsInteger,
+							CDS5->FieldByName("reparto")->AsInteger - 1);
+
+	menuImpreso = false;
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfPedidos::Button42Click(TObject *Sender)
+{
+	String numeroCliente = Edit1->Text;
+	fRepartos->idClienteABuscar = idCliSel;
+	fRepartos->planillaSeleccionada = cbRepartidor->Text;
+	fRepartos->ShowModal();
+	Edit1Change(Sender);
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfPedidos::Vercomplementos1Click(TObject *Sender)
+{
+	sectorRepartoGCC = CDS5->FieldByName("reparto")->AsInteger - 1;
+	refRepartidorGCC = CDS5->FieldByName("refRepartidor")->AsInteger;
+	String msg = "Complementos:\n" + generarCadComp("repartidor");
+	String rep = CDS5->FieldByName("repartidor")->AsString + " - " + CDS5->FieldByName("reparto")->AsString + "° Rep.";
+
+	Application->MessageBox(msg.w_str() ,rep.w_str(), MB_OK | MB_ICONINFORMATION | MB_DEFBUTTON1);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfPedidos::Imprimiretiquetasdeviandasdeestereparto1Click(TObject *Sender)
+
+{
+	if (!CDS5->Active) {
+		return;
+	}
+	if (CDS5->FieldByName("refRepartidor")->AsInteger < 0) {
+		return;
+	}
+
+	Button3->Enabled = false;
+	Button4->Enabled = false;
+	Button17->Enabled = false;
+	Button41->Enabled = false;
+	puedeSalir = false;
+
+	contLineasImpresas = 0;
+	cantLineas = StrToInt(Edit2->Text);
+	imprimirEtiquetas(CDS5->FieldByName("reparto")->AsInteger - 1, CDS5->FieldByName("refRepartidor")->AsInteger);
+
+	Button3->Enabled = true;
+	Button4->Enabled = true;
+	Button17->Enabled = true;
+	Button41->Enabled = true;
+	puedeSalir = true;
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TfPedidos::Informaciondeviandasnormales1Click(TObject *Sender)
+{
+	QueryAux->Close();
+	QueryAux->SQL->Clear();
+	String q;
+	q = "SELECT valor FROM listasprecio WHERE idListaPrecio = 1 LIMIT 1";
+	QueryAux->SQL->Add(q);
+	QueryAux->Open();
+	float valor = QueryAux->FieldByName("valor")->AsFloat;
+	QueryAux->Close();
+
+	String dir = GetCurrentDir() + "\\mensajes\\InfoServicio.txt";
+	Memo2->Clear();
+	Memo2->Lines->LoadFromFile(dir, TEncoding::UTF8);
+	int p1 = Memo2->Lines->Text.Pos("***$$$***");
+	Memo2->Lines->Text = Memo2->Lines->Text.Delete(p1,9);
+	Memo2->Lines->Text = Memo2->Lines->Text.Insert(FormatFloat("$0", valor), p1);
+
+	Memo2->SelectAll();
+	Memo2->CopyToClipboard();
+	Beep();
 }
 //---------------------------------------------------------------------------
 

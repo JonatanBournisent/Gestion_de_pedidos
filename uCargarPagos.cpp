@@ -57,26 +57,151 @@ void __fastcall TfCargarPagos::Button1Click(TObject *Sender)
    if(!existe)
    {
 
-	  q = "INSERT INTO cuentas (refCliente, fecha, refRepartidor, valorUnidad) SELECT refCliente, :f, refRepartidor, "
-		  "((SELECT valor FROM listasPrecio WHERE (SELECT refListaPrecio FROM clientes WHERE "
-				"idCliente = refCliente LIMIT 1) = idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) "
-				"FROM clientes WHERE idCliente = refCliente LIMIT 1)) "
-		  "FROM repartos WHERE (refCliente > 2 AND esSabado = :sab)";
+	// No pude hacer una consulta que se ejecute rapido. En una sola consulta tarda 15 seg.
+	// mientras que dividiendo en dos consultas tarda menos de 0.1 seg
+
+	 q = "INSERT INTO  cuentas (refCliente, fecha, refRepartidor, unidades, valorUnidad) \
+		SELECT \
+				repartos.refCliente \
+				,:f AS fecha \
+				,repartos.refRepartidor \
+				,IFNULL(cantidades.nroUnidades, 0.0) AS nroUnidades \
+				,IFNULL(cantidades.valorTotal, 0.0) AS valorTotal \
+		FROM \
+				repartos \
+				LEFT JOIN cantidades ON repartos.refCliente = cantidades.refCliente \
+		WHERE \
+				repartos.refCliente > 2 \
+				AND repartos.esSabado = :sab \
+				AND cantidades.fecha = :f";
 
 	  QueryAux->SQL->Clear();
 	  QueryAux->SQL->Add(q);
 	  QueryAux->ParamByName("sab")->AsInteger = esSabado;
 	  QueryAux->ParamByName("f")->AsDate = DTP->Date;
 	  QueryAux->ExecSQL();
+
+
+	  q =	"UPDATE clientes \
+			INNER JOIN cuentas ON cuentas.refCliente = clientes.idCliente \
+			SET		clientes.acumuladoGlobal = clientes.acumuladoGlobal + cuentas.valorUnidad \
+			WHERE	clientes.idCliente IN (SELECT refCliente FROM cuentas WHERE cuentas.fecha = :f) \
+					AND cuentas.fecha = :f";
+
+
+      QueryAux->SQL->Clear();
+	  QueryAux->SQL->Add(q);
+	  QueryAux->ParamByName("f")->AsDate = DTP->Date;
+	  QueryAux->ExecSQL();
+
+
+	  TDate fSemanal = DateOf(IncDay(StartOfTheWeek(Now()),-1));
+	  TDate fMensual = DateOf(IncDay(StartOfTheMonth(Now()),-1));
+	  TDate fechaActualizada = DTP->Date;
+
+
+
+	  if (CompareDate(fechaActualizada, fSemanal) == GreaterThanValue) {
+			q =	"UPDATE clientes \
+				INNER JOIN cuentas ON cuentas.refCliente = clientes.idCliente \
+				SET		clientes.acumuladoParcial = clientes.acumuladoParcial + cuentas.valorUnidad \
+				WHERE	clientes.idCliente IN (SELECT refCliente FROM cuentas WHERE cuentas.fecha = :f) \
+						AND clientes.refFrecuenciaPago = 2 \
+						AND cuentas.fecha = :f";
+
+
+			QueryAux->SQL->Clear();
+			QueryAux->SQL->Add(q);
+			QueryAux->ParamByName("f")->AsDate = DTP->Date;
+			QueryAux->ExecSQL();
+	  }
+
+	  if (CompareDate(fechaActualizada, fMensual) == GreaterThanValue) {
+			q =	"UPDATE clientes \
+				INNER JOIN cuentas ON cuentas.refCliente = clientes.idCliente \
+				SET		clientes.acumuladoParcial = clientes.acumuladoParcial + cuentas.valorUnidad \
+				WHERE	clientes.idCliente IN (SELECT refCliente FROM cuentas WHERE cuentas.fecha = :f) \
+						AND clientes.refFrecuenciaPago = 3 \
+						AND cuentas.fecha = :f";
+
+
+			QueryAux->SQL->Clear();
+			QueryAux->SQL->Add(q);
+			QueryAux->ParamByName("f")->AsDate = DTP->Date;
+			QueryAux->ExecSQL();
+	  }
+
+
+	  q = "INSERT INTO  cuentas (refCliente, fecha, refRepartidor, unidades, valorUnidad) \
+		SELECT \
+				repartos.refCliente \
+				,:f AS fecha \
+				,repartos.refRepartidor \
+				,0.0 AS nroUnidades \
+				,0.0 AS valorTotal \
+		FROM \
+				repartos \
+		WHERE \
+				repartos.esSabado = :sab \
+				AND refCliente > 2 \
+				AND repartos.refCliente NOT IN (SELECT refCliente FROM cantidades WHERE fecha = :f)";
+
+
+	  QueryAux->SQL->Clear();
+	  QueryAux->SQL->Add(q);
+	  QueryAux->ParamByName("sab")->AsInteger = esSabado;
+	  QueryAux->ParamByName("f")->AsDate = DTP->Date;
+	  QueryAux->ExecSQL();
+
+
+//		QueryAux->Close();
+//		QueryAux->SQL->Clear();
+//		QueryAux->SQL->Add("SELECT refCliente AS idCliente FROM cuentas WHERE fecha = :f AND valorUnidad > 0.0");
+//		QueryAux->ParamByName("f")->AsDate = DTP->Date;
+//		QueryAux->Open();
+//		QueryAux->First();
+//		while (!QueryAux->Eof) {
+//			QueryUpdate->SQL->Clear();
+//			QueryUpdate->SQL->Add("CALL calcularSaldoCliente(:f1, :f2, :fref , :refCliente)");
+//			QueryUpdate->ParamByName("f1")->AsDate = DateOf(IncDay(StartOfTheWeek(Now()),-1));
+//			QueryUpdate->ParamByName("f2")->AsDate = DateOf(IncDay(StartOfTheMonth(Now()),-1));
+//			QueryUpdate->ParamByName("fref")->AsDate = DateOf(IncYear(Now(), -10));
+//			QueryUpdate->ParamByName("refCliente")->AsInteger = QueryAux->FieldByName("idCliente")->AsInteger;
+//			QueryUpdate->ExecSQL();
+//			QueryAux->Next();
+//		}
+//		QueryAux->Close();
+//		ShowMessage("Cuentas actualizadas");
+
    }
 
-   q = "SELECT idCuenta, refCliente, refRepartidor, valorUnidad, unidades, pagoRealizado, "
-	   "(SELECT calle FROM clientes WHERE refCliente = clientes.idCliente LIMIT 1) AS calle, "
-	   "(SELECT numero FROM clientes WHERE refCliente = clientes.idCliente LIMIT 1) AS numero, "
-	   "(SELECT refFrecuenciaPago FROM clientes WHERE refCliente = clientes.idCliente LIMIT 1) AS refFrecuenciaPago, "
-	   "(SELECT posicion FROM repartos WHERE (repartos.refCliente = cuentas.refCliente AND "
-	   		"repartos.refRepartidor = cuentas.refRepartidor AND repartos.esSabado = :sab) LIMIT 1) AS posicion "
-       "FROM cuentas WHERE (refRepartidor = :rep AND fecha = :f) ORDER BY posicion";
+	q = "SELECT \
+				cuentas.idCuenta \
+				,cuentas.refCliente \
+				,cuentas.refRepartidor \
+				,cuentas.valorUnidad \
+				,cuentas.unidades \
+				,cuentas.pagoRealizado \
+				,clientes.calle AS calle \
+				,clientes.numero AS numero \
+				,CAST(clientes.refFrecuenciaPago AS UNSIGNED) AS refFrecuenciaPago \
+				,IFNULL(repartos.posicion, 0) AS posicion \
+				,CASE clientes.medioPagoDefecto \
+					WHEN 'A' THEN (clientes.acumuladoGlobal - clientes.acumuladoParcial) \
+					ELSE 0.0 \
+				END AS deudaEfectivo \
+		FROM \
+				cuentas \
+				LEFT JOIN clientes ON clientes.idCliente = cuentas.refCliente \
+				LEFT JOIN repartos ON repartos.refCliente = cuentas.refCliente AND repartos.refRepartidor = cuentas.refRepartidor AND repartos.esSabado = :sab \
+		WHERE \
+				cuentas.refRepartidor = :rep \
+				AND fecha = :f \
+		ORDER BY \
+				repartos.posicion";
+
+
+
 
    CDS->Active = false;
    Query1->Close();
@@ -218,7 +343,7 @@ void __fastcall TfCargarPagos::CDSvalorUnidadChange(TField *Sender)
 {
    QueryUpdate->SQL->Clear();
    QueryUpdate->SQL->Add("CALL actualizarCuenta(:fSemanal, :fMensual, :fechaActualizada , :unidades, "
-   						 ":pago, :valor ,:refCliente, :idC)");
+						 ":pago, :valor ,:refCliente, :idC)");
    QueryUpdate->ParamByName("fSemanal")->AsDate = DateOf(IncDay(StartOfTheWeek(Now()),-1));
    QueryUpdate->ParamByName("fMensual")->AsDate = DateOf(IncDay(StartOfTheMonth(Now()),-1));
    QueryUpdate->ParamByName("fechaActualizada")->AsDate = DTP->Date;
@@ -392,11 +517,10 @@ void __fastcall TfCargarPagos::Button6Click(TObject *Sender)
 
    if(!existe)
    {
-	  q = "INSERT INTO cuentas (refCliente, fecha, refRepartidor, valorUnidad) VALUES(:rc, :f, :rep, "
-		  "((SELECT valor FROM listasPrecio WHERE "
-		  "(SELECT refListaPrecio FROM clientes WHERE clientes.idCliente = :rc LIMIT 1) "
-		  "= listasPrecio.idListaPrecio LIMIT 1) * (SELECT ((100.0 - bonificacion) / 100.0) "
-		  "FROM clientes WHERE idCliente = :rc LIMIT 1))) ";
+	  q = "INSERT INTO cuentas (refCliente, fecha, refRepartidor, unidades, valorUnidad) \
+		   VALUES(:rc, :f, :rep, \
+				IFNULL((SELECT nroUnidades FROM cantidades WHERE refCliente = :rc AND fecha = :f LIMIT 1), 0),  \
+				IFNULL((SELECT valorTotal FROM cantidades WHERE refCliente = :rc AND fecha = :f LIMIT 1), 0)) ";
 
 	  QueryAux->SQL->Clear();
 	  QueryAux->SQL->Add(q);
@@ -404,6 +528,71 @@ void __fastcall TfCargarPagos::Button6Click(TObject *Sender)
 	  QueryAux->ParamByName("rc")->AsInteger = id;
 	  QueryAux->ParamByName("f")->AsDate = DTP->Date;
 	  QueryAux->ExecSQL();
+
+
+
+
+
+
+      q =	"UPDATE clientes \
+			INNER JOIN cuentas ON cuentas.refCliente = clientes.idCliente \
+			SET		clientes.acumuladoGlobal = clientes.acumuladoGlobal + cuentas.valorUnidad \
+			WHERE	clientes.idCliente = :rc \
+					AND cuentas.fecha = :f";
+
+
+      QueryAux->SQL->Clear();
+	  QueryAux->SQL->Add(q);
+	  QueryAux->ParamByName("rc")->AsInteger = id;
+	  QueryAux->ParamByName("f")->AsDate = DTP->Date;
+	  QueryAux->ExecSQL();
+
+
+	  TDate fSemanal = DateOf(IncDay(StartOfTheWeek(Now()),-1));
+	  TDate fMensual = DateOf(IncDay(StartOfTheMonth(Now()),-1));
+	  TDate fechaActualizada = DTP->Date;
+
+
+
+	  if (CompareDate(fechaActualizada, fSemanal) == GreaterThanValue) {
+			q =	"UPDATE clientes \
+				INNER JOIN cuentas ON cuentas.refCliente = clientes.idCliente \
+				SET		clientes.acumuladoParcial = clientes.acumuladoParcial + cuentas.valorUnidad \
+				WHERE	clientes.idCliente = :rc \
+						AND clientes.refFrecuenciaPago = 2 \
+						AND cuentas.fecha = :f";
+
+
+			QueryAux->SQL->Clear();
+			QueryAux->SQL->Add(q);
+			QueryAux->ParamByName("rc")->AsInteger = id;
+			QueryAux->ParamByName("f")->AsDate = DTP->Date;
+			QueryAux->ExecSQL();
+	  }
+
+	  if (CompareDate(fechaActualizada, fMensual) == GreaterThanValue) {
+			q =	"UPDATE clientes \
+				INNER JOIN cuentas ON cuentas.refCliente = clientes.idCliente \
+				SET		clientes.acumuladoParcial = clientes.acumuladoParcial + cuentas.valorUnidad \
+				WHERE	clientes.idCliente = :rc \
+						AND clientes.refFrecuenciaPago = 3 \
+						AND cuentas.fecha = :f";
+
+
+			QueryAux->SQL->Clear();
+			QueryAux->SQL->Add(q);
+			QueryAux->ParamByName("rc")->AsInteger = id;
+			QueryAux->ParamByName("f")->AsDate = DTP->Date;
+			QueryAux->ExecSQL();
+	  }
+
+
+
+
+
+
+
+
 	  ok = true;
    }
    else
@@ -552,8 +741,34 @@ void __fastcall TfCargarPagos::Button9Click(TObject *Sender)
 	   "(IFNULL((SELECT nroUnidades FROM cantidades WHERE "
 			"fecha = :fecha AND cantidades.refCliente = clientes.idCliente LIMIT 1), 0)) AS unidPedidos, "
 	   "(IFNULL((SELECT unidades FROM cuentas WHERE "
-	   		"fecha = :fecha AND cuentas.refCliente = clientes.idCliente LIMIT 1), 0)) AS unidPlanillas "
+			"fecha = :fecha AND cuentas.refCliente = clientes.idCliente LIMIT 1), 0)) AS unidPlanillas "
 	   " FROM clientes) t WHERE t.unidPedidos <> t.unidPlanillas ";
+
+
+//   q=	"SELECT * FROM  \
+//			(SELECT \
+//					IFNULL((SELECT nroUnidades FROM cantidades WHERE fecha = :fecha AND cantidades.refCliente = cuentas.refCliente LIMIT 1), 0) AS unidPedidos \
+//					,cuentas.unidades AS unidPlanillas \
+//					,CONCAT(clientes.calle, ' ', clientes.numero) AS cliente \
+//			FROM \
+//					cuentas \
+//					LEFT JOIN clientes ON clientes.idCliente = cuentas.refCliente \
+//			WHERE \
+//					cuentas.fecha = :fecha \
+//					AND cuentas.unidades > 0 \
+//			UNION ALL ( \
+//			SELECT \
+//					cantidades.nroUnidades AS unidPedidos \
+//					,IFNULL((SELECT unidades FROM cuentas WHERE fecha = :fecha AND cuentas.refCliente = cantidades.refCliente LIMIT 1), 0) AS unidPlanillas \
+//					,CONCAT(clientes.calle, ' ', clientes.numero) AS cliente \
+//			FROM \
+//					cantidades \
+//					LEFT JOIN clientes ON clientes.idCliente = cantidades.refCliente \
+//			WHERE \
+//					cantidades.fecha = :fecha \
+//					AND cantidades.nroUnidades > 0 \
+//			)) T \
+//		WHERE ABS(T.unidPedidos - T.unidPedidos) > 0";
 
 
    QueryAux->SQL->Add(q);
@@ -603,6 +818,20 @@ void __fastcall TfCargarPagos::Verestadodecuentadelcliente1Click(TObject *Sender
 	  fCuentas->idCliente = CDS->FieldByName("refCliente")->AsInteger;
 	  fCuentas->ShowModal();
    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfCargarPagos::DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect,
+		  int DataCol, TColumn *Column, TGridDrawState State)
+{
+	if (Column->FieldName == "deudaEfectivo") {
+		float pagoRealizado = dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("pagoRealizado")->AsFloat;
+		float pagoEsperado = dynamic_cast <TDBGrid *>(Sender)->DataSource->DataSet->FieldByName("deudaEfectivo")->AsFloat;
+		if (pagoRealizado != pagoEsperado) {
+			dynamic_cast <TDBGrid *>(Sender)->Canvas->Brush->Color = TColor(0x0059ACFF);
+		}
+	}
+	dynamic_cast <TDBGrid *>(Sender)->DefaultDrawColumnCell(Rect, DataCol, Column, State);
 }
 //---------------------------------------------------------------------------
 

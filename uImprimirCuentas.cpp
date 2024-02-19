@@ -57,11 +57,11 @@ void __fastcall TfImprimirCuentas::Button1Click(TObject *Sender)
 	  q = "SELECT idCliente, nombre, apellido, calle, numero, acumuladoGlobal AS deudaTotal, acumuladoParcial AS subtotal, "
 		  "(SELECT posicion FROM repartos WHERE repartos.esSabado = :es AND clientes.idCliente = repartos.refCliente LIMIT 1) AS pos, "
 		  "(SELECT refRepartidor FROM repartos WHERE repartos.esSabado = :es AND clientes.idCliente = repartos.refCliente LIMIT 1) AS rep, "
-		  "(SELECT IFNULL(SUM(unidades),0) FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS unidadesPeriodo, "
+		  "(SELECT 1.0 * COUNT(*) AS cant FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente AND valorUnidad > 0) AS unidadesPeriodo, "
 		  "(acumuladoGlobal - acumuladoParcial) AS saldoAnterior, "
 		  "((SELECT valor FROM listasPrecio WHERE clientes.refListaPrecio = listasPrecio.idListaPrecio LIMIT 1) * ((100.0 - clientes.bonificacion) / 100.0)) AS precio, "
 		  "(SELECT 1) AS imprimir, "
-		  "(SELECT nroUnidades FROM cantidades WHERE fecha = :ff AND clientes.idCliente = cantidades.refCliente LIMIT 1) AS agregado ";
+		  "(SELECT valorTotal * ((100.0 - (SELECT bonificacion FROM clientes WHERE idCliente = clientes.idCliente AND fecha = :ff LIMIT 1)) / 100.0) FROM cantidades WHERE fecha = :ff AND clientes.idCliente = cantidades.refCliente LIMIT 1) AS agregado ";
    }
 
    else
@@ -70,12 +70,12 @@ void __fastcall TfImprimirCuentas::Button1Click(TObject *Sender)
 		  "(SELECT posicion FROM repartos WHERE esSabado = :es AND idCliente = refCliente LIMIT 1) AS pos, "
 		  "(SELECT refRepartidor FROM repartos WHERE esSabado = :es AND idCliente = refCliente LIMIT 1) AS rep, "
 		  "(SELECT IFNULL(SUM(saldoParcial),0) FROM cuentas WHERE cuentas.fecha <= :ff AND  cuentas.refCliente = clientes.idCliente) AS deudaTotal, "   //calcula la deuda h/fecha seleccionada
-		  "(SELECT IFNULL(SUM(unidades),0) FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS unidadesPeriodo, "
-		  "(SELECT IFNULL(SUM(unidades * valorUnidad),0) FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS subtotal, "
+		  "(SELECT 1.0 * COUNT(*) AS cant FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente AND valorUnidad > 0) AS unidadesPeriodo, "
+		  "(SELECT IFNULL(SUM(valorUnidad),0) FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS subtotal, "
 		  "(SELECT deudaTotal - subtotal) AS saldoAnterior, "
 		  "((SELECT valor FROM listasPrecio WHERE refListaPrecio = idListaPrecio LIMIT 1) * ((100.0 - bonificacion) / 100.0)) AS precio, "
 		  "(SELECT 1) AS imprimir, "
-		  "(SELECT nroUnidades FROM cantidades WHERE fecha = :ff AND idCliente = refCliente LIMIT 1) AS agregado ";
+		  "(SELECT valorTotal * ((100.0 - (SELECT bonificacion FROM clientes WHERE idCliente = clientes.idCliente AND fecha = :ff LIMIT 1)) / 100.0) FROM cantidades WHERE fecha = :ff AND idCliente = refCliente LIMIT 1) AS agregado ";
 
    }
 
@@ -273,35 +273,27 @@ void __fastcall TfImprimirCuentas::Button4Click(TObject *Sender)
 				if(CompareDate(MC->Date,DateOf(Now())) == EqualsValue && usarSaldos)
 				{
 				   q1 = "SELECT "
-					 "(t.unidades * 1.0) AS unidades, t.valorUnidad AS valorUnidad, t.subtotal AS subtotal, t.detalle AS detalle "
+					 "t.unidades AS unidades, t.valorUnidad AS valorUnidad, t.subtotal AS subtotal, t.detalle AS detalle "
 					 "FROM "
 
 					 "("
 						"( "
 						   "SELECT "
-						   "unidades, "
+						   "(SELECT 1.0) AS unidades, "
 						   "valorUnidad, "
-						   "(unidades * valorUnidad) AS subtotal, "
-						   "CONCAT('Vianda(s) ', DATE_FORMAT(fecha, '%d/%m/%Y')) AS detalle "
+						   "(valorUnidad) AS subtotal, "
+						   "CONCAT('Pedido ', DATE_FORMAT(fecha, '%d/%m/%Y')) AS detalle "
 						   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND refCliente = :refCliente AND unidades > 0 ORDER BY fecha"
 						") "
 
 						"UNION ALL "
 						"( "
 						   "SELECT "
-						   "(SELECT :u) AS unidades, "
-						   "(SELECT valor "
-							  "FROM listasPrecio WHERE "
-								 "(SELECT refListaPrecio FROM clientes WHERE idCliente = :refCliente LIMIT 1) = idListaPrecio LIMIT 1) "
-						   "AS valorUnidad, "
+						   "(SELECT 1.0) AS unidades, "
+						   "CAST((SELECT :u) AS DECIMAL(19,2)) AS valorUnidad, "
+						   "CAST((SELECT :u) AS DECIMAL(19,2)) AS subtotal, "
 
-						   "("
-							  "(SELECT (:u * 1.0)) * "
-							  "(SELECT valor FROM listasPrecio WHERE "
-								 "(SELECT refListaPrecio FROM clientes WHERE idCliente = :refCliente LIMIT 1) = idListaPrecio LIMIT 1) "
-						   ") AS subtotal, "
-
-						   "CONCAT('Vianda(s) ', DATE_FORMAT(:fechaDetalle, '%d/%m/%Y')) AS detalle "
+						   "CONCAT('Pedido ', DATE_FORMAT(:fechaDetalle, '%d/%m/%Y')) AS detalle "
 						") "
 
 						"UNION ALL "
@@ -317,35 +309,27 @@ void __fastcall TfImprimirCuentas::Button4Click(TObject *Sender)
 				else
 				{
 				   q1 = "SELECT "
-					 "(t.unidades * 1.0) AS unidades, t.valorUnidad AS valorUnidad, t.subtotal AS subtotal, t.detalle AS detalle "
+					 "t.unidades AS unidades, t.valorUnidad AS valorUnidad, t.subtotal AS subtotal, t.detalle AS detalle "
 					 "FROM "
 
 					 "("
 						"( "
 						   "SELECT "
-						   "unidades, "
+						   "(SELECT 1.0) AS unidades, "
 						   "valorUnidad, "
-						   "(unidades * valorUnidad) AS subtotal, "
-						   "CONCAT('Vianda(s) ', DATE_FORMAT(fecha, '%d/%m/%Y')) AS detalle "
+						   "(valorUnidad) AS subtotal, "
+						   "CONCAT('Pedido ', DATE_FORMAT(fecha, '%d/%m/%Y')) AS detalle "
 						   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff AND refCliente = :refCliente AND unidades > 0 ORDER BY fecha"
 						") "
 
 						"UNION ALL "
 						"( "
 						   "SELECT "
-						   "(SELECT :u) AS unidades, "
-						   "(SELECT valor "
-							  "FROM listasPrecio WHERE "
-								 "(SELECT refListaPrecio FROM clientes WHERE idCliente = :refCliente LIMIT 1) = idListaPrecio LIMIT 1) "
-						   "AS valorUnidad, "
+						   "(SELECT 1.0) AS unidades, "
+						   "CAST((SELECT :u) AS DECIMAL(19,2)) AS valorUnidad, "
+						   "CAST((SELECT :u) AS DECIMAL(19,2)) AS subtotal, "
 
-						   "("
-							  "(SELECT (:u * 1.0)) * "
-							  "(SELECT valor FROM listasPrecio WHERE "
-								 "(SELECT refListaPrecio FROM clientes WHERE idCliente = :refCliente LIMIT 1) = idListaPrecio LIMIT 1) "
-						   ") AS subtotal, "
-
-						   "CONCAT('Vianda(s) ', DATE_FORMAT(:fechaDetalle, '%d/%m/%Y')) AS detalle "
+						   "CONCAT('Pedido ', DATE_FORMAT(:fechaDetalle, '%d/%m/%Y')) AS detalle "
 						") "
 
 						"UNION ALL "
@@ -402,13 +386,7 @@ void __fastcall TfImprimirCuentas::Button4Click(TObject *Sender)
 						"("
 
 						   "acumuladoGlobal "
-						   "+ :u * "
-							  "("
-
-								 "(SELECT valor FROM listasPrecio WHERE clientes.refListaPrecio = idListaPrecio LIMIT 1) * ((100.0 - bonificacion) / 100.0) "
-
-							  ") "
-
+						   "+ :u "
 						") AS total "
 						"FROM clientes WHERE idCliente = :refCLiente";
 				}
@@ -423,12 +401,8 @@ void __fastcall TfImprimirCuentas::Button4Click(TObject *Sender)
 						"(SELECT CAST(:fechaDetalle AS DATE)) AS fechaDetalleMensual, "
 						"("
 
-						   ":u * "
-						   "("
+						   ":u "
 
-							  "(SELECT valor FROM listasPrecio WHERE clientes.refListaPrecio = idListaPrecio LIMIT 1) * ((100.0 - bonificacion) / 100.0) "
-
-						   ") "
 						   "+ (SELECT IFNULL(SUM(saldoParcial),0) FROM cuentas WHERE refCliente = :refCliente AND fecha <= :ff) "
 
 						") AS total "
@@ -675,12 +649,12 @@ void __fastcall TfImprimirCuentas::Button8Click(TObject *Sender)
    q = "SELECT idCliente, nombre, apellido, calle, numero, "
 	   "(SELECT 1) AS rep, "   //repartidor para completar el campo, inventado
 	   "(SELECT IFNULL(SUM(saldoParcial),0) FROM cuentas WHERE cuentas.fecha <= :ff AND  cuentas.refCliente = clientes.idCliente) AS deudaTotal, "   //calcula la deuda h/fecha seleccionada
-	   "(SELECT IFNULL(SUM(unidades),0) FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS unidadesPeriodo, "
-	   "(SELECT IFNULL(SUM(unidades * valorUnidad),0) FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS subtotal, "
+	   "(SELECT 1.0 * COUNT(*) AS cant FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS unidadesPeriodo, "
+	   "(SELECT IFNULL(SUM(valorUnidad),0) FROM cuentas WHERE cuentas.fecha >= :fi AND cuentas.fecha <= :ff AND cuentas.refCliente = clientes.idCliente) AS subtotal, "
 	   "(SELECT deudaTotal - subtotal) AS saldoAnterior, "
 	   "((SELECT valor FROM listasPrecio WHERE refListaPrecio = idListaPrecio LIMIT 1) * ((100.0 - bonificacion) / 100.0)) AS precio, "
 	   "(SELECT 1) AS imprimir, "
-	   "(SELECT nroUnidades FROM cantidades WHERE fecha = :ff AND idCliente = refCliente LIMIT 1) AS agregado "
+	   "(SELECT valorTotal FROM cantidades WHERE fecha = :ff AND idCliente = refCliente LIMIT 1) AS agregado "
 	   "FROM clientes WHERE(idCliente = :idC)";
 
    CDS->Active = false;
@@ -839,6 +813,7 @@ void __fastcall TfImprimirCuentas::chbTicketClick(TObject *Sender)
 //	  CDS3total->DisplayFormat = "Total: $ 0.00";
 }
 //---------------------------------------------------------------------------
+
 
 
 

@@ -53,6 +53,7 @@ __published:	// IDE-managed Components
 	TMenuItem *Marcarcomonoimpreso2;
 	TMenuItem *Marcarcomoimpreso3;
 	TMenuItem *Marcarcomonoimpreso3;
+	TComboBox *ComboBox1;
 	void __fastcall DTPChange(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
@@ -68,6 +69,7 @@ __published:	// IDE-managed Components
 	void __fastcall Marcarcomoimpreso2Click(TObject *Sender);
 	void __fastcall Marcarcomonoimpreso1Click(TObject *Sender);
 	void __fastcall Marcarcomonoimpreso2Click(TObject *Sender);
+	void __fastcall ComboBox1Change(TObject *Sender);
 
 
 

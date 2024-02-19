@@ -51,6 +51,17 @@ __published:	// IDE-managed Components
 	TMenuItem *Modificarestaopcin1;
 	TMenuItem *Copiarestemen1;
 	TMemo *Memo1;
+	TButton *Button1;
+	TButton *Button2;
+	TSQLQuery *QueryMenuNormal;
+	TClientDataSet *CDS2;
+	TDataSetProvider *DataSetProvider2;
+	TDataSource *DataSource2;
+	TIntegerField *CDS2idComida;
+	TWideStringField *CDS2nombre;
+	TButton *Button6;
+	TPanel *Panel2;
+	TDBGrid *DBGrid2;
 	void __fastcall DBGrid1DblClick(TObject *Sender);
 	void __fastcall CDS1esLightGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
 	void __fastcall CDS1esVeggieGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
@@ -66,6 +77,10 @@ __published:	// IDE-managed Components
 	void __fastcall CheckBox2Click(TObject *Sender);
 	void __fastcall Modificarestaopcin1Click(TObject *Sender);
 	void __fastcall Copiarestemen1Click(TObject *Sender);
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall Button2Click(TObject *Sender);
+	void __fastcall Button6Click(TObject *Sender);
+	void __fastcall DBGrid2DblClick(TObject *Sender);
 
 
 private:	// User declarations
@@ -76,6 +91,7 @@ public:		// User declarations
 	void inicializar(TDate fechaIni);
 	TDate fecha;
 	void cerrar(void);
+	int nroPlato;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TframeMenuOficina *frameMenuOficina;

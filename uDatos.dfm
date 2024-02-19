@@ -4,7 +4,7 @@ object fDatos: TfDatos
   BorderStyle = bsDialog
   Caption = ' Consultar datos de ventas'
   ClientHeight = 639
-  ClientWidth = 576
+  ClientWidth = 700
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -199,9 +199,9 @@ object fDatos: TfDatos
     Width = 257
     Height = 160
     MultiSelect = True
-    Date = 44044.262211944440000000
+    Date = 44044.357865115740000000
     EndDate = 44044.000000000000000000
-    MaxSelectRange = 700
+    MaxSelectRange = 3000
     ShowToday = False
     TabOrder = 2
   end
@@ -263,8 +263,8 @@ object fDatos: TfDatos
     OnClick = Button7Click
   end
   object Panel1: TPanel
-    Left = 560
-    Top = 21
+    Left = 720
+    Top = 31
     Width = 328
     Height = 449
     Caption = 'Panel1'
@@ -331,6 +331,24 @@ object fDatos: TfDatos
     Caption = 'Ventas por mes (beta)'
     TabOrder = 10
     OnClick = Button8Click
+  end
+  object CheckBox1: TCheckBox
+    Left = 584
+    Top = 32
+    Width = 108
+    Height = 17
+    Caption = 'Grafico de barras'
+    Checked = True
+    State = cbChecked
+    TabOrder = 11
+  end
+  object CheckBox2: TCheckBox
+    Left = 584
+    Top = 55
+    Width = 108
+    Height = 17
+    Caption = 'Grafico de lineas'
+    TabOrder = 12
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'

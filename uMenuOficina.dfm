@@ -42,16 +42,15 @@ object fMenuOficina: TfMenuOficina
     Width = 261
     Height = 160
     MultiSelect = True
-    Date = 44841.279102581020000000
+    Date = 44841.359879814820000000
     EndDate = 44841.000000000000000000
     TabOrder = 2
   end
   object ScrollBox1: TScrollBox
-    Left = 275
+    Left = 272
     Top = 8
-    Width = 820
+    Width = 829
     Height = 539
-    HorzScrollBar.Position = 9
     HorzScrollBar.Smooth = True
     HorzScrollBar.Style = ssHotTrack
     HorzScrollBar.Tracking = True
@@ -59,52 +58,52 @@ object fMenuOficina: TfMenuOficina
     VertScrollBar.Tracking = True
     TabOrder = 3
     inline frameMenuOficina1: TframeMenuOficina
-      Left = 1
+      Left = 10
       Top = 3
       Width = 798
       Height = 169
       TabOrder = 0
-      ExplicitLeft = 1
+      ExplicitLeft = 10
       ExplicitTop = 3
       ExplicitWidth = 798
     end
     inline frameMenuOficina2: TframeMenuOficina
-      Left = 1
+      Left = 10
       Top = 184
       Width = 798
       Height = 169
       TabOrder = 1
-      ExplicitLeft = 1
+      ExplicitLeft = 10
       ExplicitTop = 184
       ExplicitWidth = 798
     end
     inline frameMenuOficina3: TframeMenuOficina
-      Left = 1
+      Left = 10
       Top = 366
       Width = 798
       Height = 169
       TabOrder = 2
-      ExplicitLeft = 1
+      ExplicitLeft = 10
       ExplicitTop = 366
       ExplicitWidth = 798
     end
     inline frameMenuOficina4: TframeMenuOficina
-      Left = 1
+      Left = 10
       Top = 552
       Width = 798
       Height = 169
       TabOrder = 3
-      ExplicitLeft = 1
+      ExplicitLeft = 10
       ExplicitTop = 552
       ExplicitWidth = 798
     end
     inline frameMenuOficina5: TframeMenuOficina
-      Left = 1
+      Left = 10
       Top = 736
       Width = 798
       Height = 169
       TabOrder = 4
-      ExplicitLeft = 1
+      ExplicitLeft = 10
       ExplicitTop = 736
       ExplicitWidth = 798
     end

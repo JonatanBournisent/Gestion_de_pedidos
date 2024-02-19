@@ -4,7 +4,7 @@ object fCargarPagos: TfCargarPagos
   BorderStyle = bsDialog
   Caption = ' Cargar datos de planillas de reparto'
   ClientHeight = 702
-  ClientWidth = 820
+  ClientWidth = 920
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object fCargarPagos: TfCargarPagos
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 620
+    Left = 708
     Top = 14
     Width = 169
     Height = 14
@@ -40,21 +40,21 @@ object fCargarPagos: TfCargarPagos
     Height = 65
   end
   object Shape2: TShape
-    Left = 608
+    Left = 696
     Top = 8
     Width = 193
     Height = 73
     Brush.Style = bsClear
   end
   object Shape3: TShape
-    Left = 608
+    Left = 696
     Top = 137
     Width = 193
     Height = 106
     Brush.Style = bsClear
   end
   object Label2: TLabel
-    Left = 619
+    Left = 707
     Top = 145
     Width = 122
     Height = 14
@@ -68,7 +68,7 @@ object fCargarPagos: TfCargarPagos
     ParentFont = False
   end
   object Shape4: TShape
-    Left = 608
+    Left = 696
     Top = 267
     Width = 193
     Height = 330
@@ -77,7 +77,7 @@ object fCargarPagos: TfCargarPagos
   object DBGrid1: TDBGrid
     Left = 3
     Top = 3
-    Width = 585
+    Width = 670
     Height = 697
     DataSource = DataSource1
     Enabled = False
@@ -94,6 +94,7 @@ object fCargarPagos: TfCargarPagos
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnDrawColumnCell = DBGrid1DrawColumnCell
     OnKeyPress = DBGrid1KeyPress
     OnKeyUp = DBGrid1KeyUp
     Columns = <
@@ -180,10 +181,23 @@ object fCargarPagos: TfCargarPagos
         Title.Font.Style = [fsBold]
         Width = 104
         Visible = True
+      end
+      item
+        Alignment = taCenter
+        Expanded = False
+        FieldName = 'deudaEfectivo'
+        Title.Alignment = taCenter
+        Title.Caption = 'Deuda'
+        Title.Font.Charset = ANSI_CHARSET
+        Title.Font.Color = clWindowText
+        Title.Font.Height = -19
+        Title.Font.Name = 'Calibri'
+        Title.Font.Style = [fsBold]
+        Visible = True
       end>
   end
   object ComboBox1: TComboBox
-    Left = 620
+    Left = 708
     Top = 165
     Width = 169
     Height = 22
@@ -193,7 +207,7 @@ object fCargarPagos: TfCargarPagos
     OnChange = ComboBox1Change
   end
   object Button1: TButton
-    Left = 619
+    Left = 707
     Top = 204
     Width = 169
     Height = 25
@@ -202,7 +216,7 @@ object fCargarPagos: TfCargarPagos
     OnClick = Button1Click
   end
   object DTP: TDateTimePicker
-    Left = 620
+    Left = 708
     Top = 34
     Width = 169
     Height = 27
@@ -218,7 +232,7 @@ object fCargarPagos: TfCargarPagos
     OnChange = DTPChange
   end
   object Button2: TButton
-    Left = 620
+    Left = 708
     Top = 557
     Width = 169
     Height = 25
@@ -227,7 +241,7 @@ object fCargarPagos: TfCargarPagos
     OnClick = Button2Click
   end
   object Button3: TButton
-    Left = 620
+    Left = 708
     Top = 361
     Width = 169
     Height = 25
@@ -276,7 +290,7 @@ object fCargarPagos: TfCargarPagos
     end
   end
   object Button6: TButton
-    Left = 619
+    Left = 707
     Top = 287
     Width = 169
     Height = 25
@@ -285,7 +299,7 @@ object fCargarPagos: TfCargarPagos
     OnClick = Button6Click
   end
   object Button7: TButton
-    Left = 620
+    Left = 708
     Top = 436
     Width = 169
     Height = 25
@@ -332,7 +346,7 @@ object fCargarPagos: TfCargarPagos
     end
   end
   object Button9: TButton
-    Left = 608
+    Left = 696
     Top = 87
     Width = 193
     Height = 25
@@ -408,6 +422,10 @@ object fCargarPagos: TfCargarPagos
     end
     object CDSrefFrecuenciaPago: TLargeintField
       FieldName = 'refFrecuenciaPago'
+    end
+    object CDSdeudaEfectivo: TFMTBCDField
+      FieldName = 'deudaEfectivo'
+      Size = 10
     end
   end
   object DataSource1: TDataSource

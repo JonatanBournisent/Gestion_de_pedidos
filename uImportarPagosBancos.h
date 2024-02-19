@@ -20,6 +20,9 @@
 #include <Vcl.DBGrids.hpp>
 #include <Vcl.Grids.hpp>
 #include <Vcl.ExtCtrls.hpp>
+#include <Data.DBXMySQL.hpp>
+#include <Data.FMTBcd.hpp>
+#include <Data.SqlExpr.hpp>
 //---------------------------------------------------------------------------
 class TfImportarPagosBancos : public TForm
 {
@@ -32,8 +35,14 @@ __published:	// IDE-managed Components
 	TIntegerField *FDMemTable1idCliente;
 	TDBGrid *DBGrid1;
 	TRadioGroup *RadioGroup1;
+	TButton *Button1;
+	TSQLConnection *SQLConnection1;
+	TSQLQuery *QueryAux;
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall DBGrid1DblClick(TObject *Sender);
+	void __fastcall Button1Click(TObject *Sender);
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall DBGrid1KeyPress(TObject *Sender, System::WideChar &Key);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfImportarPagosBancos(TComponent* Owner);

@@ -32,7 +32,20 @@ void __fastcall TfMostrarPedidos::DTPChange(TObject *Sender)
 			  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE refComida2 = idComida LIMIT 1) AS com2, "
 			  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE refComida3 = idComida LIMIT 1) AS com3, "
 			  "(SELECT IF(codigo = :una, '1', IF(codigo = :ens, 'ENS', codigo)) FROM comidas WHERE refComida4 = idComida LIMIT 1) AS com4 "
-			  "FROM pedidos WHERE momento >= :mi AND momento <= :mf ORDER BY momento DESC";
+			  "FROM pedidos WHERE momento >= :mi AND momento <= :mf ";
+
+
+
+		 if (ComboBox1->ItemIndex == 0) {
+			q1 = q1 + " ORDER BY momento DESC";
+		 }
+		 else if (ComboBox1->ItemIndex == 1) {
+			q1 = q1 + " AND refProducto = 1 ORDER BY momento DESC";
+		 }
+		 else if (ComboBox1->ItemIndex == 2) {
+			q1 = q1 + " AND refProducto = 2 ORDER BY momento DESC";
+		 }
+
 
 		 CDS2->Active = false;
 		 QueryPedidos->Close();
@@ -60,6 +73,7 @@ void __fastcall TfMostrarPedidos::DTPChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfMostrarPedidos::FormShow(TObject *Sender)
 {
+   ComboBox1->ItemIndex = 0;
    DTPChange(fMostrarPedidos);
 }
 //---------------------------------------------------------------------------
@@ -280,4 +294,10 @@ void __fastcall TfMostrarPedidos::Marcarcomonoimpreso2Click(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
+
+void __fastcall TfMostrarPedidos::ComboBox1Change(TObject *Sender)
+{
+	DTPChange(Sender);
+}
+//---------------------------------------------------------------------------
 

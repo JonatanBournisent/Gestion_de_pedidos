@@ -22,30 +22,24 @@
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.Dialogs.hpp>
 #include "frxExportBaseDialog.hpp"
+#include <FireDAC.Comp.Client.hpp>
+#include <FireDAC.Comp.DataSet.hpp>
+#include <FireDAC.DApt.Intf.hpp>
+#include <FireDAC.DatS.hpp>
+#include <FireDAC.Phys.Intf.hpp>
+#include <FireDAC.Stan.Error.hpp>
+#include <FireDAC.Stan.Intf.hpp>
+#include <FireDAC.Stan.Option.hpp>
+#include <FireDAC.Stan.Param.hpp>
+#include <Vcl.DBGrids.hpp>
+#include <Vcl.Grids.hpp>
+#include <Vcl.Menus.hpp>
 //---------------------------------------------------------------------------
 class TfEmitirComprobanteElectronico : public TForm
 {
 __published:	// IDE-managed Components
-	TLabel *Label3;
-	TLabel *Label4;
-	TLabel *Label5;
 	TLabel *Label2;
 	TLabel *Label1;
-	TEdit *Edit3;
-	TEdit *Edit4;
-	TEdit *Edit5;
-	TEdit *Edit6;
-	TEdit *Edit7;
-	TEdit *Edit8;
-	TEdit *Edit9;
-	TEdit *Edit10;
-	TEdit *Edit11;
-	TEdit *Edit12;
-	TEdit *Edit13;
-	TEdit *Edit14;
-	TEdit *Edit15;
-	TEdit *Edit16;
-	TEdit *Edit17;
 	TButton *Button10;
 	TMonthCalendar *MC;
 	TCheckBox *chbFactA4;
@@ -70,60 +64,44 @@ __published:	// IDE-managed Components
 	TLabel *lbSubtotal;
 	TLabel *lbIVA21;
 	TLabel *lbTotal;
-	TEdit *Edit1;
-	TEdit *Edit18;
-	TEdit *Edit19;
-	TEdit *Edit20;
-	TEdit *Edit21;
-	TLabel *Label6;
 	TShape *Shape1;
 	TShape *Shape2;
 	TCheckBox *CheckBox1;
 	TSaveDialog *SD1;
-	TButton *Button2;
 	TShape *Shape3;
 	TfrxBarCodeObject *frxBarCodeObject1;
-	TButton *Button3;
-	TEdit *Edit22;
+	TFDMemTable *FDMemTable1;
+	TFMTBCDField *FDMemTable1nroUnidades;
+	TWideStringField *FDMemTable1descripcion;
+	TFMTBCDField *FDMemTable1precioUnitario;
+	TFMTBCDField *FDMemTable1subtotal;
+	TDBGrid *DBGrid1;
+	TDataSource *DataSource1;
+	TfrxDBDataset *frxDBDataset1;
+	TMainMenu *MainMenu1;
+	TPopupMenu *PopupMenu1;
+	TMenuItem *Agregarunitem1;
+	TMenuItem *Eliminaresteitem1;
 	void __fastcall Button10Click(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall Button1Click(TObject *Sender);
-	void __fastcall Edit3KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit6KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit9KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit12KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit15KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit5KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit8KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit11KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit14KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit17KeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall Edit5Change(TObject *Sender);
-	void __fastcall Edit8Change(TObject *Sender);
-	void __fastcall Edit11Change(TObject *Sender);
-	void __fastcall Edit14Change(TObject *Sender);
 	void __fastcall chbFactA4Click(TObject *Sender);
-	void __fastcall Edit3Exit(TObject *Sender);
-	void __fastcall Edit6Exit(TObject *Sender);
-	void __fastcall Edit9Exit(TObject *Sender);
-	void __fastcall Edit12Exit(TObject *Sender);
-	void __fastcall Edit15Exit(TObject *Sender);
-	void __fastcall Edit5Exit(TObject *Sender);
-	void __fastcall Edit8Exit(TObject *Sender);
-	void __fastcall Edit11Exit(TObject *Sender);
-	void __fastcall Edit14Exit(TObject *Sender);
-	void __fastcall Edit17Exit(TObject *Sender);
-	void __fastcall Edit3Change(TObject *Sender);
-	void __fastcall Edit6Change(TObject *Sender);
-	void __fastcall Edit9Change(TObject *Sender);
-	void __fastcall Edit12Change(TObject *Sender);
-	void __fastcall Edit15Change(TObject *Sender);
-	void __fastcall Edit17Change(TObject *Sender);
 	void __fastcall CheckBox1Click(TObject *Sender);
-	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall FDMemTable1BeforePost(TDataSet *DataSet);
+	void __fastcall FDMemTable1precioUnitarioChange(TField *Sender);
+	void __fastcall FDMemTable1nroUnidadesValidate(TField *Sender);
+	void __fastcall FDMemTable1descripcionValidate(TField *Sender);
+	void __fastcall FDMemTable1precioUnitarioValidate(TField *Sender);
+	void __fastcall FDMemTable1AfterPost(TDataSet *DataSet);
+	void __fastcall DBGrid1Exit(TObject *Sender);
+	void __fastcall DBGrid1KeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall Eliminaresteitem1Click(TObject *Sender);
+	void __fastcall Agregarunitem1Click(TObject *Sender);
+	void __fastcall FDMemTable1AfterDelete(TDataSet *DataSet);
+
+
 
 private:	// User declarations
 public:		// User declarations
@@ -133,10 +111,21 @@ public:		// User declarations
 	bool CanPrint;
 	int idCliente;
 	float valorUnidad;
-	float calcular(void);
+	float calcular2(void);
 	void mostrarCliente(int refCliente);
+//	float _subtotal, _totalIVA21, _total;
+	bool blockCalcular2;
+
+	bool facturacionBulk;
 
 	String directorioGuararFacturas;
+	String nombreArchivoFactura;
+
+	String getPrinter(String tipo);
+	bool validatePrinter(String impSel);
+	String getDirFacturas(void);
+
+	bool facturacionMensual;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfEmitirComprobanteElectronico *fEmitirComprobanteElectronico;

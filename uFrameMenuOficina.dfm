@@ -18,7 +18,7 @@ object frameMenuOficina: TframeMenuOficina
     ParentFont = False
   end
   object DBGrid1: TDBGrid
-    Left = 2
+    Left = 3
     Top = 24
     Width = 776
     Height = 142
@@ -103,35 +103,35 @@ object frameMenuOficina: TframeMenuOficina
       end>
   end
   object Panel1: TPanel
-    Left = 189
+    Left = 406
     Top = 3
-    Width = 545
-    Height = 40
+    Width = 372
+    Height = 84
     Color = 10723580
     ParentBackground = False
     ShowCaption = False
     TabOrder = 1
     object Button3: TButton
       Left = 7
-      Top = 8
-      Width = 159
+      Top = 11
+      Width = 124
       Height = 25
       Caption = 'Seleccionar plato 1'
       TabOrder = 0
       OnClick = Button3Click
     end
     object Button4: TButton
-      Left = 172
-      Top = 8
-      Width = 159
+      Left = 137
+      Top = 11
+      Width = 120
       Height = 25
       Caption = 'Seleccionar plato 2'
       TabOrder = 1
       OnClick = Button4Click
     end
     object CheckBox1: TCheckBox
-      Left = 344
-      Top = 12
+      Left = 272
+      Top = 15
       Width = 57
       Height = 17
       Caption = 'Es Light'
@@ -139,8 +139,8 @@ object frameMenuOficina: TframeMenuOficina
       OnClick = CheckBox1Click
     end
     object CheckBox2: TCheckBox
-      Left = 416
-      Top = 12
+      Left = 272
+      Top = 38
       Width = 65
       Height = 17
       Caption = 'Es Veggie'
@@ -148,9 +148,9 @@ object frameMenuOficina: TframeMenuOficina
       OnClick = CheckBox2Click
     end
     object Button5: TButton
-      Left = 521
-      Top = 3
-      Width = 22
+      Left = 343
+      Top = 9
+      Width = 24
       Height = 22
       Caption = 'X'
       Font.Charset = DEFAULT_CHARSET
@@ -161,6 +161,39 @@ object frameMenuOficina: TframeMenuOficina
       ParentFont = False
       TabOrder = 4
       OnClick = Button5Click
+    end
+    object Button1: TButton
+      Left = 343
+      Top = 29
+      Width = 24
+      Height = 23
+      Caption = '+'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 5
+      OnClick = Button1Click
+    end
+    object Button2: TButton
+      Left = 32
+      Top = 42
+      Width = 75
+      Height = 25
+      Caption = 'Elegir'
+      TabOrder = 6
+      OnClick = Button2Click
+    end
+    object Button6: TButton
+      Left = 160
+      Top = 40
+      Width = 75
+      Height = 25
+      Caption = 'Elegir'
+      TabOrder = 7
+      OnClick = Button6Click
     end
   end
   object cerrado: TCheckBox
@@ -174,8 +207,8 @@ object frameMenuOficina: TframeMenuOficina
     OnClick = cerradoClick
   end
   object Memo1: TMemo
-    Left = 384
-    Top = 49
+    Left = 549
+    Top = 77
     Width = 185
     Height = 89
     Lines.Strings = (
@@ -183,6 +216,39 @@ object frameMenuOficina: TframeMenuOficina
     TabOrder = 3
     Visible = False
     WordWrap = False
+  end
+  object Panel2: TPanel
+    Left = 152
+    Top = 2
+    Width = 248
+    Height = 161
+    Caption = 'Panel2'
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 4
+    object DBGrid2: TDBGrid
+      Left = 0
+      Top = 0
+      Width = 248
+      Height = 161
+      DataSource = DataSource2
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnDblClick = DBGrid2DblClick
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'nombre'
+          Title.Alignment = taCenter
+          Title.Caption = 'Comida'
+          Width = 214
+          Visible = True
+        end>
+    end
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -249,15 +315,15 @@ object frameMenuOficina: TframeMenuOficina
   end
   object DataSource1: TDataSource
     DataSet = CDS1
-    Left = 742
-    Top = 96
+    Left = 750
+    Top = 72
   end
   object QueryAux: TSQLQuery
     MaxBlobSize = -1
     Params = <>
     SQLConnection = SQLConnection1
-    Left = 664
-    Top = 133
+    Left = 560
+    Top = 109
   end
   object QueryUpdate: TSQLQuery
     MaxBlobSize = -1
@@ -293,5 +359,37 @@ object frameMenuOficina: TframeMenuOficina
       Caption = 'Copiar este men'#250
       OnClick = Copiarestemen1Click
     end
+  end
+  object QueryMenuNormal: TSQLQuery
+    MaxBlobSize = -1
+    Params = <>
+    SQLConnection = SQLConnection1
+    Left = 480
+    Top = 117
+  end
+  object CDS2: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProvider2'
+    ReadOnly = True
+    Left = 336
+    Top = 101
+    object CDS2idComida: TIntegerField
+      FieldName = 'idComida'
+    end
+    object CDS2nombre: TWideStringField
+      FieldName = 'nombre'
+      Size = 100
+    end
+  end
+  object DataSetProvider2: TDataSetProvider
+    DataSet = QueryMenuNormal
+    Left = 400
+    Top = 109
+  end
+  object DataSource2: TDataSource
+    DataSet = CDS2
+    Left = 289
+    Top = 112
   end
 end

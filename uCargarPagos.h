@@ -61,7 +61,7 @@ __published:	// IDE-managed Components
 	TButton *Button9;
 	TPopupMenu *PopupMenu1;
 	TMenuItem *Aadiruncomentario1;
-	TMenuItem *Verestadodecuentadelcliente1;
+	TFMTBCDField *CDSdeudaEfectivo;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall ComboBox1Change(TObject *Sender);
@@ -84,6 +84,8 @@ __published:	// IDE-managed Components
 	void __fastcall Button9Click(TObject *Sender);
 	void __fastcall Aadiruncomentario1Click(TObject *Sender);
 	void __fastcall Verestadodecuentadelcliente1Click(TObject *Sender);
+	void __fastcall DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
+          TColumn *Column, TGridDrawState State);
 private:	// User declarations
 public:		// User declarations
 

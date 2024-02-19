@@ -64,7 +64,6 @@ object fVerCargaManual: TfVerCargaManual
         Title.Font.Height = -12
         Title.Font.Name = 'Tahoma'
         Title.Font.Style = [fsBold]
-        Width = 64
         Visible = True
       end
       item
@@ -163,7 +162,7 @@ object fVerCargaManual: TfVerCargaManual
     Top = 623
     Width = 191
     Height = 160
-    Date = 43981.420817037040000000
+    Date = 43981.367606886580000000
     TabOrder = 2
     Visible = False
   end

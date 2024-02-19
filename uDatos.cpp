@@ -7,6 +7,7 @@
 #include "uChartPedidosPorHora.h"
 #include "uChartPedidosPorDia.h"
 #include "uChartCobrosPorDia.h"
+#include "uGraficos2.h"
 #include "uChartComidasMasVendidas.h"
 #include "uDatos.h"
 //---------------------------------------------------------------------------
@@ -25,6 +26,45 @@ __fastcall TfDatos::TfDatos(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
+void TfDatos::generarGrafico(String query, String lTitulo, String bTitulo, String titulo, String xDispFormat)
+{
+	fGraficos2->CDS2xData->DisplayFormat = xDispFormat;
+	fGraficos2->DBChart1->Title->Text->Clear();
+	fGraficos2->DBChart1->Title->Text->Add(titulo);
+	fGraficos2->DBChart1->Title->Text->Add(".");
+	fGraficos2->DBChart1->Title->Font->Size = 16;
+
+	fGraficos2->DBChart1->Axes->Left->Title->Text = lTitulo;
+	fGraficos2->DBChart1->Axes->Left->Title->Font->Size = 14;
+	fGraficos2->DBChart1->Axes->Bottom->Title->Text = bTitulo;
+	fGraficos2->DBChart1->Axes->Bottom->Title->Font->Size = 14;
+
+	if (CheckBox1->Checked)
+		fGraficos2->DBChart1->Series[0]->Visible = true;
+	else
+		fGraficos2->DBChart1->Series[0]->Visible = false;
+
+	if (CheckBox2->Checked)
+		fGraficos2->DBChart1->Series[1]->Visible = true;
+	else
+		fGraficos2->DBChart1->Series[1]->Visible = false;
+
+
+
+
+	fGraficos2->CDS2->Active = false;
+	fGraficos2->Query2->Close();
+	fGraficos2->Query2->SQL->Clear();
+	fGraficos2->Query2->SQL->Add(query);
+	fGraficos2->Query2->ParamByName("fi")->AsDate = MC->Date;
+	fGraficos2->Query2->ParamByName("ff")->AsDate = MC->EndDate;;
+	fGraficos2->Query2->Open();
+	fGraficos2->CDS2->Active = true;
+
+	fGraficos2->DBChart1->UndoZoom();
+	fGraficos2->ShowModal();
+}
+//---------------------------------------------------------------------------
 void __fastcall TfDatos::Button1Click(TObject *Sender)
 {
    CDS1->Active = false;
@@ -35,7 +75,7 @@ void __fastcall TfDatos::Button1Click(TObject *Sender)
    q = "SELECT (SELECT descripcion FROM repartidores WHERE idRepartidor = refRepartidor) AS repartidor, "
 	   "SUM(unidades) AS cantViandas, SUM(pagoRealizado) AS cobro, "
 	   "(SELECT COUNT(idCantidad) FROM cantidades WHERE cantidades.refRepartidor = cuentas.refRepartidor AND fecha >= :fi AND fecha <= :ff) AS cantDomicilios, "
-	   "SUM(unidades * valorUnidad) AS montoVentas "
+	   "SUM(valorUnidad) AS montoVentas "
 	   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff GROUP BY refRepartidor";
 
    Query1->SQL->Add(q);
@@ -47,9 +87,9 @@ void __fastcall TfDatos::Button1Click(TObject *Sender)
    QueryAux->Close();
    QueryAux->SQL->Clear();
    q = "SELECT SUM(unidades) AS totalViandas, SUM(pagoRealizado) AS totalCobros, "
-	   "SUM(unidades * valorUnidad) AS totalVentas, "
+	   "SUM(valorUnidad) AS totalVentas, "
 	   "(SELECT COUNT(*) AS totalPedidos FROM pedidos WHERE momento >= :mi AND momento <= :mf) AS totalPedidos, "
-	   "(SELECT COUNT(*) AS oficina FROM pedidos WHERE refComida4 = 1 AND momento >= :mi AND momento <= :mf) AS oficina, "
+	   "(SELECT COUNT(*) AS oficina FROM pedidos WHERE refProducto = 2 AND momento >= :mi AND momento <= :mf) AS oficina, "
 	   "(SELECT SUM(acumuladoGlobal) as deudaClientes FROM clientes WHERE clientes.acumuladoGlobal > 0.0) AS deudaClientes, "
 	   "(SELECT (-1 * SUM(acumuladoGlobal)) as deudaNuestra FROM clientes WHERE clientes.acumuladoGlobal < 0.0) AS deudaNuestra "
 	   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff";
@@ -66,7 +106,7 @@ void __fastcall TfDatos::Button1Click(TObject *Sender)
    Label3->Caption = "Cobro total en el período: $ " + FormatFloat("#,##0.00",QueryAux->FieldByName("totalCobros")->AsFloat);
    Label2->Caption = "Monto total de ventas en el período: $ " + FormatFloat("#,##0.00",QueryAux->FieldByName("totalVentas")->AsFloat);
    Label4->Caption = "Total de pedidos entregados en el período: " + QueryAux->FieldByName("totalPedidos")->AsString;
-   Label5->Caption = "Total de pedidos sin complemento en el período: " + QueryAux->FieldByName("oficina")->AsString;
+   Label5->Caption = "Total de viandas de oficina: " + QueryAux->FieldByName("oficina")->AsString;
    Label6->Caption = "Total $ en viandas aún no cobradas: $ " + FormatFloat("#,##0.00",QueryAux->FieldByName("deudaClientes")->AsFloat);
    Label7->Caption = "Total $ en viandas aún no entregadas: $ " + FormatFloat("#,##0.00",QueryAux->FieldByName("deudaNuestra")->AsFloat);
    QueryAux->Close();
@@ -247,22 +287,44 @@ void __fastcall TfDatos::Button6Click(TObject *Sender)
 
 void __fastcall TfDatos::Button8Click(TObject *Sender)
 {
-   fChartPedidosPorDia->CDS2->Active = false;
+//   fChartPedidosPorDia->CDS2->Active = false;
+//
+//   fChartPedidosPorDia->Query2->Close();
+//   fChartPedidosPorDia->Query2->SQL->Clear();
+//   String q;
+//   q = "SELECT SUM(unidades) AS cantViandas, MONTH(fecha)*100000000 AS diaDelMes "
+//	   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff GROUP BY MONTH(fecha)";
+//
+//   fChartPedidosPorDia->Query2->SQL->Add(q);
+//   fChartPedidosPorDia->Query2->ParamByName("fi")->AsDate = MC->Date;
+//   fChartPedidosPorDia->Query2->ParamByName("ff")->AsDate = MC->EndDate;
+//   fChartPedidosPorDia->Query2->Open();
+//   fChartPedidosPorDia->CDS2->Active = true;
+//
+//   fChartPedidosPorDia->DBChart1->UndoZoom();
+//   fChartPedidosPorDia->ShowModal();
 
-   fChartPedidosPorDia->Query2->Close();
-   fChartPedidosPorDia->Query2->SQL->Clear();
-   String q;
-   q = "SELECT SUM(unidades) AS cantViandas, MONTH(fecha)*100000000 AS diaDelMes "
-	   "FROM cuentas WHERE fecha >= :fi AND fecha <= :ff GROUP BY MONTH(fecha)";
 
-   fChartPedidosPorDia->Query2->SQL->Add(q);
-   fChartPedidosPorDia->Query2->ParamByName("fi")->AsDate = MC->Date;
-   fChartPedidosPorDia->Query2->ParamByName("ff")->AsDate = MC->EndDate;
-   fChartPedidosPorDia->Query2->Open();
-   fChartPedidosPorDia->CDS2->Active = true;
 
-   fChartPedidosPorDia->DBChart1->UndoZoom();
-   fChartPedidosPorDia->ShowModal();
+
+	String q;
+	q =	"SELECT \
+				CAST(fecha AS DATETIME) AS xData \
+				,SUM(unidades) AS yData \
+		FROM \
+				cuentas \
+		WHERE \
+				fecha >= :fi \
+				AND fecha <= :ff \
+		GROUP BY YEAR(xData), MONTH(xData)";
+
+
+	String titulo = "Monto de venta por mes";
+	String lTitulo = "Venta del mes";
+	String bTitulo = "Mes";
+	String xDispFormat = "mmm/yy";
+
+	generarGrafico(q, lTitulo, bTitulo, titulo, xDispFormat);
 }
 //---------------------------------------------------------------------------
 

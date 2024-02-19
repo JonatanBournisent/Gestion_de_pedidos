@@ -34,6 +34,12 @@ object fAgregarCliente: TfAgregarCliente
     ExplicitTop = 14
     ExplicitWidth = 699
     ExplicitHeight = 440
+    inherited ClientDataSet1: TClientDataSet
+      inherited ClientDataSet1nombreBanco1: TWideStringField
+        DisplayWidth = 40
+        Size = 40
+      end
+    end
     inherited SQLTable1: TSQLTable
       Left = 640
       Top = 104

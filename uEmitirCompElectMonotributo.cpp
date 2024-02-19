@@ -1262,7 +1262,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit5Change(TObject *Sender)
       Edit8->Enabled = true;
    }
    if(Edit5->Text.Length() > 0)
-	  Edit1->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
+	  Edit1->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit5->Text));
 
    calcular();
 }
@@ -1278,7 +1278,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit8Change(TObject *Sender)
    }
 
    if(Edit8->Text.Length() > 0)
-	  Edit18->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
+	  Edit18->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit8->Text));
 
    calcular();
 }
@@ -1293,7 +1293,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit11Change(TObject *Sender)
    }
 
    if(Edit11->Text.Length() > 0)
-	  Edit19->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
+	  Edit19->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit11->Text));
 
    calcular();
 }
@@ -1308,7 +1308,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit14Change(TObject *Sender)
    }
 
    if(Edit14->Text.Length() > 0)
-	  Edit20->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
+	  Edit20->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit14->Text));
 
    calcular();
 }
@@ -1420,7 +1420,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit17Exit(TObject *Sender)
 void __fastcall TfEmitirCompElectMonotributo::Edit3Change(TObject *Sender)
 {
    if(Edit3->Text.Length() > 0)
-	  Edit1->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
+	  Edit1->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit5->Text));
 
    calcular();
 }
@@ -1428,7 +1428,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit3Change(TObject *Sender)
 void __fastcall TfEmitirCompElectMonotributo::Edit6Change(TObject *Sender)
 {
    if(Edit6->Text.Length() > 0)
-	  Edit18->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
+	  Edit18->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit8->Text));
 
    calcular();
 }
@@ -1436,7 +1436,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit6Change(TObject *Sender)
 void __fastcall TfEmitirCompElectMonotributo::Edit9Change(TObject *Sender)
 {
    if(Edit9->Text.Length() > 0)
-	  Edit19->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
+	  Edit19->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit11->Text));
 
    calcular();
 }
@@ -1444,7 +1444,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit9Change(TObject *Sender)
 void __fastcall TfEmitirCompElectMonotributo::Edit12Change(TObject *Sender)
 {
    if(Edit12->Text.Length() > 0)
-	  Edit20->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
+	  Edit20->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit14->Text));
 
    calcular();
 }
@@ -1452,7 +1452,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit12Change(TObject *Sender)
 void __fastcall TfEmitirCompElectMonotributo::Edit15Change(TObject *Sender)
 {
    if(Edit15->Text.Length() > 0)
-	  Edit21->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
+	  Edit21->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit17->Text));
 
    calcular();
 }
@@ -1461,7 +1461,7 @@ void __fastcall TfEmitirCompElectMonotributo::Edit15Change(TObject *Sender)
 void __fastcall TfEmitirCompElectMonotributo::Edit17Change(TObject *Sender)
 {
    if(Edit17->Text.Length() > 0)
-	  Edit21->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
+	  Edit21->Text = FormatFloat("$ 0.00", 1 * StrToFloat(Edit17->Text));
 
    calcular();
 }

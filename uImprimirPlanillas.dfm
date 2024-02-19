@@ -26,7 +26,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
   end
   object Button1: TButton
     Left = 57
-    Top = 350
+    Top = 364
     Width = 191
     Height = 25
     Caption = 'Imprimir planillas'
@@ -48,13 +48,13 @@ object fImprimirPlanillas: TfImprimirPlanillas
     Top = 25
     Width = 260
     Height = 160
-    Date = 43928.727358668980000000
+    Date = 43928.291609444440000000
     TabOrder = 2
     OnClick = MCClick
   end
   object Button2: TButton
-    Left = 57
-    Top = 309
+    Left = 58
+    Top = 327
     Width = 191
     Height = 25
     Caption = 'Previsualizar'
@@ -63,7 +63,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
   end
   object Button3: TButton
     Left = 57
-    Top = 390
+    Top = 402
     Width = 191
     Height = 25
     Caption = 'Salir'
@@ -72,7 +72,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
   end
   object CBxViernes: TCheckBox
     Left = 58
-    Top = 240
+    Top = 237
     Width = 191
     Height = 15
     Caption = 'Incluir pagos viernes'
@@ -80,7 +80,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
   end
   object CBxSabado: TCheckBox
     Left = 58
-    Top = 262
+    Top = 258
     Width = 191
     Height = 15
     Caption = 'Incluir pagos s'#225'bado'
@@ -88,11 +88,19 @@ object fImprimirPlanillas: TfImprimirPlanillas
   end
   object CBxDeshabilitar: TCheckBox
     Left = 58
-    Top = 282
+    Top = 280
     Width = 191
     Height = 17
     Caption = 'Deshabilitar pagos'
     TabOrder = 7
+  end
+  object cbMenuImpreso: TCheckBox
+    Left = 58
+    Top = 302
+    Width = 190
+    Height = 17
+    Caption = 'Incluir "Menu impreso"'
+    TabOrder = 8
   end
   object SQLConnection1: TSQLConnection
     ConnectionName = 'MySQLConnection'
@@ -342,7 +350,7 @@ object fImprimirPlanillas: TfImprimirPlanillas
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = []
-        Height = 37.795275590000000000
+        Height = 45.354335590000000000
         ParentFont = False
         Top = 124.724490000000000000
         Width = 377.953000000000000000

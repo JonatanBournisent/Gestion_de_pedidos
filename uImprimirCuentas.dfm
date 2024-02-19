@@ -163,7 +163,7 @@ object fImprimirCuentas: TfImprimirCuentas
     Top = 8
     Width = 259
     Height = 160
-    Date = 43949.770847650460000000
+    Date = 43949.846167986110000000
     MaxSelectRange = 500
     TabOrder = 2
     OnClick = MCClick
@@ -312,10 +312,6 @@ object fImprimirCuentas: TfImprimirCuentas
       FieldName = 'deudaTotal'
       DisplayFormat = '$ 0.00'
     end
-    object CDSsubtotal: TFMTBCDField
-      FieldName = 'subtotal'
-      DisplayFormat = '$ 0.00'
-    end
     object CDSsaldoAnterior: TFMTBCDField
       FieldName = 'saldoAnterior'
       DisplayFormat = '$ 0.00'
@@ -338,6 +334,11 @@ object fImprimirCuentas: TfImprimirCuentas
     end
     object CDSrep: TLargeintField
       FieldName = 'rep'
+    end
+    object CDSsubtotal: TFMTBCDField
+      FieldName = 'subtotal'
+      DisplayFormat = '$ 0.00'
+      Size = 10
     end
   end
   object DataSetProvider1: TDataSetProvider
@@ -655,13 +656,15 @@ object fImprimirCuentas: TfImprimirCuentas
       FieldName = 'valorUnidad'
       DisplayFormat = '$ 0.00'
     end
-    object CDS2subtotal: TFloatField
+    object CDS2subtotal: TFMTBCDField
       FieldName = 'subtotal'
       DisplayFormat = '$ 0.00'
+      Size = 10
     end
-    object CDS2unidades: TFloatField
+    object CDS2unidades: TFMTBCDField
       FieldName = 'unidades'
-      DisplayFormat = '0.00'
+      DisplayFormat = '0.0'
+      Size = 2
     end
   end
   object DataSource2: TDataSource

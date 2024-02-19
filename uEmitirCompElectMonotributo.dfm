@@ -196,7 +196,7 @@ object fEmitirCompElectMonotributo: TfEmitirCompElectMonotributo
     Top = 26
     Width = 249
     Height = 160
-    Date = 43678.877619652780000000
+    Date = 43678.278178668980000000
     MaxSelectRange = 500
     TabOrder = 0
   end
@@ -251,7 +251,7 @@ object fEmitirCompElectMonotributo: TfEmitirCompElectMonotributo
   end
   object Edit5: TEdit
     Left = 357
-    Top = 350
+    Top = 349
     Width = 67
     Height = 24
     Alignment = taCenter
@@ -615,7 +615,7 @@ object fEmitirCompElectMonotributo: TfEmitirCompElectMonotributo
     Width = 259
     Height = 160
     MultiSelect = True
-    Date = 43678.877619733790000000
+    Date = 43678.278178692130000000
     EndDate = 43678.000000000000000000
     MaxSelectRange = 3
     TabOrder = 27

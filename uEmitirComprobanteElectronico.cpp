@@ -30,6 +30,55 @@ __fastcall TfEmitirComprobanteElectronico::TfEmitirComprobanteElectronico(TCompo
 {
 }
 //---------------------------------------------------------------------------
+bool TfEmitirComprobanteElectronico::validatePrinter(String impSel)
+{
+	TPrinter *printers;
+	printers = new TPrinter;
+
+	for(int imp_index=0; imp_index<printers->Printers->Count; imp_index++)
+	{
+		if(printers->Printers->Strings[imp_index] == impSel)
+		{
+			delete printers;
+			return true;
+		}
+	}
+	delete printers;
+	return false;
+}
+//---------------------------------------------------------------------------
+String TfEmitirComprobanteElectronico::getDirFacturas(void)
+{
+	TIniFile *Configuraciones;
+	String dir = GetCurrentDir()+"//Config.ini";
+	Configuraciones = new TIniFile(dir);
+	String dirFacturas = Configuraciones->ReadString("Directorios","Facturas","NO_CONFIGURADA");
+	delete Configuraciones;
+	return dirFacturas;
+}
+//---------------------------------------------------------------------------
+
+String TfEmitirComprobanteElectronico::getPrinter(String tipo)
+{
+	TIniFile *Configuraciones;
+	String dir = GetCurrentDir()+"//Config.ini";
+	Configuraciones = new TIniFile(dir);
+	String imp_actual;
+
+	if(tipo == "PDF")
+		imp_actual = Configuraciones->ReadString("Impresion","ImpresoraPDF","NO_CONFIGURADA");
+	else if(tipo == "Planillas")
+		imp_actual = Configuraciones->ReadString("Impresion","ImpresoraPlanillas","NO_CONFIGURADA");
+	else if(tipo == "Presupuestos")
+		imp_actual = Configuraciones->ReadString("Impresion","ImpresoraPresupuestos","NO_CONFIGURADA");
+	else
+		imp_actual = "NO_CONFIGURADA";
+
+	delete Configuraciones;
+
+	return imp_actual;
+}
+//---------------------------------------------------------------------------
 
 void TfEmitirComprobanteElectronico::mostrarCliente(int refCliente)
 {
@@ -81,553 +130,300 @@ void TfEmitirComprobanteElectronico::mostrarCliente(int refCliente)
 
    if(refCondicionFrenteIVA == 2)
    {
-	  lbTotal->Top = 550;
 	  lbIVA21->Visible = true;
    }
    else
    {
-	  lbTotal->Top = 510;
 	  lbIVA21->Visible = false;
    }
-   calcular();
    Button10->Enabled = true;
-   Edit3->SetFocus();
+
 }
+
 //---------------------------------------------------------------------------
 
-float TfEmitirComprobanteElectronico::calcular(void)
+float TfEmitirComprobanteElectronico::calcular2(void)
 {
-   float tot = StrToFloat(Edit1->Text.Delete(1,2)) +
-				StrToFloat(Edit18->Text.Delete(1,2)) +
-				StrToFloat(Edit19->Text.Delete(1,2)) +
-				StrToFloat(Edit20->Text.Delete(1,2)) +
-				StrToFloat(Edit21->Text.Delete(1,2));
-   float subt = tot / 1.21;
-   float totalIva21 = subt * 0.21;
+	if (blockCalcular2) {
+        return 0.0;
+	}
+	if (!FDMemTable1->Active) {
+		return 0.0;
+	}
+   
+	float tot = 0.0;
+	int recNo = FDMemTable1->RecNo;
 
-   if(refCondicionFrenteIVA != 2)
-	  lbSubtotal->Caption = FormatFloat("Subtotal: $ 0.00", tot);
-   else
-	  lbSubtotal->Caption = FormatFloat("Subtotal: $ 0.00", subt);
 
-   lbIVA21->Caption = FormatFloat("IVA 21%: $ 0.00", totalIva21);
-   lbTotal->Caption = FormatFloat("TOTAL: $ 0.00", tot);
-   return tot;
+	DataSource1->Enabled = false;
+	DataSource1->DataSet = NULL;
+
+	FDMemTable1->First();
+	while (!FDMemTable1->Eof){
+		tot = tot + FDMemTable1->FieldByName("subtotal")->AsFloat;
+		FDMemTable1->Next();
+	}
+	FDMemTable1->RecNo = recNo;
+	DataSource1->DataSet = FDMemTable1;
+    DataSource1->Enabled = true;
+
+	float _subtotal = tot / 1.21;
+	float _totalIVA21 = tot * 0.1735537190082645;
+	float _total = tot;
+
+	if(refCondicionFrenteIVA != 2)
+		lbSubtotal->Caption = FormatFloat("Subtotal: $ 0.00", _total);
+	else
+		lbSubtotal->Caption = FormatFloat("Subtotal: $ 0.00", _subtotal);
+
+	lbIVA21->Caption = FormatFloat("IVA 21%: $ 0.00", _totalIVA21);
+	lbTotal->Caption = FormatFloat("TOTAL: $ 0.00", _total);
+    ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+
+	return _total;
 }
 //---------------------------------------------------------------------------
 void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
 {
-   if(!CDS3->Active)
-	  return;
+	if(!CDS3->Active)
+		return;
 
-   if(calcular() < 0.0)
-   {
-	  Application->MessageBox(L"No es posible generar un comprobante electrónico con valor negativo." ,L"Error.",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
-   }
-   else if(calcular() == 0.0)
-   {
-	  if(Application->MessageBox(L"Esta por generar un comprobante por un valor de $ 0,00. Realmente desea continuar?" ,L"ATENCIÓN!",MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) != IDYES)
-	  {
-		 return;
-	  }
-   }
+	if(calcular2() < 0.0)
+		Application->MessageBox(L"No es posible generar un comprobante electrónico con valor negativo." ,L"Error.",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
 
-   Button10->Enabled = false;
-
-   CanPrint = false;
-   String imp_actual;
-   String DirFacturas;
-
-   TIniFile *Configuraciones;
-   String Dir = GetCurrentDir()+"//Config.ini";
-   Configuraciones = new TIniFile(Dir);
-
-   if(CheckBox1->Checked)
-      imp_actual = Configuraciones->ReadString("Impresion","ImpresoraPDF","NO_CONFIGURADA");
-   else if(chbFactA4->Checked)
-	  imp_actual = Configuraciones->ReadString("Impresion","ImpresoraPlanillas","NO_CONFIGURADA");
-   else
-	  imp_actual = Configuraciones->ReadString("Impresion","ImpresoraPresupuestos","NO_CONFIGURADA");
-
-   DirFacturas = Configuraciones->ReadString("Directorios","Facturas","NO_CONFIGURADA");
-
-   if(DirFacturas == "NO_CONFIGURADA")
-   {
-	   delete Configuraciones;
-	   Application->MessageBox(L"Antes de continuar debe configurar un directorio para guardar las copias de respaldo" ,L"Configurar directorio.",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
-       CDS3->Active = false;
-	   Query3->Close();
-	   return;
-   }
-
-   if(imp_actual != "NO_CONFIGURADA")
-   {
-	  CanPrint = true;
-
-	  int imp_index;
-
-	  if(CanPrint)
-	  {
-		 TPrinter *printer;
-		 printer = new TPrinter;
-		 for(imp_index=0; imp_index<printer->Printers->Count; imp_index++)
-		 {
-			if(printer->Printers->Strings[imp_index] == imp_actual)
-			   break;
-		 }
-		 if(imp_index < printer->Printers->Count)
-			CanPrint = true;
-		 else
-		 {
-			CanPrint = false;
-			if(CheckBox1->Checked)
-			   Configuraciones->WriteString("Impresion","ImpresoraPDF","NO CONFIGURADA");
-			else if(chbFactA4->Checked)
-			   Configuraciones->WriteString("Impresion","ImpresoraPlanillas","NO CONFIGURADA");
-			else
-			   Configuraciones->WriteString("Impresion","ImpresoraPresupuestos","NO CONFIGURADA");
-		 }
-	  }
-	  delete Configuraciones;
-
-	  if(CanPrint)
-	  {
-		 dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("fechaComp"))->Text = FormatDateTime("dd/mm/yyy", MC->Date);
-		 dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("fechaComp"))->Text = FormatDateTime("dd/mm/yyy", MC->Date);
-		 dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("fechaComp"))->Text = FormatDateTime("dd/mm/yyy", MC->Date);
-
-
-		 float total = 0.0;
-
-		 if(Edit3->Enabled && Edit3->Text != "" && Edit3->Text != "0")
-		 {
-			total = total + (StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades1"))->Text = FormatFloat("0.00", StrToFloat(Edit3->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio1"))->Text = Edit4->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades1"))->Text = FormatFloat("0.00", StrToFloat(Edit3->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio1"))->Text = Edit4->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades1"))->Text = FormatFloat("0.00", StrToFloat(Edit3->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio1"))->Text = Edit4->Text;
-
-			if(refCondicionFrenteIVA == 2)
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit5->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit5->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit5->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text) / 1.21);
-
-			}
-			else
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit5->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit5->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit5->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal1"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
-			}
-		 }
-		 else
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal1"))->Text = "";
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal1"))->Text = "";
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio1"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal1"))->Text = "";
-
+	else if(calcular2() == 0.0)
+		if(Application->MessageBox(L"Esta por generar un comprobante por un valor de $ 0,00. Realmente desea continuar?" ,L"ATENCIÓN!",MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) != IDYES)
 			return;
-		 }
-		 if(Edit6->Enabled && Edit6->Text != "" && Edit6->Text != "0")
-		 {
-			total = total + (StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades2"))->Text = FormatFloat("0.00", StrToFloat(Edit6->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio2"))->Text = Edit7->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades2"))->Text = FormatFloat("0.00", StrToFloat(Edit6->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio2"))->Text = Edit7->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades2"))->Text = FormatFloat("0.00", StrToFloat(Edit6->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio2"))->Text = Edit7->Text;
+	Button10->Enabled = false;
 
-			if(refCondicionFrenteIVA == 2)
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit8->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit8->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit8->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text) / 1.21);
-			}
-			else
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit8->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit8->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit8->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal2"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
-			}
-		 }
-		 else
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal2"))->Text = "";
+	String DirFacturas = getDirFacturas();
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal2"))->Text = "";
+	if(DirFacturas == "NO_CONFIGURADA")
+	{
+		Application->MessageBox(L"Antes de continuar debe configurar un directorio para guardar las copias de respaldo" ,L"Configurar directorio.",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
+		CDS3->Active = false;
+		Query3->Close();
+		return;
+	}
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio2"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal2"))->Text = "";
-		 }
-		 if(Edit9->Enabled && Edit9->Text != "" && Edit9->Text != "0")
-		 {
-			total = total + (StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
+    String imp_actual = "NO_CONFIGURADA";
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades3"))->Text = FormatFloat("0.00", StrToFloat(Edit9->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio3"))->Text = Edit10->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades3"))->Text = FormatFloat("0.00", StrToFloat(Edit9->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio3"))->Text = Edit10->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades3"))->Text = FormatFloat("0.00", StrToFloat(Edit9->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio3"))->Text = Edit10->Text;
+	if(CheckBox1->Checked)
+		imp_actual = getPrinter("PDF");
+	else if(chbFactA4->Checked)
+	   imp_actual = getPrinter("Planillas");
+	else
+	   imp_actual = getPrinter("Presupuestos");
 
-			if(refCondicionFrenteIVA == 2)
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit11->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit11->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit11->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text) / 1.21);
-			}
-			else
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit11->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit11->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit11->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal3"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
-			}
-		 }
-		 else
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal3"))->Text = "";
+	if(imp_actual == "NO_CONFIGURADA")
+	{
+		Application->MessageBox(L"Debe configurar una impresora antes de imprimir." ,L"Error",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
+		return;
+	}
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal3"))->Text = "";
+	if(!validatePrinter(imp_actual))
+	{
+		Application->MessageBox(L"La impresora configurada no se encuentra en el sistema. Debera volver a configurarla" ,L"Error",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
+		return;
+	}
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio3"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal3"))->Text = "";
-		 }
-		 if(Edit12->Enabled && Edit12->Text != "" && Edit12->Text != "0")
-		 {
-			total = total + (StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades4"))->Text = FormatFloat("0.00", StrToFloat(Edit12->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio4"))->Text = Edit13->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades4"))->Text = FormatFloat("0.00", StrToFloat(Edit12->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio4"))->Text = Edit13->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades4"))->Text = FormatFloat("0.00", StrToFloat(Edit12->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio4"))->Text = Edit13->Text;
-
-			if(refCondicionFrenteIVA == 2)
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit14->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit14->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit14->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text) / 1.21);
-			}
-			else
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit14->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit14->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit14->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal4"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
-			}
-		 }
-		 else
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal4"))->Text = "";
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal4"))->Text = "";
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio4"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal4"))->Text = "";
-		 }
-		 if(Edit15->Enabled && Edit15->Text != "" && Edit15->Text != "0")
-		 {
-			total = total + (StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades5"))->Text = FormatFloat("0.00", StrToFloat(Edit15->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio5"))->Text = Edit16->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades5"))->Text = FormatFloat("0.00", StrToFloat(Edit15->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio5"))->Text = Edit16->Text;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades5"))->Text = FormatFloat("0.00", StrToFloat(Edit15->Text));
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio5"))->Text = Edit16->Text;
-
-			if(refCondicionFrenteIVA == 2)
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit17->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit17->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit17->Text) / 1.21);
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text) / 1.21);
-			}
-			else
-			{
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit17->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit17->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit17->Text));
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal5"))->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
-			}
-		 }
-		 else
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mUnidades5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mDomicilio5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mPrecio5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal5"))->Text = "";
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mUnidades5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mDomicilio5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mPrecio5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal5"))->Text = "";
-
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mUnidades5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mDomicilio5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mPrecio5"))->Text = "";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal5"))->Text = "";
-		 }
+	 dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("fechaComp"))->Text = FormatDateTime("dd/mm/yyy", MC->Date);
+	 dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("fechaComp"))->Text = FormatDateTime("dd/mm/yyy", MC->Date);
+	 dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("fechaComp"))->Text = FormatDateTime("dd/mm/yyy", MC->Date);
 
 
-	   float subtotalSIVA = total / 1.21;
-	   float totalIVA21 = total * 0.1735537190082645;
+	 float total = calcular2();
+	 float subtotalSIVA = total / 1.21;
+	 float totalIVA21 = total * 0.1735537190082645;
 
 
-	   QueryAux->Close();
-	   QueryAux->SQL->Clear();
-	   QueryAux->SQL->Add("SELECT montoMaximoFacturableSinDatos FROM registros WHERE idRegistro = 1 LIMIT 1");
-	   QueryAux->Open();
-	   float maximoFactSD = QueryAux->FieldByName("montoMaximoFacturableSinDatos")->AsFloat;
-	   QueryAux->Close();
+	 QueryAux->Close();
+	 QueryAux->SQL->Clear();
+	 QueryAux->SQL->Add("SELECT montoMaximoFacturableSinDatos FROM registros WHERE idRegistro = 1 LIMIT 1");
+	 QueryAux->Open();
+	 float maximoFactSD = QueryAux->FieldByName("montoMaximoFacturableSinDatos")->AsFloat;
+	 QueryAux->Close();
 
-	   if(
+	 if(
 			 (CDS3->FieldByName("cuit")->AsString == "00000000"
 		  || CDS3->FieldByName("cuit")->AsString == "00000000000"
 		  || CDS3->FieldByName("domicilio")->AsString == "-"
 		  || CDS3->FieldByName("domicilio")->AsString == ""
 		  || CDS3->FieldByName("razonSocial")->AsString == "-"
 		  || CDS3->FieldByName("razonSocial")->AsString == "")
-		  && (total > maximoFactSD)
-		 )
-	   {
+		  && (total > maximoFactSD)	 )
+	 {
 		  String msg = "Error: para emitir facturas con monto mayor a: " + FormatFloat("$ 0.00", maximoFactSD);
 		  msg = msg + " debe completar todos los datos del cliente\nCuit/DNI, Domicilio Fiscal y Razón Social o Nombre y Apellido";
 		  Application->MessageBox(msg.w_str() ,L"ERROR!",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
-          CDS3->Active = false;
-	  	  Query3->Close();
+		  CDS3->Active = false;
+		  Query3->Close();
 		  return;
-	   }
+	 }
 
 
-	   if(
+	 if(
 		  (refCondicionFrenteIVA == 2) &&
 			 (CDS3->FieldByName("cuit")->AsString == "00000000"
 		  || CDS3->FieldByName("cuit")->AsString == "00000000000"
 		  || CDS3->FieldByName("domicilio")->AsString == "-"
 		  || CDS3->FieldByName("domicilio")->AsString == ""
 		  || CDS3->FieldByName("razonSocial")->AsString == "-"
-		  || CDS3->FieldByName("razonSocial")->AsString == "")
-		 )
-	   {
+		  || CDS3->FieldByName("razonSocial")->AsString == "") )
+	 {
 		  String msg = "Error: para emitir facturas A debe completar todos los datos del cliente\nCuit, Domicilio Fiscal y Razón Social o Nombre y Apellido";
 		  Application->MessageBox(msg.w_str() ,L"ERROR!",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
-          CDS3->Active = false;
+		  CDS3->Active = false;
 		  Query3->Close();
 		  return;
-	   }
+	 }
 
-		 bool conDNI, sinID;
+	 bool conDNI, sinID;
 
-		 conDNI = false;
-		 sinID = false;
+	 conDNI = false;
+	 sinID = false;
 
-		 if(CDS3->FieldByName("cuit")->AsString == "00000000" || CDS3->FieldByName("cuit")->AsString == "00000000000")
-			 sinID = true;
-		 else if(CDS3->FieldByName("cuit")->AsString.Length() == 8)
-			conDNI = true;
-
-
-
-		 int selModelo = 0;
-
-		 if(refCondicionFrenteIVA == 2 && chbFactA4->Checked)
-			selModelo = 1; //factura A A4
-		 else if(refCondicionFrenteIVA == 2 && !chbFactA4->Checked)
-			selModelo = 2; //TIQUE A
-		 else if(refCondicionFrenteIVA != 2 && chbFactA4->Checked && sinID)
-			selModelo = 3; //factura B A4 sin datos de cliente
-		 else if(refCondicionFrenteIVA != 2 && chbFactA4->Checked)
-			selModelo = 4; //factura B A4
-		 else if(refCondicionFrenteIVA != 2 && !chbFactA4->Checked && sinID)
-			selModelo = 5; //TIQUE B sin datos de cliente
-		 else
-			selModelo = 6; //TIQUE B con datos de cliente
+	 if(CDS3->FieldByName("cuit")->AsString == "00000000" || CDS3->FieldByName("cuit")->AsString == "00000000000")
+		 sinID = true;
+	 else if(CDS3->FieldByName("cuit")->AsString.Length() == 8)
+		conDNI = true;
 
 
-         String s;
 
-		 if(selModelo == 1)
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo18"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo19"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo21"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoComp"))->Text = "A";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("codigoComp"))->Text = "COD. 01";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoDocumento"))->Text = "FACTURA";
+	 int selModelo = 0;
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", subtotalSIVA);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
+	 if(refCondicionFrenteIVA == 2 && chbFactA4->Checked)
+		selModelo = 1; //factura A A4
+	 else if(refCondicionFrenteIVA == 2 && !chbFactA4->Checked)
+		selModelo = 2; //TIQUE A
+	 else if(refCondicionFrenteIVA != 2 && chbFactA4->Checked && sinID)
+		selModelo = 3; //factura B A4 sin datos de cliente
+	 else if(refCondicionFrenteIVA != 2 && chbFactA4->Checked)
+		selModelo = 4; //factura B A4
+	 else if(refCondicionFrenteIVA != 2 && !chbFactA4->Checked && sinID)
+		selModelo = 5; //TIQUE B sin datos de cliente
+	 else
+		selModelo = 6; //TIQUE B con datos de cliente
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Visible = true;
-            dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
 
-			s = "FACTURA A - ";
-		 }
-		 else if(selModelo == 2)
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("Memo19"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("tipoComp"))->Text = "FACTURA A. COD. 01";
+	 String s;
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", subtotalSIVA);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
+	 if(selModelo == 1)
+	 {
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo18"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo19"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo21"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoComp"))->Text = "A";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("codigoComp"))->Text = "COD. 01";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoDocumento"))->Text = "FACTURA";
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", subtotalSIVA);   // subtotalSIVA
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21); //  totalIVA21
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total); //total
 
-            if(conDNI)
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
-			else
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
 
-			s = "FACTURA A - ";
-		 }
-		 else if(selModelo == 3)
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo18"))->Visible = false;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo19"))->Visible = false;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo21"))->Visible = false;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoComp"))->Text = "B";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("codigoComp"))->Text = "COD. 06";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoDocumento"))->Text = "FACTURA";
+		s = "FACTURA A - ";
+	 }
+	 else if(selModelo == 2)
+	 {
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("Memo19"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("tipoComp"))->Text = "FACTURA A. COD. 01";
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", subtotalSIVA);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Visible = false;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Visible = true;
 
-			if(conDNI)
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
-			else
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
+		if(conDNI)
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
+		else
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
 
-			s = "FACTURA B - ";
-		 }
-		 else if(selModelo == 4)
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo18"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo19"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo21"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoComp"))->Text = "B";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("codigoComp"))->Text = "COD. 06";
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoDocumento"))->Text = "FACTURA";
+		s = "FACTURA A - ";
+	 }
+	 else if(selModelo == 3)
+	 {
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo18"))->Visible = false;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo19"))->Visible = false;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo21"))->Visible = false;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoComp"))->Text = "B";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("codigoComp"))->Text = "COD. 06";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoDocumento"))->Text = "FACTURA";
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Visible = false;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Visible = false;
 
-            if(conDNI)
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
-			else
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
+		if(conDNI)
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
+		else
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
 
-			s = "FACTURA B - ";
-		 }
+		s = "FACTURA B - ";
+	 }
+	 else if(selModelo == 4)
+	 {
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo18"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo19"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo21"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoComp"))->Text = "B";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("codigoComp"))->Text = "COD. 06";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("tipoDocumento"))->Text = "FACTURA";
 
-		 else if(selModelo == 5)
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("Memo19"))->Visible = false;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("tipoComp"))->Text = "FACTURA B. COD. 06";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("mTotalIVA21"))->Visible = false;
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mTotalIVA21"))->Visible = false;
+		if(conDNI)
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
+		else
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
 
-			s = "FACTURA B - ";
-		 }
-		 else if(selModelo == 6)
-		 {
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("Memo19"))->Visible = true;
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("tipoComp"))->Text = "FACTURA B. COD. 06";
+		s = "FACTURA B - ";
+	 }
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
+	 else if(selModelo == 5)
+	 {
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("Memo19"))->Visible = false;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("tipoComp"))->Text = "FACTURA B. COD. 06";
 
-			dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Visible = false;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
 
-            if(conDNI)
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
-			else
-			   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport1->FindObject("mTotalIVA21"))->Visible = false;
 
-			s = "FACTURA B - ";
-		 }
+		s = "FACTURA B - ";
+	 }
+	 else if(selModelo == 6)
+	 {
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("Memo19"))->Visible = true;
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("tipoComp"))->Text = "FACTURA B. COD. 06";
+
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mSubtotal"))->Text = FormatFloat("Subtotal: $ 0.00", total);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Text = FormatFloat("IVA 21%: $ 0.00", totalIVA21);
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotal"))->Text = FormatFloat("Total: $ 0.00", total);
+
+		dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport2->FindObject("mTotalIVA21"))->Visible = false;
+
+		if(conDNI)
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "DNI:";
+		else
+		   dynamic_cast <TfrxMemoView *> (fEmitirComprobanteElectronico->frxReport3->FindObject("Memo27"))->Text = "CUIT:";
+
+		s = "FACTURA B - ";
+	 }
+
+
+
 
 
 //**************** CODIGOS SEGUN TABLA DE CODIGOS DE AFIP ************
@@ -659,9 +455,10 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
    WideString Reproceso = "";
    WideString Vencimiento = "";
    WideString CUIT = "20149650939";     //CUIT EMISOR DE FACTURA
-   double totalComp = StrToFloat(FormatFloat("0.00",total));
-   double netoGravado = StrToFloat(FormatFloat("0.00",subtotalSIVA));
-   double IVA21 = StrToFloat(FormatFloat("0.00",totalIVA21));
+   double totalComp = StrToFloat(FormatFloat("0.00", total));
+   double netoGravado = StrToFloat(FormatFloat("0.00", subtotalSIVA));
+   double IVA21 = StrToFloat(FormatFloat("0.00", totalIVA21));
+
 
    bool error = false;
 
@@ -730,11 +527,11 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
    else
 	  mensaje  = mensaje + "\nCUIT: " + CDS3cuit->AsString;
 
-   mensaje  = mensaje + "\nCondición frente al IVA: " + CDS3condFrenteIVA->AsString;
+   mensaje = mensaje + "\nCondición frente al IVA: " + CDS3condFrenteIVA->AsString;
    mensaje = mensaje + "\nNeto Gravado: " + FormatFloat("$ 0.00", netoGravado);
    mensaje = mensaje + "\nIVA 21%: " + FormatFloat("$ 0.00", IVA21);
    mensaje = mensaje + "\nImporte TOTAL: " + FormatFloat("$ 0.00", totalComp);
-   mensaje  = mensaje  + "\n\nRealmente desea continuar?";
+   mensaje = mensaje  + "\n\nRealmente desea continuar?";
 
 
    if(Application->MessageBox(L"Esta operación no puede cancelarse. Desea continuar?" ,L"ATENCIÓN!",MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) != IDYES)
@@ -751,6 +548,8 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
 
 
    bool comprobanteAutorizado = false;
+
+
 
 
    Twsfev1 *lwsfev1;
@@ -828,8 +627,8 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
 
 
 
-//ATENCION!!!!      SIMULACION***********************************************************
-
+////ATENCION!!!!      SIMULACION***********************************************************
+//
 //   CAE = "71099320294706";
 //   MC->Date = StrToDate("27/02/2021");
 //   PtoVta = 3;
@@ -839,9 +638,9 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
 //   total = 7872.03;
 //   conDNI = false;
 //   sinID = false;
-
-
-//*********************************************************************
+//
+//
+////*********************************************************************
 
 
 
@@ -868,10 +667,10 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
 
 
 
-//ATENCION!!!! SIMULACION**************************************************
+////ATENCION!!!! SIMULACION**************************************************
 //   comprobanteAutorizado = true;      //para poder probar sin enviar a AFIP
 //   fechaVencimiento = "01/01/2020";
-//*************************************************************
+////*************************************************************
 
 
 
@@ -887,8 +686,8 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
 	 importe = importe.Delete(importe.Length() - 2, 1);
 	 importe = importe.Insert(".", importe.Length() - 1);
 
-	 if(importe.Pos(".00") > 0)
-		importe = importe.SubString(1,importe.Pos(".00") - 1);
+	 if(importe.Pos(".0") > 0)
+		importe = importe.SubString(1,importe.Pos(".0") - 1);
 
 	 String json = "{\"ver\":1,\"fecha\":\"" + FormatDateTime("yyyy-mm-dd", MC->Date);
 	 json = json + "\",\"cuit\":" + CUIT + ",\"ptoVta\":" + IntToStr(PtoVta);
@@ -1033,28 +832,11 @@ void __fastcall TfEmitirComprobanteElectronico::Button10Click(TObject *Sender)
    delete lwsfev1;
 
 
-	  }
-	  else
-	  {
-		 String str;
-		 str = "Se produjo un error al intentar localizar la impresora seleccionada.";
-		 str = str + '\n';
-		 str = str + "La reconfiguraracion de la impresora podria solucionar el problema.";
+	Button10->Enabled = true;
 
-		 Application->MessageBox(str.w_str() ,L"Error", MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
-	  }
-   }
-   else
-   {
-	  delete Configuraciones;
-	  Application->MessageBox(L"Debe configurar una impresora antes de imprimir." ,L"Error",MB_OK | MB_ICONERROR | MB_DEFBUTTON1);
-   }
-
-//   Query1->Close();
-//   CDS3->Active = false;
-//   Query3->Close();
-//   QueryAux->Close();
-   Button10->Enabled = true;
+	if (facturacionMensual) {
+      Close();
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TfEmitirComprobanteElectronico::FormCreate(TObject *Sender)
@@ -1062,67 +844,35 @@ void __fastcall TfEmitirComprobanteElectronico::FormCreate(TObject *Sender)
    SQLConnection1->Params->Values["HostName"] = servidor;
    SQLConnection1->Params->Values["Database"] = dbName;
    SQLConnection1->Params->Values["User_Name"] = userName;
-   SQLConnection1->Params->Values["Password"] = pass;
+	SQLConnection1->Params->Values["Password"] = pass;
+	facturacionBulk = false;
+	facturacionMensual = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TfEmitirComprobanteElectronico::FormShow(TObject *Sender)
 {
-      Edit2->Enabled = false;
-      Edit3->Enabled = false;
-      Edit4->Enabled = false;
-      Edit5->Enabled = false;
-      Edit6->Enabled = false;
-      Edit7->Enabled = false;
-      Edit8->Enabled = false;
-      Edit9->Enabled = false;
-      Edit10->Enabled = false;
-      Edit11->Enabled = false;
-      Edit12->Enabled = false;
-      Edit13->Enabled = false;
-      Edit14->Enabled = false;
-      Edit15->Enabled = false;
-      Edit16->Enabled = false;
-      Edit17->Enabled = false;
-      Edit2->Text = "";
-      Edit3->Text = "0";
-      Edit4->Text = "Vianda(s)";
-      Edit5->Text = "0";
-      Edit6->Text = "0";
-      Edit7->Text = "Vianda(s)";
-      Edit8->Text = "0";
-      Edit9->Text = "0";
-      Edit10->Text = "Vianda(s)";
-      Edit11->Text = "0";
-      Edit12->Text = "0";
-      Edit13->Text = "Vianda(s)";
-      Edit14->Text = "0";
-      Edit15->Text = "0";
-      Edit16->Text = "Vianda(s)";
-	  Edit17->Text = "0";
+	  blockCalcular2 = false;
+	  facturacionBulk = false;
+	  Edit2->Text = "";
 
 	  Label1->Caption = "";
 
 	  Edit2->Enabled = true;
-	  Edit3->Enabled = true;
-	  Edit4->Enabled = true;
-	  Edit5->Enabled = true;
 	  Button10->Enabled = false;
 	  Button1->SetFocus();
 
 	  CheckBox1->Checked = false;
 	  chbFactA4->Checked = false;
 
-	  lbTotal->Top = 510;
 	  lbIVA21->Visible = false;
 	  refCondicionFrenteIVA = 0;
 
-	  //Button10->Enabled = true;
 
 	  MC->Date = Now();
 	  directorioGuararFacturas = "";
+      FDMemTable1->Active = true;
 }
 //---------------------------------------------------------------------------
-
 
 void __fastcall TfEmitirComprobanteElectronico::Button1Click(TObject *Sender)
 {
@@ -1142,352 +892,179 @@ void __fastcall TfEmitirComprobanteElectronico::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TfEmitirComprobanteElectronico::Edit3KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit6KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit9KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit12KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit15KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit5KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit8KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit11KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit14KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit17KeyPress(TObject *Sender, System::WideChar &Key)
-
-{
-   if((Key < '0' || Key > '9') && Key != '\b' && Key != '.')
-	  Key = NULL;
-   if(Key == '.')
-	  Key = ',';
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit5Change(TObject *Sender)
-{
-   if(Edit3->Text != "0" && Edit4->Text != "" && Edit5->Text != "0")
-   {
-      Edit6->Enabled = true;
-      Edit7->Enabled = true;
-      Edit8->Enabled = true;
-   }
-   if(Edit5->Text.Length() > 0)
-	  Edit1->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit8Change(TObject *Sender)
-{
-   if(Edit6->Text != "0" && Edit7->Text != "" && Edit8->Text != "0")
-   {
-      Edit9->Enabled = true;
-      Edit10->Enabled = true;
-      Edit11->Enabled = true;
-   }
-
-   if(Edit8->Text.Length() > 0)
-	  Edit18->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit11Change(TObject *Sender)
-{
-   if(Edit9->Text != "0" && Edit10->Text != "" && Edit11->Text != "0")
-   {
-      Edit12->Enabled = true;
-      Edit13->Enabled = true;
-      Edit14->Enabled = true;
-   }
-
-   if(Edit11->Text.Length() > 0)
-	  Edit19->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-void __fastcall TfEmitirComprobanteElectronico::Edit14Change(TObject *Sender)
-{
-   if(Edit12->Text != "0" && Edit13->Text != "" && Edit14->Text != "0")
-   {
-      Edit15->Enabled = true;
-      Edit16->Enabled = true;
-      Edit17->Enabled = true;
-   }
-
-   if(Edit14->Text.Length() > 0)
-	  Edit20->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
 void __fastcall TfEmitirComprobanteElectronico::chbFactA4Click(TObject *Sender)
 {
-   if(chbFactA4->Checked)
-   {
-	  Edit4->MaxLength = 40;
-	  Edit7->MaxLength = 40;
-	  Edit10->MaxLength = 40;
-	  Edit13->MaxLength = 40;
-	  Edit16->MaxLength = 40;
-   }
-   else
-   {
-	  bool largo = false;
+	if(!FDMemTable1->Active)
+		return;
 
-	  if(Edit4->Text.Length() > 17)
-		 largo = true;
-	  else if(Edit7->Text.Length() > 17)
-		 largo = true;
-	  else if(Edit10->Text.Length() > 17)
-		 largo = true;
-	  else if(Edit13->Text.Length() > 17)
-		 largo = true;
-	  else if(Edit16->Text.Length() > 17)
-		 largo = true;
+	FDMemTable1->Cancel();
 
-	  Edit4->Text = Edit4->Text.SubString(1,17);
-	  Edit7->Text = Edit7->Text.SubString(1,17);
-	  Edit10->Text = Edit10->Text.SubString(1,17);
-	  Edit13->Text = Edit13->Text.SubString(1,17);
-	  Edit16->Text = Edit16->Text.SubString(1,17);
+	if(!chbFactA4->Checked)
+	{
+		bool largo = false;
 
-	  Edit4->MaxLength = 17;
-	  Edit7->MaxLength = 17;
-	  Edit10->MaxLength = 17;
-	  Edit13->MaxLength = 17;
-	  Edit16->MaxLength = 17;
+		if (FDMemTable1->Active) {
+			 int recNro = FDMemTable1->RecNo;
+			 DataSource1->Enabled = false;
 
-	  if(largo)
-	     Application->MessageBox(L"En formato tique, las descripciones pueden tener un máximo de 17 caracteres de longitud" ,L"Antención",MB_OK | MB_ICONWARNING | MB_DEFBUTTON1);
-   }
+			 while (!FDMemTable1->Eof) {
+				if (FDMemTable1descripcion->AsString.Length() > 17) {
+				   largo = true;
+				   break;
+				}
+				FDMemTable1->Next();
+			 }
+
+			 FDMemTable1->RecNo = recNro;
+			 DataSource1->Enabled = true;
+		}
+
+
+		int recNro = FDMemTable1->RecNo;
+		DataSource1->Enabled = false;
+
+		while (!FDMemTable1->Eof) {
+			 FDMemTable1->Edit();
+			 FDMemTable1descripcion->AsString = FDMemTable1descripcion->AsString.SubString(1,17);
+			 FDMemTable1->Post();
+			 FDMemTable1->Next();
+		}
+
+		FDMemTable1->RecNo = recNro;
+		DataSource1->Enabled = true;
+
+		if(largo)
+		 Application->MessageBox(L"En formato tique, las descripciones pueden tener un máximo de 17 caracteres de longitud" ,L"Antención",MB_OK | MB_ICONWARNING | MB_DEFBUTTON1);
+	}
 }
 //---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit3Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-      dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit6Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit9Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit12Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit15Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit5Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit8Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit11Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit14Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit17Exit(TObject *Sender)
-{
-   if(dynamic_cast <TEdit *>(Sender)->Text == "")
-	  dynamic_cast <TEdit *>(Sender)->Text = "0";
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit3Change(TObject *Sender)
-{
-   if(Edit3->Text.Length() > 0)
-	  Edit1->Text = FormatFloat("$ 0.00", StrToFloat(Edit3->Text) * StrToFloat(Edit5->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit6Change(TObject *Sender)
-{
-   if(Edit6->Text.Length() > 0)
-	  Edit18->Text = FormatFloat("$ 0.00", StrToFloat(Edit6->Text) * StrToFloat(Edit8->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit9Change(TObject *Sender)
-{
-   if(Edit9->Text.Length() > 0)
-	  Edit19->Text = FormatFloat("$ 0.00", StrToFloat(Edit9->Text) * StrToFloat(Edit11->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit12Change(TObject *Sender)
-{
-   if(Edit12->Text.Length() > 0)
-	  Edit20->Text = FormatFloat("$ 0.00", StrToFloat(Edit12->Text) * StrToFloat(Edit14->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit15Change(TObject *Sender)
-{
-   if(Edit15->Text.Length() > 0)
-	  Edit21->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Edit17Change(TObject *Sender)
-{
-   if(Edit17->Text.Length() > 0)
-	  Edit21->Text = FormatFloat("$ 0.00", StrToFloat(Edit15->Text) * StrToFloat(Edit17->Text));
-
-   calcular();
-}
-//---------------------------------------------------------------------------
-
 
 void __fastcall TfEmitirComprobanteElectronico::CheckBox1Click(TObject *Sender)
 {
    if(CheckBox1->Checked)
-      chbFactA4->Checked = true;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TfEmitirComprobanteElectronico::Button2Click(TObject *Sender)
-{
-   Close();
+	  chbFactA4->Checked = true;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TfEmitirComprobanteElectronico::FormClose(TObject *Sender, TCloseAction &Action)
 
 {
-   Query1->Close();
-   CDS3->Active = false;
-   Query3->Close();
-   QueryAux->Close();
-   SQLConnection1->Close();
+	Query1->Close();
+	CDS3->Active = false;
+	Query3->Close();
+	QueryAux->Close();
+	SQLConnection1->Close();
+	FDMemTable1->Cancel();
+	FDMemTable1->Active = false;
+	facturacionMensual = false;
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TfEmitirComprobanteElectronico::FDMemTable1BeforePost(TDataSet *DataSet)
 
-void __fastcall TfEmitirComprobanteElectronico::Button3Click(TObject *Sender)
 {
-   Edit22->Text = TNetEncoding::Base64->Decode("eyJ2ZXIiOjEsImZlY2hhIjoiMjAyMS0wMy0xMCIsImN1aXQiOjIwMTQ5NjUwOTM5LCJwdG9WdGEiOjYsInRpcG9DbXAiOjEsIm5yb0NtcCI6MTgxLCJpbXBvcnRlIjo4MTAsIm1vbmVkYSI6IlBFUyIsImN0eiI6MSwidGlwb0RvY1JlYyI6ODAsIm5yb0RvY1JlYyI6MzA3MTEyMjczNjUsInRpcG9Db2RBdXQiOiJFIiwiY29kQXV0Ijo3MTEwOTk0MzkzOTk5MH0=");
+	if (DataSet->FieldByName("nroUnidades")->IsNull ||
+		DataSet->FieldByName("nroUnidades")->AsFloat == 0.0 ||
+		DataSet->FieldByName("descripcion")->AsString == "" ||
+		DataSet->FieldByName("precioUnitario")->IsNull ||
+		DataSet->FieldByName("precioUnitario")->AsFloat == 0.0 ||
+		DataSet->FieldByName("subtotal")->IsNull ||
+		DataSet->FieldByName("subtotal")->AsFloat == 0.0)
+	{
+		DataSet->Cancel();
+	}
+
 }
 //---------------------------------------------------------------------------
+
+
+
+void __fastcall TfEmitirComprobanteElectronico::FDMemTable1precioUnitarioChange(TField *Sender)
+          
+{
+	Sender->DataSet->FieldByName("subtotal")->AsFloat = Sender->AsFloat;
+//	calcular2();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::FDMemTable1nroUnidadesValidate(TField *Sender)
+          
+{
+	if (Sender->IsNull || Sender->AsFloat == 0.0) {
+		throw(Exception("Se debe indicar un valor mayor que cero"));
+	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::FDMemTable1descripcionValidate(TField *Sender)
+          
+{
+	if (Sender->AsString == "") {
+	   throw(Exception("Debe ingresar una descripción"));
+	}	
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::FDMemTable1precioUnitarioValidate(TField *Sender)
+          
+{
+	if (Sender->IsNull || Sender->AsFloat == 0.0) {
+		throw(Exception("Se debe indicar un valor mayor que cero"));
+	}	
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::FDMemTable1AfterPost(TDataSet *DataSet)
+
+{
+   calcular2();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::DBGrid1Exit(TObject *Sender)
+{
+	if(FDMemTable1->Active && FDMemTable1->State == dsEdit)
+		FDMemTable1->Post();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::DBGrid1KeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift)
+{
+	if (Key == VK_RETURN) {
+		if(FDMemTable1->Active && FDMemTable1->State == dsEdit)
+			FDMemTable1->Post();
+	}
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TfEmitirComprobanteElectronico::Eliminaresteitem1Click(TObject *Sender)
+
+{
+	if(FDMemTable1->Active)
+		FDMemTable1->Delete();
+
+	ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::Agregarunitem1Click(TObject *Sender)
+
+{
+	if(FDMemTable1->Active)
+		FDMemTable1->Insert();
+
+	ShowScrollBar(DBGrid1->Handle, SB_VERT, true);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfEmitirComprobanteElectronico::FDMemTable1AfterDelete(TDataSet *DataSet)
+
+{
+	calcular2();
+}
+//---------------------------------------------------------------------------
+
 

@@ -73,6 +73,8 @@ __published:	// IDE-managed Components
 	TFMTBCDField *CDS1cantViandas;
 	TLabel *Label9;
 	TButton *Button8;
+	TCheckBox *CheckBox1;
+	TCheckBox *CheckBox2;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormShow(TObject *Sender);
@@ -87,6 +89,8 @@ __published:	// IDE-managed Components
 private:	// User declarations
 public:		// User declarations
 	__fastcall TfDatos(TComponent* Owner);
+
+	void generarGrafico(String query, String lTitulo, String bTitulo, String titulo, String xDispFormat);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfDatos *fDatos;

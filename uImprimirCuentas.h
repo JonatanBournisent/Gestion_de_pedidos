@@ -43,7 +43,6 @@ __published:	// IDE-managed Components
 	TFMTBCDField *CDSdeudaTotal;
 	TDBCheckBox *CB;
 	TButton *Button4;
-	TFMTBCDField *CDSsubtotal;
 	TFMTBCDField *CDSsaldoAnterior;
 	TfrxReport *frxReport1;
 	TWideStringField *CDSnombre;
@@ -72,14 +71,12 @@ __published:	// IDE-managed Components
 	TWideStringField *CDS3cliente;
 	TWideStringField *CDS3domicilio;
 	TWideStringField *CDS2detalle;
-	TFloatField *CDS2subtotal;
 	TFloatField *CDS3total;
 	TDateField *CDS3dfechaDetalle;
 	TDateField *CDS3mfechaDetalle;
 	TDateField *CDS3yfechaDetalle;
 	TfrxReport *frxReport3;
 	TDateField *CDS3fechaDetalleMensual;
-	TFloatField *CDS2unidades;
 	TButton *Button2;
 	TCheckBox *chbTicket;
 	TfrxReport *frxReport5;
@@ -87,6 +84,9 @@ __published:	// IDE-managed Components
 	TfrxPDFExport *frxPDFExport1;
 	TLargeintField *CDSrep;
 	TCheckBox *CheckBox1;
+	TFMTBCDField *CDSsubtotal;
+	TFMTBCDField *CDS2subtotal;
+	TFMTBCDField *CDS2unidades;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall DBGrid1DrawColumnCell(TObject *Sender, const TRect &Rect, int DataCol,
           TColumn *Column, TGridDrawState State);

@@ -63,3 +63,5 @@ void __fastcall TfAgregarCliente::Button3Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
+

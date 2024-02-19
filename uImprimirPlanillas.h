@@ -50,9 +50,10 @@ __published:	// IDE-managed Components
 	TCheckBox *CBxViernes;
 	TCheckBox *CBxSabado;
 	TCheckBox *CBxDeshabilitar;
-	TLargeintField *CDSmenuImpreso;
 	TWideStringField *CDSpagoAdelantado;
 	TFMTBCDField *CDSunidAyer;
+	TLargeintField *CDSmenuImpreso;
+	TCheckBox *cbMenuImpreso;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall ComboBox1Change(TObject *Sender);
@@ -67,6 +68,8 @@ __published:	// IDE-managed Components
 	void __fastcall CDSsaldoTotalGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
 	void __fastcall CDSvar_dummyGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
 	void __fastcall CDSmenuImpresoGetText(TField *Sender, UnicodeString &Text, bool DisplayText);
+
+
 
 
 
